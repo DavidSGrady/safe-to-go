@@ -9,7 +9,6 @@ import ReturnBanner from '@/components/ReturnBanner.vue'
 import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
 import DiveDeeper from '@/components/DiveDeeper.vue'
-import TideExplainer from '@/components/TideExplainer.vue'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 
 const { t } = useI18n()
@@ -44,7 +43,6 @@ onMounted(() => store.start())
         @toggle-extended="store.toggleExtended"
       />
       <DiveDeeper :status="status" :rules="rules" :now="now" />
-      <TideExplainer />
     </template>
 
     <p v-if="error" class="card error">{{ t('verdict.unknownSub') }}</p>

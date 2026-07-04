@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dayLabel, fmtTime } from '@/lib/format'
 import type { SafetyRules, StatusResult } from '@/lib/types'
-import TideChart from './TideChart.vue'
 
 const props = defineProps<{
   status: StatusResult
@@ -29,8 +28,6 @@ const detail = computed(() => {
     deadlineTxt: fmtTime(w.deadline, locale.value),
   }
 })
-
-const showChart = ref(false)
 </script>
 
 <template>
@@ -58,11 +55,6 @@ const showChart = ref(false)
         <li>{{ t('dive.fact3') }}</li>
       </ul>
     </div>
-
-    <button type="button" class="btn-link" @click="showChart = !showChart">
-      {{ showChart ? t('dive.hideChart') : t('dive.showChart') }}
-    </button>
-    <TideChart v-if="showChart" :curve="status.curve" :rules="rules" :now="now" />
   </section>
 </template>
 
@@ -142,17 +134,5 @@ const showChart = ref(false)
   height: 6px;
   border-radius: 50%;
   background: var(--text-muted);
-}
-
-.btn-link {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--accent);
-  border-radius: 12px;
-  padding: 11px 14px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  width: 100%;
 }
 </style>

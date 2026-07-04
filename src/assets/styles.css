@@ -1,6 +1,7 @@
 /* Design tokens, ported from the "Safe to Go — Mandø" redesign spec.
-   Light is default, dark via prefers-color-scheme. */
+   Light mode only. */
 :root {
+  color-scheme: light;
   --page: #f7f8f6;
   --surface: #fcfcfb;
   --text-primary: #1b2b2e;
@@ -49,53 +50,6 @@
 
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --page: #14201f;
-    --surface: #1b2523;
-    --text-primary: #f4f6f3;
-    --text-secondary: #c3ccc6;
-    --text-muted: #8fa199;
-    --grid: #253330;
-    --baseline: #33423e;
-    --border: #2e3d39;
-    --accent: #4fb3a5;
-
-    --verdict-safe-bg: #17332355;
-    --verdict-safe-bd: #2c5a3d;
-    --verdict-safe-fg: #8fe0ac;
-    --verdict-safe-accent: #2f9b5f;
-
-    --verdict-caution-bg: #3a2f1155;
-    --verdict-caution-bd: #6b511c;
-    --verdict-caution-fg: #f2c869;
-    --verdict-caution-accent: #d99a2b;
-
-    --verdict-unsafe-bg: #3a201955;
-    --verdict-unsafe-bd: #6b3428;
-    --verdict-unsafe-fg: #f0a696;
-    --verdict-unsafe-accent: #d1594a;
-
-    --verdict-unknown-bg: #232f2c;
-    --verdict-unknown-bd: #33423e;
-    --verdict-unknown-fg: #c3ccc6;
-    --verdict-unknown-accent: #8fa199;
-
-    --conf-high-bg: #17332355;
-    --conf-high-fg: #8fe0ac;
-    --conf-medium-bg: #3a2f1155;
-    --conf-medium-fg: #f2c869;
-    --conf-low-bg: #232f2c;
-    --conf-low-fg: #c3ccc6;
-    --conf-verylow-bg: #1e2927;
-    --conf-verylow-fg: #8fa199;
-
-    --emergency: #f0a696;
-
-    --shadow: none;
-  }
 }
 
 * {
