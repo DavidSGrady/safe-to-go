@@ -24,6 +24,18 @@ const icon = computed(
     ({ safe: '✓', caution: '!', unsafe: '✕', unknown: '?' })[effectiveState.value],
 )
 
+// The current-level number is the actual measurement while it's fresh;
+// after that the app falls back to the surge-adjusted forecast (see tide.ts).
+const levelIsMeasured = computed(() => props.status.dataFresh)
+
+const readingAge = computed(() => {
+  if (props.status.lastObservedAt === null) return null
+  const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
+  return hours > 0
+    ? t('status.agoHoursMinutes', { hours, minutes })
+    : t('status.agoMinutes', { minutes })
+})
+
 const timeLeft = computed(() => {
   if (props.status.state !== 'safe' || props.status.safeUntil === null) return null
   const { hours, minutes } = splitDuration(props.status.safeUntil - props.now)
@@ -48,6 +60,7 @@ const timeLeft = computed(() => {
       <div v-if="status.currentLevelCm !== null" class="fact">
         <span class="fact-label">{{ t('status.currentLevel') }}</span>
         <span class="fact-value">{{ status.currentLevelCm }} cm</span>
+        <span class="fact-tag">{{ levelIsMeasured ? t('status.sourceMeasured') : t('status.sourceForecast') }}</span>
       </div>
       <div v-if="status.rising !== null" class="fact">
         <span class="fact-value trend">
@@ -59,6 +72,7 @@ const timeLeft = computed(() => {
 
     <p v-if="status.lastObservedAt" class="updated">
       {{ t('status.updated', { time: fmtTime(status.lastObservedAt, locale) }) }}
+      <span v-if="readingAge"> ({{ readingAge }})</span>
       <span v-if="!status.dataFresh"> — {{ t('status.stale') }}</span>
     </p>
   </section>
@@ -142,6 +156,12 @@ const timeLeft = computed(() => {
 .fact-value {
   font-size: 1.25rem;
   font-weight: 700;
+}
+
+.fact-tag {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.85;
 }
 
 .trend-text {
