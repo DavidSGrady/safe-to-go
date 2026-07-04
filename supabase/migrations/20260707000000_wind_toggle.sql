@@ -40,3 +40,11 @@ begin
   return new;
 end;
 $$;
+
+-- Refresh the Realtime publication for safety_rules. The previous migration
+-- dropped margin_minutes, but Realtime cached the old column list, so
+-- realtime.apply_rls kept erroring with "column margin_minutes does not
+-- exist". Removing and re-adding the table forces Realtime to re-read the
+-- current schema.
+alter publication supabase_realtime drop table public.safety_rules;
+alter publication supabase_realtime add table public.safety_rules;
