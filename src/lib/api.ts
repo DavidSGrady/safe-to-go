@@ -19,6 +19,7 @@ interface RulesRow {
   crossing_minutes: number
   buffer_minutes: number
   min_window_minutes: number
+  wind_adjustment_enabled: boolean
   updated_at: string
 }
 
@@ -62,7 +63,7 @@ export async function fetchRules(): Promise<SafetyRules> {
   if (isDemoMode) return demoRules
   const { data, error } = await getSupabase()
     .from('safety_rules')
-    .select('safe_max_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, updated_at')
+    .select('safe_max_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, updated_at')
     .eq('id', 1)
     .single()
   if (error) throw error
@@ -73,6 +74,7 @@ export async function fetchRules(): Promise<SafetyRules> {
     crossingMinutes: row.crossing_minutes,
     bufferMinutes: row.buffer_minutes,
     minWindowMinutes: row.min_window_minutes,
+    windAdjustmentEnabled: row.wind_adjustment_enabled,
     updatedAt: row.updated_at,
   }
 }
@@ -86,6 +88,7 @@ export async function saveRules(rules: SafetyRules): Promise<void> {
       crossing_minutes: rules.crossingMinutes,
       buffer_minutes: rules.bufferMinutes,
       min_window_minutes: rules.minWindowMinutes,
+      wind_adjustment_enabled: rules.windAdjustmentEnabled,
     })
     .eq('id', 1)
   if (error) throw error

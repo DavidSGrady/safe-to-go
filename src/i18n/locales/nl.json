@@ -33,7 +33,11 @@
     "unsafeLine1NoNext": "Geen momenten in de voorspelling",
     "unknownTitle": "Geen live gegevens",
     "unknownSub": "We kunnen het meetstation momenteel niet bereiken. Steek niet over op basis van deze pagina — controleer ter plaatse.",
-    "stormBanner": "Westenwind: +{cm} cm meegenomen in de voorspelling",
+    "stormBanner": "Weer & wind: {cm} cm boven het astronomische getij, meegenomen in de voorspelling.",
+    "shortSafe": "vertrek voor {time}",
+    "shortCaution": "te laat om te starten",
+    "shortUnsafe": "volgende {time}",
+    "shortNone": "geen momenten",
     "staleBanner": "De laatste meting is {duration} oud — toont in plaats daarvan de DMI-voorspelling. Wees extra voorzichtig.",
     "freshFresh": "Gemeten {duration} geleden",
     "freshStale": "Meting {duration} oud — toont voorspelling"

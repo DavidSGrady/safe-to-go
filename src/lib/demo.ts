@@ -46,4 +46,5 @@ export const demoRules: SafetyRules = {
   crossingMinutes: 30,
   bufferMinutes: 10,
   minWindowMinutes: 10,
+  windAdjustmentEnabled: true,
 }

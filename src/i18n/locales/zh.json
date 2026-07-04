@@ -33,7 +33,11 @@
     "unsafeLine1NoNext": "预测中没有可通行时段",
     "unknownTitle": "暂无实时数据",
     "unknownSub": "目前无法连接测量站。请勿仅凭本页面通行——请在现场确认情况。",
-    "stormBanner": "西风：预测中已计入 +{cm} 厘米",
+    "stormBanner": "天气与风力：比天文潮位高 {cm} 厘米，已计入预测。",
+    "shortSafe": "最晚 {time} 出发",
+    "shortCaution": "出发已太晚",
+    "shortUnsafe": "下次 {time}",
+    "shortNone": "无通行时段",
     "staleBanner": "最新测量数据已是 {duration} 前的——现改为显示 DMI 预测值。请格外小心。",
     "freshFresh": "{duration}前测量",
     "freshStale": "测量数据已有 {duration}——显示预测值"

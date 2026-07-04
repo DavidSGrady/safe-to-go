@@ -33,7 +33,11 @@
     "unsafeLine1NoNext": "No hay ventanas en el pronóstico",
     "unknownTitle": "Sin datos en vivo",
     "unknownSub": "No podemos conectar con la estación de medición ahora mismo. No cruce basándose en esta página — infórmese en el lugar.",
-    "stormBanner": "Viento del oeste: +{cm} cm añadidos al pronóstico",
+    "stormBanner": "Tiempo y viento: {cm} cm por encima de la marea astronómica, incluidos en el pronóstico.",
+    "shortSafe": "salida antes de {time}",
+    "shortCaution": "demasiado tarde para salir",
+    "shortUnsafe": "próxima {time}",
+    "shortNone": "sin ventanas",
     "staleBanner": "La última medición tiene {duration} de antigüedad — se muestra en su lugar el pronóstico de DMI. Sea especialmente prudente.",
     "freshFresh": "Medido hace {duration}",
     "freshStale": "Medición con {duration} de antigüedad — muestra el pronóstico"

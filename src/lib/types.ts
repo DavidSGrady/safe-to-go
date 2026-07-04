@@ -28,6 +28,13 @@ export interface SafetyRules {
   bufferMinutes: number
   /** Windows shorter than this are not shown (minutes) — filters measurement noise */
   minWindowMinutes: number
+  /**
+   * When true, the current gap between the measured level and the
+   * astronomical tide table (wind + air-pressure surge) is carried forward
+   * and added to the forecast. When false, the forecast uses the plain
+   * astronomical tide only.
+   */
+  windAdjustmentEnabled: boolean
   updatedAt?: string
 }
 
@@ -76,8 +83,12 @@ export interface StatusResult {
   lastDepartureToday: SafeWindow | null
   /** Combined observed + adjusted forecast curve for charting */
   curve: CurvePoint[]
-  /** Storm-surge offset applied to the astronomical prediction (cm) */
+  /** Surge offset actually applied to the forecast (cm) — 0 when wind adjustment is off */
   surgeOffsetCm: number
+  /** Measured-minus-astronomical gap (cm), regardless of whether it is applied — for diagnostics */
+  rawSurgeOffsetCm: number
+  /** Whether the wind/weather surge is being folded into the forecast */
+  windAdjustmentEnabled: boolean
   /** Timestamp of the newest observation (ms epoch) */
   lastObservedAt: number | null
   /** True when the newest observation is recent enough to trust */

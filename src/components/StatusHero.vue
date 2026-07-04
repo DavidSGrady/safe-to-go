@@ -94,7 +94,11 @@ const lines = computed(() => {
   return { line1: '', line2: '' }
 })
 
-const showStormBanner = computed(() => props.status.surgeOffsetCm >= 15)
+// Show the weather/wind note only when the admin has the adjustment on and
+// it is meaningfully raising the water above the astronomical tide.
+const showWindBanner = computed(
+  () => props.status.windAdjustmentEnabled && props.status.surgeOffsetCm >= 15,
+)
 
 const freshnessTxt = computed(() => {
   if (props.status.lastObservedAt === null) return null
@@ -117,7 +121,7 @@ const freshnessTxt = computed(() => {
       <div v-if="lines.line2" class="box-l2">{{ lines.line2 }}</div>
     </div>
 
-    <p v-if="showStormBanner" class="banner">
+    <p v-if="showWindBanner" class="banner">
       {{ t('verdict.stormBanner', { cm: status.surgeOffsetCm }) }}
     </p>
     <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">

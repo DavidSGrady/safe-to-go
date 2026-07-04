@@ -22,6 +22,7 @@ const form = reactive({
   crossingMinutes: 0,
   bufferMinutes: 0,
   minWindowMinutes: 0,
+  windAdjustmentEnabled: true,
 })
 
 const saved = ref(false)
@@ -38,6 +39,7 @@ watch(
       form.crossingMinutes = r.crossingMinutes
       form.bufferMinutes = r.bufferMinutes
       form.minWindowMinutes = r.minWindowMinutes
+      form.windAdjustmentEnabled = r.windAdjustmentEnabled
     }
   },
   { immediate: true },
@@ -67,7 +69,7 @@ const health = computed(() => {
     lastReading,
     lastPrediction,
     fresh: status.value?.dataFresh ?? false,
-    surge: status.value?.surgeOffsetCm ?? 0,
+    surge: status.value?.rawSurgeOffsetCm ?? 0,
   }
 })
 
@@ -94,7 +96,14 @@ async function signOut(): Promise<void> {
 }
 
 function diff(entry: RuleChangeLogEntry): string {
-  const keys = ['safe_max_cm', 'caution_max_cm', 'crossing_minutes', 'buffer_minutes', 'min_window_minutes']
+  const keys = [
+    'safe_max_cm',
+    'caution_max_cm',
+    'crossing_minutes',
+    'buffer_minutes',
+    'min_window_minutes',
+    'wind_adjustment_enabled',
+  ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
     .map((k) => `${k}: ${entry.oldValues[k]} → ${entry.newValues[k]}`)
@@ -162,6 +171,19 @@ onMounted(async () => {
           <label for="minWindow">{{ t('admin.rules.minWindow') }}: <strong>{{ form.minWindowMinutes }}</strong></label>
           <input id="minWindow" v-model.number="form.minWindowMinutes" type="range" min="0" max="240" step="15" />
           <p class="muted">{{ t('admin.rules.minWindowHelp') }}</p>
+        </div>
+
+        <div class="field toggle-field">
+          <label class="toggle">
+            <input v-model="form.windAdjustmentEnabled" type="checkbox" />
+            <span class="toggle-text">
+              <span class="toggle-title">{{ t('admin.rules.windAdjust') }}</span>
+              <span class="toggle-state">
+                {{ form.windAdjustmentEnabled ? t('admin.rules.windAdjustOn') : t('admin.rules.windAdjustOff') }}
+              </span>
+            </span>
+          </label>
+          <p class="muted">{{ t('admin.rules.windAdjustHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>
@@ -286,6 +308,36 @@ onMounted(async () => {
 
 .field .muted {
   margin-top: 4px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.toggle-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle-title {
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.toggle-state {
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 .error {

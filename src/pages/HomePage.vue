@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
 import { isDemoMode } from '@/lib/supabase'
 import StatusHero from '@/components/StatusHero.vue'
+import StickyVerdict from '@/components/StickyVerdict.vue'
 import ReturnBanner from '@/components/ReturnBanner.vue'
 import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
@@ -15,7 +16,24 @@ const { t } = useI18n()
 const store = useStatusStore()
 const { status, rules, loading, error, now, extended } = storeToRefs(store)
 
+// Show the sticky verdict bar once the main verdict panel is scrolled past.
+const stuck = ref(false)
+const heroSentinel = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
+
+watch(heroSentinel, (el) => {
+  observer?.disconnect()
+  observer = null
+  if (el) {
+    observer = new IntersectionObserver(([entry]) => {
+      stuck.value = entry.boundingClientRect.top < 0
+    })
+    observer.observe(el)
+  }
+})
+
 onMounted(() => store.start())
+onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
@@ -33,7 +51,9 @@ onMounted(() => store.start())
     <div v-if="loading" class="card skeleton" aria-busy="true"></div>
 
     <template v-else-if="status && rules">
+      <StickyVerdict :status="status" :now="now" :visible="stuck" />
       <StatusHero :status="status" :rules="rules" :now="now" />
+      <div ref="heroSentinel" class="hero-sentinel" aria-hidden="true"></div>
       <ReturnBanner :status="status" :now="now" />
       <RoadCrossSection :status="status" :rules="rules" :now="now" />
       <WindowsList
@@ -76,6 +96,11 @@ onMounted(() => store.start())
   display: block;
   color: var(--text-muted);
   font-size: 0.82rem;
+}
+
+.hero-sentinel {
+  height: 1px;
+  margin-top: -1px;
 }
 
 .demo-banner {

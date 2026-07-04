@@ -33,7 +33,7 @@ function togglePlay(): void {
   if (offsetMin.value >= MAX_OFFSET_MIN) offsetMin.value = 0
   playing.value = true
   timer = setInterval(() => {
-    offsetMin.value = Math.min(MAX_OFFSET_MIN, offsetMin.value + 3)
+    offsetMin.value = Math.min(MAX_OFFSET_MIN, offsetMin.value + 9)
     if (offsetMin.value >= MAX_OFFSET_MIN) stop()
   }, 80)
 }
@@ -79,7 +79,6 @@ function pct(cm: number): number {
 }
 
 const roadTopPct = computed(() => pct(props.rules.cautionMaxCm))
-const limitPct = computed(() => pct(props.rules.safeMaxCm))
 const waterPct = computed(() => (displayLevel.value === null ? 0 : pct(displayLevel.value)))
 
 const basisTxt = computed(() => {
@@ -101,10 +100,6 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
         <div class="road" :style="{ height: roadTopPct + '%' }"></div>
         <div class="water" :style="{ height: waterPct + '%' }"></div>
         <div class="waterline" :style="{ bottom: waterPct + '%' }"></div>
-        <div class="limit-line" :style="{ bottom: limitPct + '%' }"></div>
-        <div class="limit-label" :style="{ bottom: limitPct + '%' }">
-          {{ t('road.limitLabel', { cm: rules.safeMaxCm }) }}
-        </div>
         <div class="road-label" :style="{ bottom: roadTopPct + '%' }">
           {{ t('road.roadLabel', { cm: rules.cautionMaxCm }) }}
         </div>
@@ -197,27 +192,6 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
   right: 0;
   border-top: 2px solid var(--accent);
   transition: bottom 0.2s ease;
-}
-
-.limit-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  border-top: 2px dashed var(--verdict-caution-accent);
-}
-
-.limit-label {
-  position: absolute;
-  right: 8px;
-  margin-bottom: 3px;
-  transform: translateY(100%);
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--verdict-caution-accent);
-  background: rgba(255, 255, 255, 0.75);
-  padding: 1px 5px;
-  border-radius: 4px;
 }
 
 .road-label {

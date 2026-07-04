@@ -33,7 +33,11 @@
     "unsafeLine1NoNext": "Aucun créneau dans la prévision",
     "unknownTitle": "Pas de données en direct",
     "unknownSub": "La station de mesure est injoignable pour le moment. Ne traversez pas sur la base de cette page — renseignez-vous sur place.",
-    "stormBanner": "Vent d'ouest : +{cm} cm ajoutés à la prévision",
+    "stormBanner": "Météo & vent : {cm} cm au-dessus de la marée astronomique, pris en compte dans la prévision.",
+    "shortSafe": "départ avant {time}",
+    "shortCaution": "trop tard pour partir",
+    "shortUnsafe": "prochain {time}",
+    "shortNone": "aucun créneau",
     "staleBanner": "La dernière mesure date de {duration} — affichage de la prévision DMI à la place. Soyez particulièrement prudent.",
     "freshFresh": "Mesuré il y a {duration}",
     "freshStale": "Mesure vieille de {duration} — affiche la prévision"

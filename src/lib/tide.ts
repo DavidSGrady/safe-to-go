@@ -141,13 +141,17 @@ export function computeStatus(
   const predict = buildPredictionCurve(predictions)
 
   // Storm-surge correction: observed minus predicted at observation time.
-  let surgeOffsetCm = 0
+  // This is the effect of wind and air pressure on top of the astronomical
+  // tide. We always measure it (for diagnostics), but only fold it into the
+  // forecast when the admin has wind adjustment enabled.
+  let rawSurgeOffsetCm = 0
   if (latest && predict) {
     const predictedAtObs = predict(latest.t)
     if (predictedAtObs !== null) {
-      surgeOffsetCm = clamp(latest.level - predictedAtObs, -MAX_SURGE_CM, MAX_SURGE_CM)
+      rawSurgeOffsetCm = clamp(latest.level - predictedAtObs, -MAX_SURGE_CM, MAX_SURGE_CM)
     }
   }
+  const surgeOffsetCm = rules.windAdjustmentEnabled ? rawSurgeOffsetCm : 0
 
   const adjusted = predict
     ? (t: number): number | null => {
@@ -209,6 +213,8 @@ export function computeStatus(
     lastDepartureToday,
     curve,
     surgeOffsetCm: Math.round(surgeOffsetCm),
+    rawSurgeOffsetCm: Math.round(rawSurgeOffsetCm),
+    windAdjustmentEnabled: rules.windAdjustmentEnabled,
     lastObservedAt: latest ? latest.t : null,
     dataFresh,
     rising,
