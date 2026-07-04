@@ -33,6 +33,7 @@
     "unsafeLine1NoNext": "预测中没有可通行时段",
     "unknownTitle": "暂无实时数据",
     "unknownSub": "目前无法连接测量站。请勿仅凭本页面通行——请在现场确认情况。",
+    "levelNow": "当前水位为 {cm} 厘米",
     "stormBanner": "天气与风力：比天文潮位高 {cm} 厘米，已计入预测。",
     "shortSafe": "最晚 {time} 出发",
     "shortCaution": "出发已太晚",

@@ -33,6 +33,7 @@
     "unsafeLine1NoNext": "Geen momenten in de voorspelling",
     "unknownTitle": "Geen live gegevens",
     "unknownSub": "We kunnen het meetstation momenteel niet bereiken. Steek niet over op basis van deze pagina — controleer ter plaatse.",
+    "levelNow": "De waterstand is nu {cm} cm",
     "stormBanner": "Weer & wind: {cm} cm boven het astronomische getij, meegenomen in de voorspelling.",
     "shortSafe": "vertrek voor {time}",
     "shortCaution": "te laat om te starten",

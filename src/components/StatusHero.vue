@@ -39,25 +39,14 @@ const title = computed(() => {
   }
 })
 
+// Simple current-water-level statement (with trend), or the unknown message
+// when we have no reading at all.
 const sub = computed(() => {
   const s = props.status
-  if (s.state === 'safe') {
-    return t(s.rising ? 'verdict.safeSubRising' : 'verdict.safeSubFalling', {
-      limit: props.rules.safeMaxCm,
-    })
-  }
-  if (s.state === 'caution' && s.currentWindow) {
-    const remainMs = s.currentWindow.end - s.currentWindow.deadline
-    return t('verdict.cautionSub', {
-      limit: props.rules.safeMaxCm,
-      time: fmtTime(s.currentWindow.end, locale.value),
-      duration: durationTxt(remainMs),
-    })
-  }
-  if (s.state === 'unsafe') {
-    return t('verdict.unsafeSub', { flood: props.rules.cautionMaxCm })
-  }
-  return t('verdict.unknownSub')
+  if (s.currentLevelCm === null) return t('verdict.unknownSub')
+  const base = t('verdict.levelNow', { cm: s.currentLevelCm })
+  if (s.rising === null) return base
+  return `${base} · ${s.rising ? t('common.rising') : t('common.falling')}`
 })
 
 /** The two-line countdown box: what to do and when. */
@@ -94,12 +83,6 @@ const lines = computed(() => {
   return { line1: '', line2: '' }
 })
 
-// Show the weather/wind note only when the admin has the adjustment on and
-// it is meaningfully raising the water above the astronomical tide.
-const showWindBanner = computed(
-  () => props.status.windAdjustmentEnabled && props.status.surgeOffsetCm >= 15,
-)
-
 const freshnessTxt = computed(() => {
   if (props.status.lastObservedAt === null) return null
   const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
@@ -121,9 +104,6 @@ const freshnessTxt = computed(() => {
       <div v-if="lines.line2" class="box-l2">{{ lines.line2 }}</div>
     </div>
 
-    <p v-if="showWindBanner" class="banner">
-      {{ t('verdict.stormBanner', { cm: status.surgeOffsetCm }) }}
-    </p>
     <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">
       {{
         t('verdict.staleBanner', {

@@ -33,6 +33,7 @@
     "unsafeLine1NoNext": "Aucun créneau dans la prévision",
     "unknownTitle": "Pas de données en direct",
     "unknownSub": "La station de mesure est injoignable pour le moment. Ne traversez pas sur la base de cette page — renseignez-vous sur place.",
+    "levelNow": "Le niveau d'eau est de {cm} cm actuellement",
     "stormBanner": "Météo & vent : {cm} cm au-dessus de la marée astronomique, pris en compte dans la prévision.",
     "shortSafe": "départ avant {time}",
     "shortCaution": "trop tard pour partir",

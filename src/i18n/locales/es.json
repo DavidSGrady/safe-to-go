@@ -33,6 +33,7 @@
     "unsafeLine1NoNext": "No hay ventanas en el pronóstico",
     "unknownTitle": "Sin datos en vivo",
     "unknownSub": "No podemos conectar con la estación de medición ahora mismo. No cruce basándose en esta página — infórmese en el lugar.",
+    "levelNow": "El nivel del agua es de {cm} cm ahora mismo",
     "stormBanner": "Tiempo y viento: {cm} cm por encima de la marea astronómica, incluidos en el pronóstico.",
     "shortSafe": "salida antes de {time}",
     "shortCaution": "demasiado tarde para salir",

@@ -33,6 +33,7 @@
     "unsafeLine1NoNext": "Ingen vinduer i prognosen",
     "unknownTitle": "Ingen live-data",
     "unknownSub": "Vi kan ikke nå målestationen lige nu. Kryds ikke ud fra denne side — undersøg forholdene lokalt.",
+    "levelNow": "Vandstanden er {cm} cm lige nu",
     "stormBanner": "Vejr og vind: {cm} cm over den astronomiske tidevandsstand er indregnet i prognosen.",
     "shortSafe": "afgang senest {time}",
     "shortCaution": "for sent at starte",
