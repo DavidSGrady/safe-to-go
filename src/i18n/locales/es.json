@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "¿Se puede cruzar?",
+    "subtitle": "Cruce hacia Mandø"
+  },
+  "status": {
+    "safe": "Seguro para cruzar",
+    "caution": "Precaución",
+    "unsafe": "No cruce",
+    "unknown": "Sin datos en vivo",
+    "safeDesc": "El agua está lo bastante baja para cruzar el camino elevado hacia Mandø.",
+    "cautionDesc": "El agua está cerca del límite o la marea está subiendo. Cruce solo si conoce la ruta y compruebe las condiciones in situ.",
+    "unsafeDesc": "El camino está inundado o va a inundarse. Cruzar ahora es peligroso — espere a la próxima marea baja.",
+    "unknownDesc": "No podemos conectar con la estación de medición ahora mismo. No cruce basándose en esta página — infórmese en el lugar.",
+    "safeUntil": "Seguro hasta aprox. {time}",
+    "hoursMinutesLeft": "quedan aprox. {hours} h {minutes} min",
+    "minutesLeft": "quedan aprox. {minutes} min",
+    "currentLevel": "Nivel del agua ahora",
+    "aboveNormal": "{cm} cm por encima de lo normal (marea meteorológica)",
+    "belowNormal": "{cm} cm por debajo de lo normal",
+    "tideRising": "La marea está subiendo",
+    "tideFalling": "La marea está bajando",
+    "updated": "Medido {time}",
+    "stale": "La última medición es antigua — considere las condiciones como desconocidas."
+  },
+  "windows": {
+    "title": "¿Cuándo puedo cruzar?",
+    "intro": "El camino a Mandø solo es transitable con el agua baja. Próximas ventanas:",
+    "nowOpen": "Abierta ahora",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "none": "No hay ventanas seguras en las próximas 48 horas. Normalmente significa que una tormenta está empujando el agua — vuelva a consultar más tarde.",
+    "from": "desde las {time}",
+    "until": "hasta las {time}",
+    "duration": "{hours} h {minutes} min"
+  },
+  "chart": {
+    "title": "Nivel del agua — últimas 6 h y próximas 30 h",
+    "observed": "Medido",
+    "forecast": "Previsto",
+    "now": "Ahora",
+    "safeLimit": "Límite seguro",
+    "unsafeLimit": "Límite de peligro",
+    "unit": "cm",
+    "tableView": "Ver como tabla",
+    "time": "Hora",
+    "level": "Nivel (cm)"
+  },
+  "explainer": {
+    "title": "¿Nunca ha visto las mareas?",
+    "whatTitle": "El mar se mueve dos veces al día",
+    "whatBody": "Dos veces al día el mar sube (pleamar) y baja (bajamar), atraído por la luna. En Mandø la diferencia es de unos 2 metros — suficiente para cubrir por completo la carretera con la marea alta.",
+    "roadTitle": "La carretera a veces está bajo el agua",
+    "roadBody": "A Mandø se llega por el Låningsvej, un camino de grava sobre el fondo marino. Con marea baja es una carretera normal; con marea alta desaparece bajo el mar. Es normal y ocurre dos veces al día.",
+    "windTitle": "El viento lo cambia todo",
+    "windBody": "Un viento fuerte del oeste puede empujar el agua mucho más arriba de lo que dice la tabla de mareas y mantener la carretera inundada todo el día. Por eso esta página usa mediciones en vivo, no solo la tabla de mareas.",
+    "ruleTitle": "La regla de oro",
+    "ruleBody": "Nunca empiece a cruzar cuando el agua esté subiendo. Si tiene dudas, espere a la próxima ventana o súbase al bus-tractor del Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "Esta página es solo orientativa, no un servicio oficial de seguridad. Siga siempre la señalización y los avisos de las autoridades. Cruza bajo su propia responsabilidad.",
+    "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Modo demo — datos de marea sintéticos, no mediciones reales."
+  },
+  "login": {
+    "title": "Acceso admin",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "error": "Error al iniciar sesión. Compruebe el correo y la contraseña.",
+    "notAdmin": "Esta cuenta no tiene acceso de administrador."
+  }
+}

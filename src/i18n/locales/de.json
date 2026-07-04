@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "Kann man rüber?",
+    "subtitle": "Überfahrt nach Mandø"
+  },
+  "status": {
+    "safe": "Überquerung sicher",
+    "caution": "Vorsicht",
+    "unsafe": "Nicht überqueren",
+    "unknown": "Keine Live-Daten",
+    "safeDesc": "Das Wasser ist niedrig genug, um den Damm nach Mandø zu überqueren.",
+    "cautionDesc": "Das Wasser ist nahe an der Grenze oder die Flut kommt. Nur überqueren, wenn Sie die Strecke kennen — prüfen Sie die Lage vor Ort.",
+    "unsafeDesc": "Der Damm ist überflutet oder wird gleich überflutet. Eine Überquerung ist jetzt gefährlich — warten Sie auf die nächste Ebbe.",
+    "unknownDesc": "Die Messstation ist derzeit nicht erreichbar. Überqueren Sie nicht aufgrund dieser Seite — informieren Sie sich vor Ort.",
+    "safeUntil": "Sicher bis ca. {time}",
+    "hoursMinutesLeft": "noch ca. {hours} Std. {minutes} Min.",
+    "minutesLeft": "noch ca. {minutes} Min.",
+    "currentLevel": "Wasserstand jetzt",
+    "aboveNormal": "{cm} cm über normal (Windstau)",
+    "belowNormal": "{cm} cm unter normal",
+    "tideRising": "Die Flut kommt (Wasser steigt)",
+    "tideFalling": "Das Wasser läuft ab (Ebbe)",
+    "updated": "Gemessen {time}",
+    "stale": "Die letzte Messung ist alt — Bedingungen als unbekannt behandeln."
+  },
+  "windows": {
+    "title": "Wann kann ich rüber?",
+    "intro": "Der Weg nach Mandø ist nur bei Niedrigwasser passierbar. Die nächsten Zeitfenster:",
+    "nowOpen": "Jetzt offen",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "none": "Keine sicheren Zeitfenster in den nächsten 48 Stunden. Meist drückt dann ein Sturm das Wasser hoch — später erneut prüfen.",
+    "from": "ab {time}",
+    "until": "bis {time}",
+    "duration": "{hours} Std. {minutes} Min."
+  },
+  "chart": {
+    "title": "Wasserstand — letzte 6 Std. und nächste 30 Std.",
+    "observed": "Gemessen",
+    "forecast": "Erwartet",
+    "now": "Jetzt",
+    "safeLimit": "Sichere Grenze",
+    "unsafeLimit": "Gefahrengrenze",
+    "unit": "cm",
+    "tableView": "Als Tabelle anzeigen",
+    "time": "Zeit",
+    "level": "Stand (cm)"
+  },
+  "explainer": {
+    "title": "Noch nie Gezeiten erlebt?",
+    "whatTitle": "Das Meer bewegt sich zweimal am Tag",
+    "whatBody": "Zweimal täglich steigt das Meer (Flut) und fällt wieder (Ebbe), gezogen vom Mond. Bei Mandø beträgt der Unterschied etwa 2 Meter — genug, um die Straße bei Flut vollständig zu bedecken.",
+    "roadTitle": "Die Straße liegt manchmal unter Wasser",
+    "roadBody": "Nach Mandø gelangt man über den Låningsvej, einen Schotterdamm über den Meeresboden. Bei Ebbe ist er eine normale Straße; bei Flut verschwindet er im Meer. Das ist normal und passiert zweimal am Tag.",
+    "windTitle": "Der Wind ändert alles",
+    "windBody": "Starker Westwind kann das Wasser viel höher drücken, als die Gezeitentabelle angibt, und die Straße den ganzen Tag überflutet halten. Deshalb nutzt diese Seite Live-Messungen, nicht nur die Gezeitentabelle.",
+    "ruleTitle": "Die goldene Regel",
+    "ruleBody": "Beginnen Sie die Überquerung niemals bei steigendem Wasser. Im Zweifel warten Sie auf das nächste Zeitfenster oder fahren Sie mit dem Traktorbus vom Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "Diese Seite dient nur zur Orientierung und ist kein offizieller Sicherheitsdienst. Beachten Sie stets die Beschilderung und Warnungen der Behörden. Überquerung auf eigene Verantwortung.",
+    "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Demo-Modus — synthetische Gezeitendaten, keine echten Messungen."
+  },
+  "login": {
+    "title": "Admin-Anmeldung",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "error": "Anmeldung fehlgeschlagen. E-Mail und Passwort prüfen.",
+    "notAdmin": "Dieses Konto hat keinen Admin-Zugang."
+  }
+}

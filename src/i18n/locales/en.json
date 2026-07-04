@@ -1,0 +1,115 @@
+{
+  "app": {
+    "title": "Safe to Go?",
+    "subtitle": "Crossing to Mandø"
+  },
+  "status": {
+    "safe": "Safe to cross",
+    "caution": "Be careful",
+    "unsafe": "Do not cross",
+    "unknown": "No live data",
+    "safeDesc": "The water is low enough to cross the causeway to Mandø.",
+    "cautionDesc": "The water is close to the limit, or the tide is coming in. Only cross if you know the route and check conditions on site.",
+    "unsafeDesc": "The causeway is flooded or about to flood. Crossing now is dangerous — wait for the next low tide.",
+    "unknownDesc": "We cannot reach the measuring station right now. Do not cross based on this page — check locally.",
+    "safeUntil": "Safe until about {time}",
+    "hoursMinutesLeft": "about {hours} h {minutes} min left",
+    "minutesLeft": "about {minutes} min left",
+    "currentLevel": "Water level right now",
+    "aboveNormal": "{cm} cm above normal (storm surge)",
+    "belowNormal": "{cm} cm below normal",
+    "tideRising": "Tide is coming in (water rising)",
+    "tideFalling": "Tide is going out (water falling)",
+    "updated": "Measured {time}",
+    "stale": "The latest measurement is old — treat conditions as unknown."
+  },
+  "windows": {
+    "title": "When can I cross?",
+    "intro": "The road to Mandø is only passable at low water. These are the next windows:",
+    "nowOpen": "Open now",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "none": "No safe crossing windows in the next 48 hours. This usually means a storm is pushing the water up — check again later.",
+    "from": "from {time}",
+    "until": "until {time}",
+    "duration": "{hours} h {minutes} min"
+  },
+  "chart": {
+    "title": "Water level — past 6 h and next 30 h",
+    "observed": "Measured",
+    "forecast": "Expected",
+    "now": "Now",
+    "safeLimit": "Safe limit",
+    "unsafeLimit": "Danger limit",
+    "unit": "cm",
+    "tableView": "Show as table",
+    "time": "Time",
+    "level": "Level (cm)"
+  },
+  "explainer": {
+    "title": "Never seen a tide before?",
+    "whatTitle": "The sea moves twice a day",
+    "whatBody": "Twice every day the sea rises (high tide) and falls (low tide), pulled by the moon. At Mandø the difference is about 2 metres — enough to completely cover the road at high tide.",
+    "roadTitle": "The road is sometimes under water",
+    "roadBody": "Mandø is reached by the Låningsvej, a gravel causeway across the seabed. At low tide it is a normal road; at high tide it disappears under the sea. This is normal and happens twice a day.",
+    "windTitle": "Wind changes everything",
+    "windBody": "Strong westerly wind can push the water much higher than the tide table says, and keep the road flooded all day. That is why this page uses live measurements, not just the tide table.",
+    "ruleTitle": "The golden rule",
+    "ruleBody": "Never start crossing when the water is rising. If you are unsure, wait for the next window or join a guided tractor bus tour from the Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "This page is guidance only, not an official safety service. Always follow local signage and warnings from authorities. You cross at your own responsibility.",
+    "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Demo mode — synthetic tide data, not real measurements."
+  },
+  "login": {
+    "title": "Admin sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Sign in failed. Check your email and password.",
+    "notAdmin": "This account has no admin access."
+  },
+  "admin": {
+    "title": "Safety settings",
+    "signOut": "Sign out",
+    "backToSite": "← Back to site",
+    "rules": {
+      "title": "Thresholds",
+      "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the Mandø station.",
+      "safeMax": "Safe below (cm)",
+      "safeMaxHelp": "At or below this water level the crossing is shown as SAFE (green).",
+      "cautionMax": "Danger above (cm)",
+      "cautionMaxHelp": "Above this water level the crossing is shown as DO NOT CROSS (red). Between the two values it shows amber.",
+      "margin": "Safety margin (minutes)",
+      "marginHelp": "Trimmed off both ends of every safe window: the water must have been below the limit this long before a window opens, and visitors are warned this long before it floods again.",
+      "minWindow": "Minimum window (minutes)",
+      "minWindowHelp": "Windows shorter than this are hidden — too short to safely cross and return.",
+      "save": "Save changes",
+      "saved": "Saved.",
+      "invalid": "Danger limit must be at or above the safe limit.",
+      "preview": "Preview with current data",
+      "previewState": "With these values the site would now show: {state}"
+    },
+    "health": {
+      "title": "Data health",
+      "lastReading": "Latest measurement",
+      "lastPrediction": "Predictions loaded until",
+      "surge": "Current surge offset",
+      "surgeHelp": "Difference between the measured level and the astronomical tide table — wind pushing water in (+) or out (−).",
+      "ok": "OK",
+      "stale": "STALE",
+      "noData": "No data — has the fetch job run?"
+    },
+    "log": {
+      "title": "Change history",
+      "when": "When",
+      "who": "Who",
+      "change": "Change",
+      "empty": "No changes yet."
+    }
+  }
+}

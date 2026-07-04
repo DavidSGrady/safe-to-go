@@ -1,0 +1,115 @@
+{
+  "app": {
+    "title": "Kan man køre over?",
+    "subtitle": "Overfarten til Mandø"
+  },
+  "status": {
+    "safe": "Sikkert at krydse",
+    "caution": "Vær forsigtig",
+    "unsafe": "Kryds ikke",
+    "unknown": "Ingen live-data",
+    "safeDesc": "Vandstanden er lav nok til at krydse Låningsvejen til Mandø.",
+    "cautionDesc": "Vandet er tæt på grænsen, eller tidevandet er på vej ind. Kryds kun, hvis du kender ruten, og tjek forholdene på stedet.",
+    "unsafeDesc": "Låningsvejen er oversvømmet eller oversvømmes snart. Det er farligt at krydse nu — vent på næste lavvande.",
+    "unknownDesc": "Vi kan ikke nå målestationen lige nu. Kryds ikke ud fra denne side — undersøg forholdene lokalt.",
+    "safeUntil": "Sikkert til ca. {time}",
+    "hoursMinutesLeft": "ca. {hours} t {minutes} min tilbage",
+    "minutesLeft": "ca. {minutes} min tilbage",
+    "currentLevel": "Vandstand lige nu",
+    "aboveNormal": "{cm} cm over normalen (forhøjet vandstand)",
+    "belowNormal": "{cm} cm under normalen",
+    "tideRising": "Tidevandet er på vej ind (vandet stiger)",
+    "tideFalling": "Tidevandet er på vej ud (vandet falder)",
+    "updated": "Målt {time}",
+    "stale": "Seneste måling er gammel — betragt forholdene som ukendte."
+  },
+  "windows": {
+    "title": "Hvornår kan jeg krydse?",
+    "intro": "Vejen til Mandø kan kun passeres ved lav vandstand. Her er de næste tidsvinduer:",
+    "nowOpen": "Åbent nu",
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "none": "Ingen sikre tidsvinduer de næste 48 timer. Det betyder normalt, at en storm presser vandet op — tjek igen senere.",
+    "from": "fra {time}",
+    "until": "til {time}",
+    "duration": "{hours} t {minutes} min"
+  },
+  "chart": {
+    "title": "Vandstand — seneste 6 t og næste 30 t",
+    "observed": "Målt",
+    "forecast": "Forventet",
+    "now": "Nu",
+    "safeLimit": "Sikker grænse",
+    "unsafeLimit": "Faregrænse",
+    "unit": "cm",
+    "tableView": "Vis som tabel",
+    "time": "Tidspunkt",
+    "level": "Vandstand (cm)"
+  },
+  "explainer": {
+    "title": "Aldrig oplevet tidevand før?",
+    "whatTitle": "Havet bevæger sig to gange i døgnet",
+    "whatBody": "To gange i døgnet stiger havet (højvande) og falder igen (lavvande), trukket af månen. Ved Mandø er forskellen omkring 2 meter — nok til helt at dække vejen ved højvande.",
+    "roadTitle": "Vejen er nogle gange under vand",
+    "roadBody": "Man kommer til Mandø ad Låningsvejen, en grusvej hen over havbunden. Ved lavvande er det en almindelig vej; ved højvande forsvinder den under havet. Det er helt normalt og sker to gange i døgnet.",
+    "windTitle": "Vinden ændrer alt",
+    "windBody": "Kraftig vestenvind kan presse vandet meget højere op, end tidevandstabellen siger, og holde vejen oversvømmet hele dagen. Derfor bruger denne side live-målinger og ikke kun tidevandstabellen.",
+    "ruleTitle": "Den gyldne regel",
+    "ruleBody": "Begynd aldrig at krydse, mens vandet stiger. Er du i tvivl, så vent på næste vindue eller tag med traktorbussen fra Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "Denne side er kun vejledende og ikke en officiel sikkerhedstjeneste. Følg altid skiltning og myndighedernes varsler. Overfart sker på eget ansvar.",
+    "source": "Live-data: DMI & Kystdirektoratet, målestation ved Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Demotilstand — syntetiske tidevandsdata, ikke rigtige målinger."
+  },
+  "login": {
+    "title": "Admin-login",
+    "email": "E-mail",
+    "password": "Adgangskode",
+    "submit": "Log ind",
+    "error": "Login mislykkedes. Tjek e-mail og adgangskode.",
+    "notAdmin": "Denne konto har ikke admin-adgang."
+  },
+  "admin": {
+    "title": "Sikkerhedsindstillinger",
+    "signOut": "Log ud",
+    "backToSite": "← Tilbage til siden",
+    "rules": {
+      "title": "Grænseværdier",
+      "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved stationen på Mandø.",
+      "safeMax": "Sikkert under (cm)",
+      "safeMaxHelp": "Ved eller under denne vandstand vises overfarten som SIKKER (grøn).",
+      "cautionMax": "Farligt over (cm)",
+      "cautionMaxHelp": "Over denne vandstand vises KRYDS IKKE (rød). Mellem de to værdier vises gult.",
+      "margin": "Sikkerhedsmargin (minutter)",
+      "marginHelp": "Trækkes fra begge ender af hvert sikkert vindue: Vandet skal have været under grænsen så længe, før et vindue åbner, og besøgende advares så længe, før det oversvømmes igen.",
+      "minWindow": "Minimumsvindue (minutter)",
+      "minWindowHelp": "Vinduer kortere end dette skjules — for kort tid til sikkert at krydse og komme tilbage.",
+      "save": "Gem ændringer",
+      "saved": "Gemt.",
+      "invalid": "Faregrænsen skal være mindst lige så høj som den sikre grænse.",
+      "preview": "Forhåndsvisning med aktuelle data",
+      "previewState": "Med disse værdier ville siden lige nu vise: {state}"
+    },
+    "health": {
+      "title": "Datastatus",
+      "lastReading": "Seneste måling",
+      "lastPrediction": "Forudsigelser indlæst frem til",
+      "surge": "Aktuel vindstuvning",
+      "surgeHelp": "Forskellen mellem den målte vandstand og den astronomiske tidevandstabel — vinden presser vand ind (+) eller ud (−).",
+      "ok": "OK",
+      "stale": "FORÆLDET",
+      "noData": "Ingen data — er hentejobbet kørt?"
+    },
+    "log": {
+      "title": "Ændringshistorik",
+      "when": "Hvornår",
+      "who": "Hvem",
+      "change": "Ændring",
+      "empty": "Ingen ændringer endnu."
+    }
+  }
+}

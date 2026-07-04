@@ -1,0 +1,12 @@
+{
+  "name": "Safe to Go — Mandø",
+  "short_name": "Mandø Tide",
+  "description": "Is it safe to cross to Mandø right now? Live water level and tide windows for the causeway.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f9f7",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

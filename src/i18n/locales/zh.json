@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "现在能过去吗？",
+    "subtitle": "前往曼德岛（Mandø）"
+  },
+  "status": {
+    "safe": "可以安全通行",
+    "caution": "请小心",
+    "unsafe": "禁止通行",
+    "unknown": "暂无实时数据",
+    "safeDesc": "目前水位足够低，可以通过堤道前往曼德岛。",
+    "cautionDesc": "水位接近警戒线，或潮水正在上涨。只有熟悉路线时才可通行，并请在现场确认情况。",
+    "unsafeDesc": "堤道已被淹没或即将被淹没。现在通行非常危险 — 请等待下一次退潮。",
+    "unknownDesc": "目前无法连接测量站。请勿仅凭本页面通行 — 请在现场确认情况。",
+    "safeUntil": "大约安全至 {time}",
+    "hoursMinutesLeft": "剩余约 {hours} 小时 {minutes} 分钟",
+    "minutesLeft": "剩余约 {minutes} 分钟",
+    "currentLevel": "当前水位",
+    "aboveNormal": "高于正常水位 {cm} 厘米（风暴增水）",
+    "belowNormal": "低于正常水位 {cm} 厘米",
+    "tideRising": "正在涨潮（水位上升）",
+    "tideFalling": "正在退潮（水位下降）",
+    "updated": "测量时间 {time}",
+    "stale": "最新测量数据已过时 — 请视情况为未知。"
+  },
+  "windows": {
+    "title": "什么时候可以通行？",
+    "intro": "前往曼德岛的道路只有在低水位时才能通行。接下来的通行时段：",
+    "nowOpen": "现在开放",
+    "today": "今天",
+    "tomorrow": "明天",
+    "none": "未来 48 小时内没有安全通行时段。这通常意味着风暴正在推高水位 — 请稍后再查看。",
+    "from": "从 {time} 开始",
+    "until": "至 {time}",
+    "duration": "{hours} 小时 {minutes} 分钟"
+  },
+  "chart": {
+    "title": "水位 — 过去 6 小时与未来 30 小时",
+    "observed": "实测",
+    "forecast": "预测",
+    "now": "现在",
+    "safeLimit": "安全线",
+    "unsafeLimit": "危险线",
+    "unit": "厘米",
+    "tableView": "以表格显示",
+    "time": "时间",
+    "level": "水位（厘米）"
+  },
+  "explainer": {
+    "title": "第一次接触潮汐？",
+    "whatTitle": "大海每天涨落两次",
+    "whatBody": "在月球引力作用下，大海每天涨潮和退潮各两次。在曼德岛，潮差约为 2 米 — 涨潮时足以完全淹没道路。",
+    "roadTitle": "道路有时会被海水淹没",
+    "roadBody": "前往曼德岛需经过 Låningsvej，一条铺设在海床上的碎石堤道。退潮时它是一条普通道路；涨潮时它会消失在海面之下。这是正常现象，每天发生两次。",
+    "windTitle": "风会改变一切",
+    "windBody": "强劲的西风会把水位推得比潮汐表显示的高得多，甚至让道路整天被淹。因此本页面使用实时测量数据，而不仅仅是潮汐表。",
+    "ruleTitle": "黄金法则",
+    "ruleBody": "涨潮时切勿开始通行。如果不确定，请等待下一个通行时段，或从瓦登海中心（Vadehavscentret）乘坐拖拉机巴士。"
+  },
+  "footer": {
+    "disclaimer": "本页面仅供参考，并非官方安全服务。请务必遵守现场标志和有关部门的警告。通行风险自负。",
+    "source": "实时数据：丹麦气象局（DMI）与丹麦海岸管理局，曼德岛（Mandø）测量站。",
+    "admin": "管理"
+  },
+  "demo": {
+    "banner": "演示模式 — 显示的是模拟潮汐数据，并非真实测量。"
+  },
+  "login": {
+    "title": "管理员登录",
+    "email": "邮箱",
+    "password": "密码",
+    "submit": "登录",
+    "error": "登录失败。请检查邮箱和密码。",
+    "notAdmin": "此账户没有管理员权限。"
+  }
+}

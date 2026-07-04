@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "Kun je oversteken?",
+    "subtitle": "Oversteek naar Mandø"
+  },
+  "status": {
+    "safe": "Veilig om over te steken",
+    "caution": "Wees voorzichtig",
+    "unsafe": "Niet oversteken",
+    "unknown": "Geen live gegevens",
+    "safeDesc": "Het water staat laag genoeg om de dam naar Mandø over te steken.",
+    "cautionDesc": "Het water zit dicht bij de grens, of de vloed komt op. Steek alleen over als u de route kent en controleer de situatie ter plaatse.",
+    "unsafeDesc": "De dam staat onder water of overstroomt binnenkort. Oversteken is nu gevaarlijk — wacht op het volgende laagwater.",
+    "unknownDesc": "We kunnen het meetstation momenteel niet bereiken. Steek niet over op basis van deze pagina — controleer ter plaatse.",
+    "safeUntil": "Veilig tot ongeveer {time}",
+    "hoursMinutesLeft": "nog ongeveer {hours} u {minutes} min",
+    "minutesLeft": "nog ongeveer {minutes} min",
+    "currentLevel": "Waterstand nu",
+    "aboveNormal": "{cm} cm boven normaal (opstuwing)",
+    "belowNormal": "{cm} cm onder normaal",
+    "tideRising": "De vloed komt op (water stijgt)",
+    "tideFalling": "Het water zakt (eb)",
+    "updated": "Gemeten {time}",
+    "stale": "De laatste meting is oud — beschouw de omstandigheden als onbekend."
+  },
+  "windows": {
+    "title": "Wanneer kan ik oversteken?",
+    "intro": "De weg naar Mandø is alleen begaanbaar bij laagwater. De volgende mogelijkheden:",
+    "nowOpen": "Nu open",
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "none": "Geen veilige oversteekmomenten in de komende 48 uur. Meestal stuwt een storm dan het water op — kijk later opnieuw.",
+    "from": "vanaf {time}",
+    "until": "tot {time}",
+    "duration": "{hours} u {minutes} min"
+  },
+  "chart": {
+    "title": "Waterstand — afgelopen 6 u en komende 30 u",
+    "observed": "Gemeten",
+    "forecast": "Verwacht",
+    "now": "Nu",
+    "safeLimit": "Veilige grens",
+    "unsafeLimit": "Gevarengrens",
+    "unit": "cm",
+    "tableView": "Toon als tabel",
+    "time": "Tijd",
+    "level": "Stand (cm)"
+  },
+  "explainer": {
+    "title": "Nooit eerder getijden gezien?",
+    "whatTitle": "De zee beweegt twee keer per dag",
+    "whatBody": "Twee keer per dag stijgt de zee (vloed) en zakt weer (eb), aangetrokken door de maan. Bij Mandø is het verschil ongeveer 2 meter — genoeg om de weg bij vloed volledig te bedekken.",
+    "roadTitle": "De weg staat soms onder water",
+    "roadBody": "Mandø bereik je via de Låningsvej, een gravel dam over de zeebodem. Bij eb is het een gewone weg; bij vloed verdwijnt hij onder zee. Dat is normaal en gebeurt twee keer per dag.",
+    "windTitle": "De wind verandert alles",
+    "windBody": "Sterke westenwind kan het water veel hoger opstuwen dan de getijdentabel aangeeft en de weg de hele dag onder water houden. Daarom gebruikt deze pagina live metingen, niet alleen de getijdentabel.",
+    "ruleTitle": "De gouden regel",
+    "ruleBody": "Begin nooit met oversteken als het water stijgt. Twijfelt u, wacht dan op het volgende moment of ga mee met de tractorbus vanaf het Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "Deze pagina is alleen een hulpmiddel, geen officiële veiligheidsdienst. Volg altijd de borden en waarschuwingen van de autoriteiten. Oversteken is op eigen verantwoordelijkheid.",
+    "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Demomodus — synthetische getijdengegevens, geen echte metingen."
+  },
+  "login": {
+    "title": "Admin inloggen",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "submit": "Inloggen",
+    "error": "Inloggen mislukt. Controleer e-mail en wachtwoord.",
+    "notAdmin": "Dit account heeft geen admin-toegang."
+  }
+}

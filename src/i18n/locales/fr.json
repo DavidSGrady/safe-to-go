@@ -1,0 +1,76 @@
+{
+  "app": {
+    "title": "Peut-on traverser ?",
+    "subtitle": "Traversée vers Mandø"
+  },
+  "status": {
+    "safe": "Traversée sûre",
+    "caution": "Prudence",
+    "unsafe": "Ne traversez pas",
+    "unknown": "Pas de données en direct",
+    "safeDesc": "L'eau est assez basse pour traverser la digue vers Mandø.",
+    "cautionDesc": "L'eau est proche de la limite, ou la marée monte. Ne traversez que si vous connaissez l'itinéraire et vérifiez les conditions sur place.",
+    "unsafeDesc": "La digue est inondée ou va l'être. Traverser maintenant est dangereux — attendez la prochaine marée basse.",
+    "unknownDesc": "La station de mesure est injoignable pour le moment. Ne traversez pas sur la base de cette page — renseignez-vous sur place.",
+    "safeUntil": "Sûr jusqu'à environ {time}",
+    "hoursMinutesLeft": "environ {hours} h {minutes} min restantes",
+    "minutesLeft": "environ {minutes} min restantes",
+    "currentLevel": "Niveau d'eau actuel",
+    "aboveNormal": "{cm} cm au-dessus de la normale (surcote)",
+    "belowNormal": "{cm} cm en dessous de la normale",
+    "tideRising": "La marée monte (l'eau monte)",
+    "tideFalling": "La marée descend (l'eau baisse)",
+    "updated": "Mesuré {time}",
+    "stale": "La dernière mesure est ancienne — considérez les conditions comme inconnues."
+  },
+  "windows": {
+    "title": "Quand puis-je traverser ?",
+    "intro": "La route vers Mandø n'est praticable qu'à marée basse. Voici les prochains créneaux :",
+    "nowOpen": "Ouvert maintenant",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "none": "Aucun créneau sûr dans les 48 prochaines heures. En général, une tempête pousse l'eau vers la côte — revenez plus tard.",
+    "from": "à partir de {time}",
+    "until": "jusqu'à {time}",
+    "duration": "{hours} h {minutes} min"
+  },
+  "chart": {
+    "title": "Niveau d'eau — 6 dernières h et 30 prochaines h",
+    "observed": "Mesuré",
+    "forecast": "Prévu",
+    "now": "Maintenant",
+    "safeLimit": "Limite sûre",
+    "unsafeLimit": "Limite de danger",
+    "unit": "cm",
+    "tableView": "Afficher en tableau",
+    "time": "Heure",
+    "level": "Niveau (cm)"
+  },
+  "explainer": {
+    "title": "Jamais vu de marée ?",
+    "whatTitle": "La mer bouge deux fois par jour",
+    "whatBody": "Deux fois par jour, la mer monte (marée haute) puis redescend (marée basse), attirée par la lune. À Mandø, la différence est d'environ 2 mètres — assez pour recouvrir entièrement la route à marée haute.",
+    "roadTitle": "La route est parfois sous l'eau",
+    "roadBody": "On accède à Mandø par le Låningsvej, une digue de gravier posée sur le fond marin. À marée basse, c'est une route normale ; à marée haute, elle disparaît sous la mer. C'est normal et cela arrive deux fois par jour.",
+    "windTitle": "Le vent change tout",
+    "windBody": "Un fort vent d'ouest peut pousser l'eau bien plus haut que ne l'indique l'annuaire des marées et garder la route inondée toute la journée. C'est pourquoi cette page utilise des mesures en direct, pas seulement l'annuaire des marées.",
+    "ruleTitle": "La règle d'or",
+    "ruleBody": "Ne commencez jamais la traversée quand l'eau monte. En cas de doute, attendez le prochain créneau ou prenez le bus-tracteur du Vadehavscentret."
+  },
+  "footer": {
+    "disclaimer": "Cette page est indicative et ne constitue pas un service de sécurité officiel. Respectez toujours la signalisation et les avertissements des autorités. Vous traversez sous votre propre responsabilité.",
+    "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de Mandø.",
+    "admin": "Admin"
+  },
+  "demo": {
+    "banner": "Mode démo — données de marée synthétiques, pas de vraies mesures."
+  },
+  "login": {
+    "title": "Connexion admin",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "error": "Échec de la connexion. Vérifiez l'e-mail et le mot de passe.",
+    "notAdmin": "Ce compte n'a pas d'accès admin."
+  }
+}
