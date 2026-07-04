@@ -1,4 +1,4 @@
-import type { Prediction, Reading, SafetyRules } from './types'
+import type { ForecastPoint, Prediction, Reading, SafetyRules } from './types'
 
 /**
  * Synthetic Wadden Sea tide for previewing the app without a backend.
@@ -38,6 +38,22 @@ export function demoPredictions(now: number): Prediction[] {
     })
   }
   return predictions
+}
+
+/**
+ * Stand-in for DMI's DKSS forecast: the astronomical tide plus the same
+ * surge that shows up in the observations, so it behaves like a real
+ * weather-inclusive forecast (distinct from the pure astronomical curve).
+ */
+export function demoForecast(now: number): ForecastPoint[] {
+  const points: ForecastPoint[] = []
+  for (let t = now - 2 * 60 * 60 * 1000; t <= now + 5 * 24 * 60 * 60 * 1000; t += 60 * 60 * 1000) {
+    points.push({
+      forecastAt: new Date(t).toISOString(),
+      levelCm: Math.round(astronomical(t) + surge(t)),
+    })
+  }
+  return points
 }
 
 export const demoRules: SafetyRules = {

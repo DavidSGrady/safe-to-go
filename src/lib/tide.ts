@@ -2,6 +2,7 @@ import { startOfNextLocalDay } from './format'
 import type {
   ConfidenceTier,
   CurvePoint,
+  ForecastPoint,
   Prediction,
   Reading,
   SafeWindow,
@@ -110,10 +111,14 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
 /**
  * Compute the full safety status from raw data.
  *
- * The astronomical prediction is corrected by the current storm-surge offset
- * (latest observation minus prediction at the same moment), because wind
- * setup in the Wadden Sea routinely shifts the real level tens of cm from
- * the astronomical tide.
+ * The forecast comes from two DMI sources, chosen by the admin's wind toggle:
+ *   - windAdjustmentEnabled (default): DMI's DKSS storm-surge model, which
+ *     already includes wind and air pressure. We do NOT add a surge of our
+ *     own; the only adjustment is a small constant datum offset so DKSS lines
+ *     up with the gauge's zero. Beyond the DKSS horizon (~5 days) it falls
+ *     back to the astronomical tide table.
+ *   - off: the plain astronomical tide table only.
+ * Either way, the current status uses the live measured level.
  *
  * A "window" is a stretch where the level is at or below `safeMaxCm` (the
  * road is passable). Within it, the **deadline** — window end minus the
@@ -124,6 +129,7 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
 export function computeStatus(
   readings: Reading[],
   predictions: Prediction[],
+  forecast: ForecastPoint[],
   rules: SafetyRules,
   now: number = Date.now(),
   horizonHours: number = DEFAULT_HORIZON_HOURS,
@@ -138,27 +144,53 @@ export function computeStatus(
     : null
   const dataFresh = latest !== null && now - latest.t <= FRESHNESS_MS
 
-  const predict = buildPredictionCurve(predictions)
+  // Astronomical tide table (no weather) — used when the wind toggle is off
+  // and as a fallback beyond the DKSS horizon.
+  const astro = buildPredictionCurve(predictions)
 
-  // Storm-surge correction: observed minus predicted at observation time.
-  // This is the effect of wind and air pressure on top of the astronomical
-  // tide. We always measure it (for diagnostics), but only fold it into the
-  // forecast when the admin has wind adjustment enabled.
-  let rawSurgeOffsetCm = 0
-  if (latest && predict) {
-    const predictedAtObs = predict(latest.t)
-    if (predictedAtObs !== null) {
-      rawSurgeOffsetCm = clamp(latest.level - predictedAtObs, -MAX_SURGE_CM, MAX_SURGE_CM)
-    }
+  // DKSS weather-inclusive forecast, as a dense interpolable curve.
+  const dkssPts = forecast
+    .map((f) => ({ t: Date.parse(f.forecastAt), level: f.levelCm }))
+    .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.level))
+    .sort((a, b) => a.t - b.t)
+  const dkss = dkssPts.length >= 2 ? (t: number) => interpolateLinear(dkssPts, t) : null
+
+  // Datum alignment: shift DKSS so it matches the gauge's zero at "now".
+  // DKSS already carries the weather, so this offset is small and constant
+  // (datum + model bias), not a surge we are inventing.
+  let dkssDatumCm = 0
+  if (latest && dkss) {
+    const d = dkss(latest.t) ?? dkssPts[0].level
+    dkssDatumCm = clamp(latest.level - d, -MAX_SURGE_CM, MAX_SURGE_CM)
   }
-  const surgeOffsetCm = rules.windAdjustmentEnabled ? rawSurgeOffsetCm : 0
 
-  const adjusted = predict
-    ? (t: number): number | null => {
-        const v = predict(t)
-        return v === null ? null : v + surgeOffsetCm
-      }
-    : null
+  // Weather surge, for admin diagnostics only: how far the measured level is
+  // from the astronomical tide right now.
+  let surgeOffsetCm = 0
+  if (latest && astro) {
+    const a = astro(latest.t)
+    if (a !== null) surgeOffsetCm = clamp(latest.level - a, -MAX_SURGE_CM, MAX_SURGE_CM)
+  }
+
+  const useDkss = rules.windAdjustmentEnabled && dkss !== null
+  const forecastSource: StatusResult['forecastSource'] = useDkss
+    ? 'dkss'
+    : astro
+      ? 'astronomical'
+      : 'none'
+
+  const adjusted: ((t: number) => number | null) | null =
+    forecastSource === 'none'
+      ? null
+      : (t: number): number | null => {
+          if (useDkss) {
+            const d = dkss!(t)
+            if (d !== null) return d + dkssDatumCm
+            // Past the DKSS horizon → fall back to the astronomical table.
+            return astro ? astro(t) : null
+          }
+          return astro ? astro(t) : null
+        }
   const levelAt = adjusted ?? ((): number | null => null)
 
   // Current level: trust a fresh observation over the model.
@@ -213,7 +245,7 @@ export function computeStatus(
     lastDepartureToday,
     curve,
     surgeOffsetCm: Math.round(surgeOffsetCm),
-    rawSurgeOffsetCm: Math.round(rawSurgeOffsetCm),
+    forecastSource,
     windAdjustmentEnabled: rules.windAdjustmentEnabled,
     lastObservedAt: latest ? latest.t : null,
     dataFresh,

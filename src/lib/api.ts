@@ -1,6 +1,12 @@
 import { getSupabase, isDemoMode } from './supabase'
-import { demoPredictions, demoReadings, demoRules } from './demo'
-import type { Prediction, Reading, RuleChangeLogEntry, SafetyRules } from './types'
+import { demoForecast, demoPredictions, demoReadings, demoRules } from './demo'
+import type {
+  ForecastPoint,
+  Prediction,
+  Reading,
+  RuleChangeLogEntry,
+  SafetyRules,
+} from './types'
 
 interface ReadingRow {
   observed_at: string
@@ -56,6 +62,29 @@ export async function fetchPredictions(): Promise<Prediction[]> {
     predictedAt: p.predicted_at,
     predictionType: p.prediction_type,
     levelCm: Number(p.value_cm),
+  }))
+}
+
+interface ForecastRow {
+  forecast_at: string
+  value_cm: number
+}
+
+export async function fetchForecast(): Promise<ForecastPoint[]> {
+  if (isDemoMode) return demoForecast(Date.now())
+  const from = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+  const to = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString()
+  const { data, error } = await getSupabase()
+    .from('water_level_forecast')
+    .select('forecast_at, value_cm')
+    .gte('forecast_at', from)
+    .lte('forecast_at', to)
+    .order('forecast_at', { ascending: true })
+    .limit(1000)
+  if (error) throw error
+  return (data as ForecastRow[]).map((r) => ({
+    forecastAt: r.forecast_at,
+    levelCm: Number(r.value_cm),
   }))
 }
 

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { fetchPredictions, fetchReadings, fetchRules } from '@/lib/api'
+import { fetchForecast, fetchPredictions, fetchReadings, fetchRules } from '@/lib/api'
 import { computeStatus, DEFAULT_HORIZON_HOURS, EXTENDED_HORIZON_HOURS } from '@/lib/tide'
 import { isDemoMode, getSupabase } from '@/lib/supabase'
-import type { Prediction, Reading, SafetyRules } from '@/lib/types'
+import type { ForecastPoint, Prediction, Reading, SafetyRules } from '@/lib/types'
 
 const RECOMPUTE_MS = 30 * 1000
 const REFRESH_MS = 5 * 60 * 1000
@@ -11,6 +11,7 @@ const REFRESH_MS = 5 * 60 * 1000
 export const useStatusStore = defineStore('status', () => {
   const readings = ref<Reading[]>([])
   const predictions = ref<Prediction[]>([])
+  const forecast = ref<ForecastPoint[]>([])
   const rules = ref<SafetyRules | null>(null)
   const loading = ref(true)
   const error = ref<string | null>(null)
@@ -22,7 +23,14 @@ export const useStatusStore = defineStore('status', () => {
   const status = computed(() => {
     if (!rules.value) return null
     const horizon = extended.value ? EXTENDED_HORIZON_HOURS : DEFAULT_HORIZON_HOURS
-    return computeStatus(readings.value, predictions.value, rules.value, now.value, horizon)
+    return computeStatus(
+      readings.value,
+      predictions.value,
+      forecast.value,
+      rules.value,
+      now.value,
+      horizon,
+    )
   })
 
   function toggleExtended(): void {
@@ -31,13 +39,15 @@ export const useStatusStore = defineStore('status', () => {
 
   async function refresh(): Promise<void> {
     try {
-      const [r, p, ru] = await Promise.all([
+      const [r, p, f, ru] = await Promise.all([
         fetchReadings(),
         fetchPredictions(),
+        fetchForecast(),
         fetchRules(),
       ])
       readings.value = r
       predictions.value = p
+      forecast.value = f
       rules.value = ru
       error.value = null
     } catch (e) {
@@ -79,6 +89,7 @@ export const useStatusStore = defineStore('status', () => {
   return {
     readings,
     predictions,
+    forecast,
     rules,
     loading,
     error,

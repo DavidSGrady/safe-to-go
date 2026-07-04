@@ -6,13 +6,25 @@ export interface Reading {
   levelCm: number
 }
 
-/** A tide prediction from the DMI oceanObs `tidewater` collection. */
+/** An astronomical tide prediction from the DMI oceanObs `tidewater` collection. */
 export interface Prediction {
   /** ISO timestamp the prediction applies to */
   predictedAt: string
   /** 'minimum' (low tide), 'maximum' (high tide) or '10minutes' (curve point) */
   predictionType: 'minimum' | 'maximum' | '10minutes'
   /** Predicted water level in cm relative to DVR90 */
+  levelCm: number
+}
+
+/**
+ * A point from DMI's DKSS storm-surge forecast (weather-inclusive water
+ * level). This is the real "prognosis" — wind and air pressure are already
+ * included by DMI's model, so we do not add any surge of our own.
+ */
+export interface ForecastPoint {
+  /** ISO timestamp the forecast applies to */
+  forecastAt: string
+  /** Forecast water level in cm (aligned to the gauge datum at read time) */
   levelCm: number
 }
 
@@ -83,11 +95,15 @@ export interface StatusResult {
   lastDepartureToday: SafeWindow | null
   /** Combined observed + adjusted forecast curve for charting */
   curve: CurvePoint[]
-  /** Surge offset actually applied to the forecast (cm) — 0 when wind adjustment is off */
+  /**
+   * Weather surge (cm): measured level minus the astronomical tide at the
+   * same moment — how far wind/pressure is pushing the water off the tide
+   * table. Diagnostic only; the forecast itself comes from DKSS.
+   */
   surgeOffsetCm: number
-  /** Measured-minus-astronomical gap (cm), regardless of whether it is applied — for diagnostics */
-  rawSurgeOffsetCm: number
-  /** Whether the wind/weather surge is being folded into the forecast */
+  /** Which source the forecast/windows are built from */
+  forecastSource: 'dkss' | 'astronomical' | 'none'
+  /** Whether the DKSS (weather-inclusive) forecast is selected */
   windAdjustmentEnabled: boolean
   /** Timestamp of the newest observation (ms epoch) */
   lastObservedAt: number | null

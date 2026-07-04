@@ -14,7 +14,7 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const store = useStatusStore()
-const { readings, predictions, rules, status, now } = storeToRefs(store)
+const { readings, predictions, forecast, rules, status, now } = storeToRefs(store)
 
 const form = reactive({
   safeMaxCm: 0,
@@ -50,7 +50,7 @@ const invalid = computed(() => form.cautionMaxCm < form.safeMaxCm)
 /** What the public page would show right now with the edited (unsaved) values. */
 const preview = computed(() => {
   if (readings.value.length === 0 && predictions.value.length === 0) return null
-  return computeStatus(readings.value, predictions.value, { ...form }, now.value)
+  return computeStatus(readings.value, predictions.value, forecast.value, { ...form }, now.value)
 })
 
 const previewTitleKey = {
@@ -69,7 +69,7 @@ const health = computed(() => {
     lastReading,
     lastPrediction,
     fresh: status.value?.dataFresh ?? false,
-    surge: status.value?.rawSurgeOffsetCm ?? 0,
+    surge: status.value?.surgeOffsetCm ?? 0,
   }
 })
 
