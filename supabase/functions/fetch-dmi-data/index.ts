@@ -106,11 +106,11 @@ async function ingest() {
     if (error) throw new Error(`upsert readings: ${error.message}`)
   }
 
-  // --- Tide predictions: -12 h to +60 h ---
+  // --- Tide predictions: -12 h to +8 days (covers the "see further ahead" 7-day view) ---
   const tideFeatures = await dmiGet('tidewater', {
     stationId: STATION_TIDE,
-    datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 60 * 3600_000)}`,
-    limit: '1000',
+    datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
+    limit: '3000',
   })
 
   const predictions = tideFeatures

@@ -30,7 +30,7 @@ export function demoReadings(now: number): Reading[] {
 
 export function demoPredictions(now: number): Prediction[] {
   const predictions: Prediction[] = []
-  for (let t = now - 12 * 60 * 60 * 1000; t <= now + 50 * 60 * 60 * 1000; t += 10 * 60 * 1000) {
+  for (let t = now - 12 * 60 * 60 * 1000; t <= now + 8 * 24 * 60 * 60 * 1000; t += 10 * 60 * 1000) {
     predictions.push({
       predictedAt: new Date(t).toISOString(),
       predictionType: '10minutes',
@@ -41,8 +41,9 @@ export function demoPredictions(now: number): Prediction[] {
 }
 
 export const demoRules: SafetyRules = {
-  safeMaxCm: 20,
-  cautionMaxCm: 50,
-  marginMinutes: 30,
-  minWindowMinutes: 45,
+  safeMaxCm: 50,
+  cautionMaxCm: 60,
+  crossingMinutes: 30,
+  bufferMinutes: 10,
+  minWindowMinutes: 10,
 }

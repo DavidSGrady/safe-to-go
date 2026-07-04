@@ -18,24 +18,41 @@ export interface Prediction {
 
 /** Admin-configurable safety thresholds. */
 export interface SafetyRules {
-  /** Water level (cm DVR90) at or below which crossing is considered safe */
+  /** Water level (cm DVR90) at or below which the road is passable */
   safeMaxCm: number
-  /** Water level (cm DVR90) above which crossing is considered unsafe */
+  /** Water level (cm DVR90) at which the road is fully flooded */
   cautionMaxCm: number
-  /** Safety buffer applied to both ends of a safe window (minutes) */
-  marginMinutes: number
-  /** Windows shorter than this are not shown (minutes) */
+  /** Time it takes to cross the causeway in the worst case (minutes) */
+  crossingMinutes: number
+  /** Extra safety buffer beyond the crossing time (minutes) */
+  bufferMinutes: number
+  /** Windows shorter than this are not shown (minutes) — filters measurement noise */
   minWindowMinutes: number
   updatedAt?: string
 }
 
 export type SafetyState = 'safe' | 'caution' | 'unsafe' | 'unknown'
 
+export type ConfidenceTier = 'high' | 'medium' | 'low' | 'veryLow'
+
 export interface SafeWindow {
-  /** ms epoch */
+  /** ms epoch — level drops to/below safeMaxCm */
   start: number
-  /** ms epoch */
+  /** ms epoch — level rises back above safeMaxCm (road floods again) */
   end: number
+  /**
+   * ms epoch — the last moment it's safe to *start* crossing:
+   * end minus crossing time minus safety buffer. Between start and deadline
+   * is the "green" period; between deadline and end is "amber" (still
+   * passable, but too late to safely begin).
+   */
+  deadline: number
+  /** ms epoch of the lowest water level within the window */
+  lowAt: number
+  /** the lowest water level within the window (cm) */
+  minLevelCm: number
+  /** how far ahead of "now" this window starts, driving the confidence tier */
+  confidence: ConfidenceTier
 }
 
 export interface CurvePoint {
@@ -51,10 +68,12 @@ export interface StatusResult {
   state: SafetyState
   /** Current water level in cm (observed if fresh, otherwise adjusted forecast) */
   currentLevelCm: number | null
-  /** When the current safe period ends (ms epoch), if state === 'safe' */
-  safeUntil: number | null
+  /** The window "now" falls inside (before or after its deadline), if any */
+  currentWindow: SafeWindow | null
   /** Upcoming safe windows, soonest first (may include the current one) */
   windows: SafeWindow[]
+  /** The last window whose deadline is still today (Danish local time), for the return-trip banner */
+  lastDepartureToday: SafeWindow | null
   /** Combined observed + adjusted forecast curve for charting */
   curve: CurvePoint[]
   /** Storm-surge offset applied to the astronomical prediction (cm) */
@@ -65,6 +84,8 @@ export interface StatusResult {
   dataFresh: boolean
   /** True when the tide is currently rising */
   rising: boolean | null
+  /** Sample the surge-adjusted forecast curve at an arbitrary future time (ms epoch); null outside its range */
+  levelAt: (t: number) => number | null
 }
 
 export interface RuleChangeLogEntry {

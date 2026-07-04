@@ -70,7 +70,7 @@ input {
 }
 
 .error {
-  color: var(--ink-unsafe);
+  color: var(--verdict-unsafe-accent);
   font-size: 0.9rem;
 }
 

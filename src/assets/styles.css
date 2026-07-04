@@ -1,57 +1,98 @@
-/* Design tokens — light is default, dark via prefers-color-scheme. */
+/* Design tokens, ported from the "Safe to Go — Mandø" redesign spec.
+   Light is default, dark via prefers-color-scheme. */
 :root {
-  --page: #f9f9f7;
+  --page: #f7f8f6;
   --surface: #fcfcfb;
-  --text-primary: #0b0b0b;
-  --text-secondary: #52514e;
-  --text-muted: #898781;
-  --grid: #e1e0d9;
-  --baseline: #c3c2b7;
-  --border: rgba(11, 11, 11, 0.1);
-  --accent: #0f766e;
+  --text-primary: #1b2b2e;
+  --text-secondary: #4c5c56;
+  --text-muted: #64756f;
+  --grid: #edf0ec;
+  --baseline: #dfe3de;
+  --border: #e2e6e1;
+  --accent: #0f6e66;
 
-  /* Status fills for the hero card: deep enough for white text in both modes */
-  --status-safe: #15803d;
-  --status-caution: #b45309;
-  --status-unsafe: #b91c1c;
-  --status-unknown: #52514e;
+  /* Verdict panel — safe (green) / caution (amber) / unsafe (red) */
+  --verdict-safe-bg: #e7f2e9;
+  --verdict-safe-bd: #c4dfcc;
+  --verdict-safe-fg: #14522f;
+  --verdict-safe-accent: #1f7a4d;
 
-  /* Status inks for text/markers on the surface */
-  --ink-safe: #0ca30c;
-  --ink-caution: #b45309;
-  --ink-unsafe: #d03b3b;
+  --verdict-caution-bg: #f8f0da;
+  --verdict-caution-bd: #e8d9ad;
+  --verdict-caution-fg: #6e4c0c;
+  --verdict-caution-accent: #b0740f;
 
-  /* Chart series */
-  --series-observed: #2a78d6;
-  --series-forecast: #2a78d6;
+  --verdict-unsafe-bg: #f7e6e2;
+  --verdict-unsafe-bd: #ecc9c2;
+  --verdict-unsafe-fg: #75231b;
+  --verdict-unsafe-accent: #b3362b;
+
+  --verdict-unknown-bg: #eceeea;
+  --verdict-unknown-bd: #d5dad4;
+  --verdict-unknown-fg: #3d4d48;
+  --verdict-unknown-accent: #64756f;
+
+  /* Confidence badges */
+  --conf-high-bg: #e7f2e9;
+  --conf-high-fg: #14522f;
+  --conf-medium-bg: #f8f0da;
+  --conf-medium-fg: #6e4c0c;
+  --conf-low-bg: #e9ecf0;
+  --conf-low-fg: #44525e;
+  --conf-verylow-bg: #eceef0;
+  --conf-verylow-fg: #6a747d;
+
+  --emergency: #75231b;
 
   --radius: 18px;
-  --shadow: 0 1px 3px rgba(11, 11, 11, 0.06), 0 6px 20px rgba(11, 11, 11, 0.05);
+  --shadow: 0 1px 3px rgba(27, 43, 46, 0.06), 0 6px 20px rgba(27, 43, 46, 0.05);
+
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #898781;
-    --grid: #2c2c2a;
-    --baseline: #383835;
-    --border: rgba(255, 255, 255, 0.1);
-    --accent: #14b8a6;
+    --page: #14201f;
+    --surface: #1b2523;
+    --text-primary: #f4f6f3;
+    --text-secondary: #c3ccc6;
+    --text-muted: #8fa199;
+    --grid: #253330;
+    --baseline: #33423e;
+    --border: #2e3d39;
+    --accent: #4fb3a5;
 
-    --status-safe: #166534;
-    --status-caution: #92400e;
-    --status-unsafe: #991b1b;
-    --status-unknown: #383835;
+    --verdict-safe-bg: #17332355;
+    --verdict-safe-bd: #2c5a3d;
+    --verdict-safe-fg: #8fe0ac;
+    --verdict-safe-accent: #2f9b5f;
 
-    --ink-safe: #4ade80;
-    --ink-caution: #fbbf24;
-    --ink-unsafe: #f87171;
+    --verdict-caution-bg: #3a2f1155;
+    --verdict-caution-bd: #6b511c;
+    --verdict-caution-fg: #f2c869;
+    --verdict-caution-accent: #d99a2b;
 
-    --series-observed: #3987e5;
-    --series-forecast: #3987e5;
+    --verdict-unsafe-bg: #3a201955;
+    --verdict-unsafe-bd: #6b3428;
+    --verdict-unsafe-fg: #f0a696;
+    --verdict-unsafe-accent: #d1594a;
+
+    --verdict-unknown-bg: #232f2c;
+    --verdict-unknown-bd: #33423e;
+    --verdict-unknown-fg: #c3ccc6;
+    --verdict-unknown-accent: #8fa199;
+
+    --conf-high-bg: #17332355;
+    --conf-high-fg: #8fe0ac;
+    --conf-medium-bg: #3a2f1155;
+    --conf-medium-fg: #f2c869;
+    --conf-low-bg: #232f2c;
+    --conf-low-fg: #c3ccc6;
+    --conf-verylow-bg: #1e2927;
+    --conf-verylow-fg: #8fa199;
+
+    --emergency: #f0a696;
 
     --shadow: none;
   }
@@ -69,7 +110,7 @@ body {
   margin: 0;
   background: var(--page);
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -97,7 +138,11 @@ h3 {
 }
 
 h2 {
-  font-size: 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 p {
@@ -159,6 +204,10 @@ button:focus-visible {
 
 .secondary {
   color: var(--text-secondary);
+}
+
+.mono {
+  font-family: var(--font-mono);
 }
 
 table {

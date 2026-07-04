@@ -16,7 +16,8 @@ interface PredictionRow {
 interface RulesRow {
   safe_max_cm: number
   caution_max_cm: number
-  margin_minutes: number
+  crossing_minutes: number
+  buffer_minutes: number
   min_window_minutes: number
   updated_at: string
 }
@@ -39,15 +40,16 @@ export async function fetchReadings(): Promise<Reading[]> {
 
 export async function fetchPredictions(): Promise<Prediction[]> {
   if (isDemoMode) return demoPredictions(Date.now())
+  // Fetch far enough ahead to cover the "see further ahead" 7-day toggle.
   const from = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
-  const to = new Date(Date.now() + 52 * 60 * 60 * 1000).toISOString()
+  const to = new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString()
   const { data, error } = await getSupabase()
     .from('tide_predictions')
     .select('predicted_at, prediction_type, value_cm')
     .gte('predicted_at', from)
     .lte('predicted_at', to)
     .order('predicted_at', { ascending: true })
-    .limit(1000)
+    .limit(3000)
   if (error) throw error
   return (data as PredictionRow[]).map((p) => ({
     predictedAt: p.predicted_at,
@@ -60,7 +62,7 @@ export async function fetchRules(): Promise<SafetyRules> {
   if (isDemoMode) return demoRules
   const { data, error } = await getSupabase()
     .from('safety_rules')
-    .select('safe_max_cm, caution_max_cm, margin_minutes, min_window_minutes, updated_at')
+    .select('safe_max_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, updated_at')
     .eq('id', 1)
     .single()
   if (error) throw error
@@ -68,7 +70,8 @@ export async function fetchRules(): Promise<SafetyRules> {
   return {
     safeMaxCm: row.safe_max_cm,
     cautionMaxCm: row.caution_max_cm,
-    marginMinutes: row.margin_minutes,
+    crossingMinutes: row.crossing_minutes,
+    bufferMinutes: row.buffer_minutes,
     minWindowMinutes: row.min_window_minutes,
     updatedAt: row.updated_at,
   }
@@ -80,7 +83,8 @@ export async function saveRules(rules: SafetyRules): Promise<void> {
     .update({
       safe_max_cm: rules.safeMaxCm,
       caution_max_cm: rules.cautionMaxCm,
-      margin_minutes: rules.marginMinutes,
+      crossing_minutes: rules.crossingMinutes,
+      buffer_minutes: rules.bufferMinutes,
       min_window_minutes: rules.minWindowMinutes,
     })
     .eq('id', 1)

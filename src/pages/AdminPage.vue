@@ -19,7 +19,8 @@ const { readings, predictions, rules, status, now } = storeToRefs(store)
 const form = reactive({
   safeMaxCm: 0,
   cautionMaxCm: 0,
-  marginMinutes: 0,
+  crossingMinutes: 0,
+  bufferMinutes: 0,
   minWindowMinutes: 0,
 })
 
@@ -34,7 +35,8 @@ watch(
     if (r) {
       form.safeMaxCm = r.safeMaxCm
       form.cautionMaxCm = r.cautionMaxCm
-      form.marginMinutes = r.marginMinutes
+      form.crossingMinutes = r.crossingMinutes
+      form.bufferMinutes = r.bufferMinutes
       form.minWindowMinutes = r.minWindowMinutes
     }
   },
@@ -48,6 +50,13 @@ const preview = computed(() => {
   if (readings.value.length === 0 && predictions.value.length === 0) return null
   return computeStatus(readings.value, predictions.value, { ...form }, now.value)
 })
+
+const previewTitleKey = {
+  safe: 'verdict.safeTitle',
+  caution: 'verdict.cautionTitle',
+  unsafe: 'verdict.unsafeTitle',
+  unknown: 'verdict.unknownTitle',
+} as const
 
 const health = computed(() => {
   const lastReading = status.value?.lastObservedAt ?? null
@@ -85,7 +94,7 @@ async function signOut(): Promise<void> {
 }
 
 function diff(entry: RuleChangeLogEntry): string {
-  const keys = ['safe_max_cm', 'caution_max_cm', 'margin_minutes', 'min_window_minutes']
+  const keys = ['safe_max_cm', 'caution_max_cm', 'crossing_minutes', 'buffer_minutes', 'min_window_minutes']
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
     .map((k) => `${k}: ${entry.oldValues[k]} → ${entry.newValues[k]}`)
@@ -138,9 +147,15 @@ onMounted(async () => {
         </div>
 
         <div class="field">
-          <label for="margin">{{ t('admin.rules.margin') }}: <strong>{{ form.marginMinutes }}</strong></label>
-          <input id="margin" v-model.number="form.marginMinutes" type="range" min="0" max="120" step="5" />
-          <p class="muted">{{ t('admin.rules.marginHelp') }}</p>
+          <label for="crossing">{{ t('admin.rules.crossing') }}: <strong>{{ form.crossingMinutes }}</strong></label>
+          <input id="crossing" v-model.number="form.crossingMinutes" type="range" min="0" max="90" step="5" />
+          <p class="muted">{{ t('admin.rules.crossingHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="buffer">{{ t('admin.rules.buffer') }}: <strong>{{ form.bufferMinutes }}</strong></label>
+          <input id="buffer" v-model.number="form.bufferMinutes" type="range" min="0" max="60" step="5" />
+          <p class="muted">{{ t('admin.rules.bufferHelp') }}</p>
         </div>
 
         <div class="field">
@@ -152,7 +167,7 @@ onMounted(async () => {
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>
 
         <div v-if="preview" class="preview" :class="preview.state">
-          {{ t('admin.rules.previewState', { state: t(`status.${preview.state}`) }) }}
+          {{ t('admin.rules.previewState', { state: t(previewTitleKey[preview.state]) }) }}
         </div>
 
         <div class="save-row">
@@ -245,7 +260,7 @@ onMounted(async () => {
 }
 
 .notadmin {
-  color: var(--ink-unsafe);
+  color: var(--verdict-unsafe-fg);
 }
 
 .intro {
@@ -274,32 +289,40 @@ onMounted(async () => {
 }
 
 .error {
-  color: var(--ink-unsafe);
+  color: var(--verdict-unsafe-fg);
   font-size: 0.9rem;
 }
 
 .preview {
   border-radius: 12px;
   padding: 10px 14px;
-  color: #fff;
   font-weight: 600;
   margin-bottom: 14px;
+  border: 1px solid;
 }
 
 .preview.safe {
-  background: var(--status-safe);
+  background: var(--verdict-safe-bg);
+  border-color: var(--verdict-safe-bd);
+  color: var(--verdict-safe-fg);
 }
 
 .preview.caution {
-  background: var(--status-caution);
+  background: var(--verdict-caution-bg);
+  border-color: var(--verdict-caution-bd);
+  color: var(--verdict-caution-fg);
 }
 
 .preview.unsafe {
-  background: var(--status-unsafe);
+  background: var(--verdict-unsafe-bg);
+  border-color: var(--verdict-unsafe-bd);
+  color: var(--verdict-unsafe-fg);
 }
 
 .preview.unknown {
-  background: var(--status-unknown);
+  background: var(--verdict-unknown-bg);
+  border-color: var(--verdict-unknown-bd);
+  color: var(--verdict-unknown-fg);
 }
 
 .save-row {
@@ -309,17 +332,17 @@ onMounted(async () => {
 }
 
 .saved {
-  color: var(--ink-safe);
+  color: var(--verdict-safe-accent);
   font-weight: 600;
 }
 
 .ok {
-  color: var(--ink-safe);
+  color: var(--verdict-safe-accent);
   margin-left: 8px;
 }
 
 .stale {
-  color: var(--ink-unsafe);
+  color: var(--verdict-unsafe-accent);
   margin-left: 8px;
 }
 

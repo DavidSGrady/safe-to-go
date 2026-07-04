@@ -1,177 +1,276 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { fmtTime, splitDuration } from '@/lib/format'
-import type { StatusResult } from '@/lib/types'
+import { dayLabel, fmtTime, splitDuration } from '@/lib/format'
+import type { SafetyRules, StatusResult } from '@/lib/types'
 
 const props = defineProps<{
   status: StatusResult
+  rules: SafetyRules
   now: number
 }>()
 
 const { t, locale } = useI18n()
 
-const effectiveState = computed(() =>
-  props.status.dataFresh || props.status.state === 'unknown'
-    ? props.status.state
-    : props.status.state === 'safe'
-      ? 'caution'
-      : props.status.state,
-)
-
 const icon = computed(
-  () =>
-    ({ safe: '✓', caution: '!', unsafe: '✕', unknown: '?' })[effectiveState.value],
+  () => ({ safe: '✓', caution: '!', unsafe: '✕', unknown: '?' })[props.status.state],
 )
 
-// The current-level number is the actual measurement while it's fresh;
-// after that the app falls back to the surge-adjusted forecast (see tide.ts).
-const levelIsMeasured = computed(() => props.status.dataFresh)
+const durationTxt = (ms: number): string => {
+  const { hours, minutes } = splitDuration(ms)
+  return t('windows.duration', { hours, minutes })
+}
 
-const readingAge = computed(() => {
-  if (props.status.lastObservedAt === null) return null
-  const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
-  return hours > 0
-    ? t('status.agoHoursMinutes', { hours, minutes })
-    : t('status.agoMinutes', { minutes })
+const dayTxt = (ms: number): string => {
+  const label = dayLabel(ms, props.now, locale.value)
+  return label === 'today' ? t('common.today') : label === 'tomorrow' ? t('common.tomorrow') : label
+}
+
+const title = computed(() => {
+  switch (props.status.state) {
+    case 'safe':
+      return t('verdict.safeTitle')
+    case 'caution':
+      return t('verdict.cautionTitle')
+    case 'unsafe':
+      return t('verdict.unsafeTitle')
+    default:
+      return t('verdict.unknownTitle')
+  }
 })
 
-const timeLeft = computed(() => {
-  if (props.status.state !== 'safe' || props.status.safeUntil === null) return null
-  const { hours, minutes } = splitDuration(props.status.safeUntil - props.now)
-  return hours > 0
-    ? t('status.hoursMinutesLeft', { hours, minutes })
-    : t('status.minutesLeft', { minutes })
+const sub = computed(() => {
+  const s = props.status
+  if (s.state === 'safe') {
+    return t(s.rising ? 'verdict.safeSubRising' : 'verdict.safeSubFalling', {
+      limit: props.rules.safeMaxCm,
+    })
+  }
+  if (s.state === 'caution' && s.currentWindow) {
+    const remainMs = s.currentWindow.end - s.currentWindow.deadline
+    return t('verdict.cautionSub', {
+      limit: props.rules.safeMaxCm,
+      time: fmtTime(s.currentWindow.end, locale.value),
+      duration: durationTxt(remainMs),
+    })
+  }
+  if (s.state === 'unsafe') {
+    return t('verdict.unsafeSub', { flood: props.rules.cautionMaxCm })
+  }
+  return t('verdict.unknownSub')
+})
+
+/** The two-line countdown box: what to do and when. */
+const lines = computed(() => {
+  const s = props.status
+  const next = s.windows.find((w) => w.start > props.now)
+  if (s.state === 'safe' && s.currentWindow) {
+    return {
+      line1: t('verdict.safeLine1', { time: fmtTime(s.currentWindow.deadline, locale.value) }),
+      line2: durationTxt(s.currentWindow.deadline - props.now),
+    }
+  }
+  if (s.state === 'caution') {
+    if (next) {
+      return {
+        line1: t('verdict.cautionLine1WithNext'),
+        line2: t('verdict.cautionLine2WithNext', {
+          day: dayTxt(next.start),
+          time: fmtTime(next.start, locale.value),
+        }),
+      }
+    }
+    return { line1: t('verdict.cautionLine1NoNext'), line2: '' }
+  }
+  if (s.state === 'unsafe') {
+    if (next) {
+      return {
+        line1: t('verdict.unsafeLine1WithNext', { day: dayTxt(next.start), time: fmtTime(next.start, locale.value) }),
+        line2: t('verdict.unsafeLine2WithNext', { time: fmtTime(next.deadline, locale.value) }),
+      }
+    }
+    return { line1: t('verdict.unsafeLine1NoNext'), line2: '' }
+  }
+  return { line1: '', line2: '' }
+})
+
+const showStormBanner = computed(() => props.status.surgeOffsetCm >= 15)
+
+const freshnessTxt = computed(() => {
+  if (props.status.lastObservedAt === null) return null
+  const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
+  const duration = hours > 0 ? t('common.agoHoursMinutes', { hours, minutes }) : t('common.agoMinutes', { minutes })
+  return props.status.dataFresh
+    ? t('verdict.freshFresh', { duration })
+    : t('verdict.freshStale', { duration })
 })
 </script>
 
 <template>
-  <section class="hero" :class="effectiveState" role="status" aria-live="polite">
+  <section class="verdict" :class="status.state" role="status" aria-live="polite">
     <div class="badge" aria-hidden="true">{{ icon }}</div>
-    <h1 class="headline">{{ t(`status.${effectiveState}`) }}</h1>
-    <p class="desc">{{ t(`status.${effectiveState}Desc`) }}</p>
+    <h1 class="title">{{ title }}</h1>
+    <p class="sub">{{ sub }}</p>
 
-    <p v-if="status.state === 'safe' && status.safeUntil" class="until">
-      {{ t('status.safeUntil', { time: fmtTime(status.safeUntil, locale) }) }}
-      <span v-if="timeLeft" class="left">· {{ timeLeft }}</span>
-    </p>
-
-    <div class="facts">
-      <div v-if="status.currentLevelCm !== null" class="fact">
-        <span class="fact-label">{{ t('status.currentLevel') }}</span>
-        <span class="fact-value">{{ status.currentLevelCm }} cm</span>
-        <span class="fact-tag">{{ levelIsMeasured ? t('status.sourceMeasured') : t('status.sourceForecast') }}</span>
-      </div>
-      <div v-if="status.rising !== null" class="fact">
-        <span class="fact-value trend">
-          {{ status.rising ? '↑' : '↓' }}
-          <span class="trend-text">{{ status.rising ? t('status.tideRising') : t('status.tideFalling') }}</span>
-        </span>
-      </div>
+    <div v-if="lines.line1" class="box">
+      <div class="box-l1">{{ lines.line1 }}</div>
+      <div v-if="lines.line2" class="box-l2">{{ lines.line2 }}</div>
     </div>
 
-    <p v-if="status.lastObservedAt" class="updated">
-      {{ t('status.updated', { time: fmtTime(status.lastObservedAt, locale) }) }}
-      <span v-if="readingAge"> ({{ readingAge }})</span>
-      <span v-if="!status.dataFresh"> — {{ t('status.stale') }}</span>
+    <p v-if="showStormBanner" class="banner">
+      {{ t('verdict.stormBanner', { cm: status.surgeOffsetCm }) }}
+    </p>
+    <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">
+      {{
+        t('verdict.staleBanner', {
+          duration:
+            splitDuration(now - status.lastObservedAt).hours > 0
+              ? t('common.agoHoursMinutes', splitDuration(now - status.lastObservedAt))
+              : t('common.agoMinutes', { minutes: splitDuration(now - status.lastObservedAt).minutes }),
+        })
+      }}
+    </p>
+
+    <p v-if="freshnessTxt" class="freshness">
+      <span class="dot" :class="{ stale: !status.dataFresh }" aria-hidden="true"></span>
+      {{ freshnessTxt }}
     </p>
   </section>
 </template>
 
 <style scoped>
-.hero {
+.verdict {
   border-radius: var(--radius);
-  padding: 28px 24px;
-  color: #fff;
+  padding: 26px 22px 18px;
   text-align: center;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.hero.safe {
-  background: var(--status-safe);
+.verdict.safe {
+  background: var(--verdict-safe-bg);
+  border-color: var(--verdict-safe-bd);
+  color: var(--verdict-safe-fg);
 }
-
-.hero.caution {
-  background: var(--status-caution);
+.verdict.caution {
+  background: var(--verdict-caution-bg);
+  border-color: var(--verdict-caution-bd);
+  color: var(--verdict-caution-fg);
 }
-
-.hero.unsafe {
-  background: var(--status-unsafe);
+.verdict.unsafe {
+  background: var(--verdict-unsafe-bg);
+  border-color: var(--verdict-unsafe-bd);
+  color: var(--verdict-unsafe-fg);
 }
-
-.hero.unknown {
-  background: var(--status-unknown);
+.verdict.unknown {
+  background: var(--verdict-unknown-bg);
+  border-color: var(--verdict-unknown-bd);
+  color: var(--verdict-unknown-fg);
 }
 
 .badge {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 12px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 56px;
-}
-
-.headline {
-  font-size: clamp(1.7rem, 6vw, 2.3rem);
-  margin: 0 0 6px;
-}
-
-.desc {
-  margin: 0 auto 12px;
-  max-width: 44ch;
-  opacity: 0.95;
-}
-
-.until {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin: 0 0 14px;
-}
-
-.left {
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-.facts {
+  color: #fff;
   display: flex;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px 26px;
-  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 21px;
+}
+.safe .badge {
+  background: var(--verdict-safe-accent);
+}
+.caution .badge {
+  background: var(--verdict-caution-accent);
+}
+.unsafe .badge {
+  background: var(--verdict-unsafe-accent);
+}
+.unknown .badge {
+  background: var(--verdict-unknown-accent);
 }
 
-.fact-label {
-  display: block;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.title {
+  font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.sub {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  opacity: 0.9;
+  text-wrap: pretty;
+  margin: 0;
+  max-width: 46ch;
+}
+
+.box {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 9px 18px;
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.box-l1 {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.box-l2 {
+  font-size: 12.5px;
   opacity: 0.85;
 }
 
-.fact-value {
-  font-size: 1.25rem;
-  font-weight: 700;
+.banner {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin: 0;
 }
 
-.fact-tag {
-  display: block;
+.banner-stale {
+  color: var(--verdict-caution-fg);
+  background: var(--verdict-caution-bg);
+  border-color: var(--verdict-caution-bd);
+}
+
+.freshness {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-size: 0.72rem;
   opacity: 0.85;
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+  padding-top: 9px;
+  margin: 2px 0 0;
+  width: 100%;
+  justify-content: center;
 }
 
-.trend-text {
-  font-size: 0.95rem;
-  font-weight: 500;
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--verdict-safe-accent);
+  flex: none;
 }
 
-.updated {
-  margin: 0;
-  font-size: 0.8rem;
-  opacity: 0.85;
+.dot.stale {
+  background: var(--verdict-caution-accent);
 }
 </style>

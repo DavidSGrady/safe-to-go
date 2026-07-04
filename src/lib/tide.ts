@@ -1,4 +1,6 @@
+import { startOfNextLocalDay } from './format'
 import type {
+  ConfidenceTier,
   CurvePoint,
   Prediction,
   Reading,
@@ -11,10 +13,19 @@ import type {
 const FRESHNESS_MS = 45 * 60 * 1000
 /** Resolution used when scanning the curve for threshold crossings. */
 const STEP_MS = 5 * 60 * 1000
-/** How far ahead we look for safe windows. */
-const HORIZON_MS = 48 * 60 * 60 * 1000
+/** Fine resolution used when locating the low point inside a window. */
+const FINE_STEP_MS = 2 * 60 * 1000
+/** How far back we scan so a window already in progress is found correctly. */
+const LOOKBACK_MS = 8 * 60 * 60 * 1000
+/** Default forward horizon for the windows list. */
+export const DEFAULT_HORIZON_HOURS = 48
+/** Extended horizon when the user asks to see further ahead. */
+export const EXTENDED_HORIZON_HOURS = 168
 /** Surge offsets beyond this are treated as data errors and clamped. */
 const MAX_SURGE_CM = 250
+
+/** Confidence drops the further out a window starts — it leans more on forecast, less on measurement. */
+const CONFIDENCE_BREAKS_MIN = { high: 12 * 60, medium: 26 * 60, low: 72 * 60 }
 
 interface TidePoint {
   t: number
@@ -53,7 +64,6 @@ export function buildPredictionCurve(
 function interpolateLinear(points: TidePoint[], t: number): number | null {
   if (points.length === 0) return null
   if (t <= points[0].t || t >= points[points.length - 1].t) {
-    // Only trust the dense curve inside its own span
     return t === points[0].t
       ? points[0].level
       : t === points[points.length - 1].t
@@ -90,6 +100,13 @@ function findSegment(points: TidePoint[], t: number): number {
   return lo
 }
 
+function confidenceFor(startAheadMin: number): ConfidenceTier {
+  if (startAheadMin < CONFIDENCE_BREAKS_MIN.high) return 'high'
+  if (startAheadMin < CONFIDENCE_BREAKS_MIN.medium) return 'medium'
+  if (startAheadMin < CONFIDENCE_BREAKS_MIN.low) return 'low'
+  return 'veryLow'
+}
+
 /**
  * Compute the full safety status from raw data.
  *
@@ -97,12 +114,19 @@ function findSegment(points: TidePoint[], t: number): number {
  * (latest observation minus prediction at the same moment), because wind
  * setup in the Wadden Sea routinely shifts the real level tens of cm from
  * the astronomical tide.
+ *
+ * A "window" is a stretch where the level is at or below `safeMaxCm` (the
+ * road is passable). Within it, the **deadline** — window end minus the
+ * crossing time minus a safety buffer — is the last moment it's safe to
+ * *start* crossing: after the deadline the road is still dry, but there
+ * is no longer enough time to reach the other side before it floods again.
  */
 export function computeStatus(
   readings: Reading[],
   predictions: Prediction[],
   rules: SafetyRules,
   now: number = Date.now(),
+  horizonHours: number = DEFAULT_HORIZON_HOURS,
 ): StatusResult {
   const sortedReadings = [...readings]
     .map((r) => ({ t: Date.parse(r.observedAt), level: r.levelCm }))
@@ -131,6 +155,7 @@ export function computeStatus(
         return v === null ? null : v + surgeOffsetCm
       }
     : null
+  const levelAt = adjusted ?? ((): number | null => null)
 
   // Current level: trust a fresh observation over the model.
   let currentLevelCm: number | null = null
@@ -150,103 +175,103 @@ export function computeStatus(
     rising = recent[2].level > recent[0].level
   }
 
-  // Safe windows over the horizon, from the adjusted curve.
-  const windows = adjusted
-    ? findSafeWindows(adjusted, rules, now, now + HORIZON_MS)
+  const allWindows = adjusted
+    ? findWindows(adjusted, rules, now, now + horizonHours * 3600_000)
     : []
 
-  // Current state.
+  // The lookback scan can surface windows that already closed before "now"
+  // (kept only so a window in progress is detected correctly) — drop those
+  // from what's shown to the user.
+  const currentWindow = allWindows.find((w) => w.start <= now && now < w.end) ?? null
+  const windows = allWindows.filter((w) => w.end > now)
+
   let state: StatusResult['state'] = 'unknown'
-  let safeUntil: number | null = null
   if (currentLevelCm !== null) {
-    if (currentLevelCm > rules.cautionMaxCm) {
-      state = 'unsafe'
-    } else if (currentLevelCm > rules.safeMaxCm) {
-      state = 'caution'
+    if (currentWindow) {
+      state = now <= currentWindow.deadline ? 'safe' : 'caution'
     } else {
-      // Level is in the safe band — but only call it SAFE if we're inside a
-      // margin-trimmed window; right at the edges the road may still be wet
-      // or about to flood.
-      const current = windows.find((w) => w.start <= now && now < w.end)
-      if (current) {
-        state = 'safe'
-        safeUntil = current.end
-      } else {
-        state = 'caution'
-      }
+      state = 'unsafe'
     }
   }
+
+  // Return-trip banner: the last window today whose deadline is still ahead.
+  const dayEnd = startOfNextLocalDay(now)
+  const lastDepartureToday =
+    [...windows].reverse().find((w) => w.deadline > now && w.start < dayEnd) ?? null
 
   const curve = buildChartCurve(sortedReadings, adjusted, now)
 
   return {
     state,
     currentLevelCm: currentLevelCm === null ? null : Math.round(currentLevelCm),
-    safeUntil,
+    currentWindow,
     windows,
+    lastDepartureToday,
     curve,
     surgeOffsetCm: Math.round(surgeOffsetCm),
     lastObservedAt: latest ? latest.t : null,
     dataFresh,
     rising,
+    levelAt,
   }
 }
 
 /**
- * Scan the adjusted curve for intervals where the level stays at or below
- * the safe threshold, trim the margin off both ends (water must have receded
- * before, and you must be off the causeway before it returns), and drop
- * windows shorter than the configured minimum.
+ * Scan the adjusted curve for stretches at or below `safeMaxCm`, and derive
+ * the deadline, low point and confidence tier for each.
  */
-export function findSafeWindows(
+export function findWindows(
   level: (t: number) => number | null,
   rules: SafetyRules,
-  from: number,
+  now: number,
   to: number,
 ): SafeWindow[] {
-  const marginMs = rules.marginMinutes * 60 * 1000
+  const from = now - LOOKBACK_MS
   const minWindowMs = rules.minWindowMinutes * 60 * 1000
-  const windows: SafeWindow[] = []
+  const raw: Array<{ start: number; end: number }> = []
 
   let openStart: number | null = null
-  let openedAtScanStart = false
   for (let t = from; t <= to; t += STEP_MS) {
     const v = level(t)
     const safe = v !== null && v <= rules.safeMaxCm
     if (safe && openStart === null) {
       openStart = t
-      openedAtScanStart = t === from
     } else if (!safe && openStart !== null) {
-      pushWindow(windows, openStart, t, openedAtScanStart, false, marginMs, minWindowMs)
+      raw.push({ start: openStart, end: t })
       openStart = null
     }
   }
-  if (openStart !== null) {
-    pushWindow(windows, openStart, to, openedAtScanStart, true, marginMs, minWindowMs)
-  }
-  return windows
+  if (openStart !== null) raw.push({ start: openStart, end: to })
+
+  const crossingMs = rules.crossingMinutes * 60 * 1000
+  const bufferMs = rules.bufferMinutes * 60 * 1000
+
+  return raw
+    .filter((w) => w.end - w.start >= minWindowMs)
+    .map((w) => {
+      let minLevelCm = Infinity
+      let lowAt = w.start
+      for (let t = w.start; t <= w.end; t += FINE_STEP_MS) {
+        const v = level(t)
+        if (v !== null && v < minLevelCm) {
+          minLevelCm = v
+          lowAt = t
+        }
+      }
+      const deadline = w.end - crossingMs - bufferMs
+      const startAheadMin = Math.max(0, (w.start - now) / 60000)
+      return {
+        start: w.start,
+        end: w.end,
+        deadline,
+        lowAt,
+        minLevelCm: Math.round(minLevelCm),
+        confidence: confidenceFor(startAheadMin),
+      }
+    })
 }
 
-function pushWindow(
-  windows: SafeWindow[],
-  rawStart: number,
-  rawEnd: number,
-  openEndedStart: boolean,
-  openEndedEnd: boolean,
-  marginMs: number,
-  minWindowMs: number,
-): void {
-  // Don't trim an edge that is only an artifact of the scan range: if the
-  // window was already open when the scan began, its true start (with margin
-  // already elapsed) lies in the past.
-  const start = openEndedStart ? rawStart : rawStart + marginMs
-  const end = openEndedEnd ? rawEnd : rawEnd - marginMs
-  if (end - start >= minWindowMs) {
-    windows.push({ start, end })
-  }
-}
-
-/** Combined observed history + adjusted forecast, for the chart. */
+/** Combined observed history + adjusted forecast, for the optional detail chart. */
 function buildChartCurve(
   readings: TidePoint[],
   adjusted: ((t: number) => number | null) | null,

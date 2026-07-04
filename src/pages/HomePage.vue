@@ -5,14 +5,16 @@ import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
 import { isDemoMode } from '@/lib/supabase'
 import StatusHero from '@/components/StatusHero.vue'
-import NextWindows from '@/components/NextWindows.vue'
-import TideChart from '@/components/TideChart.vue'
+import ReturnBanner from '@/components/ReturnBanner.vue'
+import RoadCrossSection from '@/components/RoadCrossSection.vue'
+import WindowsList from '@/components/WindowsList.vue'
+import DiveDeeper from '@/components/DiveDeeper.vue'
 import TideExplainer from '@/components/TideExplainer.vue'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 
 const { t } = useI18n()
 const store = useStatusStore()
-const { status, rules, loading, error, now } = storeToRefs(store)
+const { status, rules, loading, error, now, extended } = storeToRefs(store)
 
 onMounted(() => store.start())
 </script>
@@ -31,19 +33,21 @@ onMounted(() => store.start())
 
     <div v-if="loading" class="card skeleton" aria-busy="true"></div>
 
-    <template v-else-if="status">
-      <StatusHero :status="status" :now="now" />
-      <NextWindows :windows="status.windows.filter((w) => w.end > now)" :now="now" />
-
-      <section v-if="rules && status.curve.length" class="card">
-        <h2>{{ t('chart.title') }}</h2>
-        <TideChart :curve="status.curve" :rules="rules" :now="now" />
-      </section>
-
+    <template v-else-if="status && rules">
+      <StatusHero :status="status" :rules="rules" :now="now" />
+      <ReturnBanner :status="status" :now="now" />
+      <RoadCrossSection :status="status" :rules="rules" :now="now" />
+      <WindowsList
+        :windows="status.windows"
+        :now="now"
+        :extended="extended"
+        @toggle-extended="store.toggleExtended"
+      />
+      <DiveDeeper :status="status" :rules="rules" :now="now" />
       <TideExplainer />
     </template>
 
-    <p v-if="error" class="card error">{{ t('status.unknownDesc') }}</p>
+    <p v-if="error" class="card error">{{ t('verdict.unknownSub') }}</p>
 
     <footer>
       <p class="muted">{{ t('footer.disclaimer') }}</p>
@@ -77,7 +81,7 @@ onMounted(() => store.start())
 }
 
 .demo-banner {
-  background: var(--ink-caution);
+  background: var(--verdict-caution-accent);
   color: #fff;
   border-radius: 12px;
   padding: 8px 14px;
@@ -97,7 +101,7 @@ onMounted(() => store.start())
 }
 
 .error {
-  color: var(--ink-unsafe);
+  color: var(--verdict-unsafe-fg);
 }
 
 footer {

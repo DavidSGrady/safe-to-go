@@ -229,12 +229,12 @@ const tableRows = computed(() => {
 }
 
 .band-safe {
-  fill: var(--ink-safe);
+  fill: var(--verdict-safe-accent);
   opacity: 0.08;
 }
 
 .band-danger {
-  fill: var(--ink-unsafe);
+  fill: var(--verdict-unsafe-accent);
   opacity: 0.08;
 }
 
@@ -254,11 +254,11 @@ const tableRows = computed(() => {
 }
 
 .threshold-safe {
-  stroke: var(--ink-safe);
+  stroke: var(--verdict-safe-accent);
 }
 
 .threshold-danger {
-  stroke: var(--ink-unsafe);
+  stroke: var(--verdict-unsafe-accent);
 }
 
 .now-line {
@@ -333,11 +333,11 @@ const tableRows = computed(() => {
 }
 
 .swatch-safe {
-  background: var(--ink-safe);
+  background: var(--verdict-safe-accent);
 }
 
 .swatch-danger {
-  background: var(--ink-unsafe);
+  background: var(--verdict-unsafe-accent);
 }
 
 .btn-link {

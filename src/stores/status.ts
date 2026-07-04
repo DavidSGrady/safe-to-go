@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { fetchPredictions, fetchReadings, fetchRules } from '@/lib/api'
-import { computeStatus } from '@/lib/tide'
+import { computeStatus, DEFAULT_HORIZON_HOURS, EXTENDED_HORIZON_HOURS } from '@/lib/tide'
 import { isDemoMode, getSupabase } from '@/lib/supabase'
 import type { Prediction, Reading, SafetyRules } from '@/lib/types'
 
@@ -15,13 +15,19 @@ export const useStatusStore = defineStore('status', () => {
   const loading = ref(true)
   const error = ref<string | null>(null)
   const now = ref(Date.now())
+  const extended = ref(false)
 
   let timersStarted = false
 
   const status = computed(() => {
     if (!rules.value) return null
-    return computeStatus(readings.value, predictions.value, rules.value, now.value)
+    const horizon = extended.value ? EXTENDED_HORIZON_HOURS : DEFAULT_HORIZON_HOURS
+    return computeStatus(readings.value, predictions.value, rules.value, now.value, horizon)
   })
+
+  function toggleExtended(): void {
+    extended.value = !extended.value
+  }
 
   async function refresh(): Promise<void> {
     try {
@@ -70,5 +76,17 @@ export const useStatusStore = defineStore('status', () => {
     }
   }
 
-  return { readings, predictions, rules, loading, error, now, status, refresh, start }
+  return {
+    readings,
+    predictions,
+    rules,
+    loading,
+    error,
+    now,
+    extended,
+    status,
+    refresh,
+    start,
+    toggleExtended,
+  }
 })
