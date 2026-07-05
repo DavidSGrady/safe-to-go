@@ -83,6 +83,14 @@ const lines = computed(() => {
   return { line1: '', line2: '' }
 })
 
+// When the water reaches the road for the window we're in — the raw fact
+// behind the deadline, so people can subtract their own crossing time + buffer.
+const floodsAtTxt = computed(() => {
+  const w = props.status.currentWindow
+  if (w && w.floodsAt !== null) return fmtTime(w.floodsAt, locale.value)
+  return null
+})
+
 const freshnessTxt = computed(() => {
   if (props.status.lastObservedAt === null) return null
   const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
@@ -103,6 +111,8 @@ const freshnessTxt = computed(() => {
       <div class="box-l1">{{ lines.line1 }}</div>
       <div v-if="lines.line2" class="box-l2">{{ lines.line2 }}</div>
     </div>
+
+    <p v-if="floodsAtTxt" class="floods">{{ t('verdict.floodsAt', { time: floodsAtTxt }) }}</p>
 
     <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">
       {{
@@ -215,6 +225,13 @@ const freshnessTxt = computed(() => {
 .box-l2 {
   font-size: 12.5px;
   opacity: 0.85;
+}
+
+.floods {
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.9;
+  margin: 0;
 }
 
 .banner {

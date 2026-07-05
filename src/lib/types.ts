@@ -69,13 +69,22 @@ export type ConfidenceTier = 'high' | 'medium' | 'low' | 'veryLow'
 export interface SafeWindow {
   /** ms epoch — falling water drops to/below the falling passable limit */
   start: number
-  /** ms epoch — rising water climbs back above the rising passable limit (road floods again) */
+  /** ms epoch — rising water floods the road (reaches cautionMaxCm again) */
   end: number
   /**
-   * ms epoch — the last moment it's safe to *start* crossing:
-   * end minus crossing time minus safety buffer. Between start and deadline
-   * is the "green" period; between deadline and end is "amber" (still
-   * passable, but too late to safely begin).
+   * ms epoch the rising water reaches the flood point (cautionMaxCm) — i.e.
+   * "the water reaches the road". Equals `end` when the window closed by
+   * flooding; null when the window never floods within the forecast horizon
+   * (so there is no flood time to show). Surfaced to users so they can do the
+   * head-math themselves (subtract crossing + their own buffer).
+   */
+  floodsAt: number | null
+  /**
+   * ms epoch — the last moment it's safe to *start* crossing: the water
+   * reaches (cautionMaxCm − floodMarginCm) minus crossing time minus safety
+   * buffer, so the crossing finishes with that margin below flooding. Between
+   * start and deadline is the "green" period; between deadline and the flood
+   * is "amber" (still passable, but too late to safely begin).
    */
   deadline: number
   /** ms epoch of the lowest water level within the window */

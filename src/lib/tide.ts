@@ -300,7 +300,9 @@ export function findWindows(
 ): SafeWindow[] {
   const from = now - LOOKBACK_MS
   const minWindowMs = rules.minWindowMinutes * 60 * 1000
-  const raw: Array<{ start: number; end: number }> = []
+  // `flooded` = the window closed because rising water hit the flood point
+  // (a real flood time), vs. just running past the forecast horizon.
+  const raw: Array<{ start: number; end: number; flooded: boolean }> = []
 
   let openStart: number | null = null
   let prev: number | null = null
@@ -310,12 +312,15 @@ export function findWindows(
     if (inWindow && openStart === null) {
       openStart = t
     } else if (!inWindow && openStart !== null) {
-      raw.push({ start: openStart, end: t })
+      // A real flood time only when the level actually reached the flood point
+      // here — not when the forecast data simply ran out (v === null).
+      const flooded = v !== null && v >= rules.cautionMaxCm
+      raw.push({ start: openStart, end: t, flooded })
       openStart = null
     }
     prev = v
   }
-  if (openStart !== null) raw.push({ start: openStart, end: to })
+  if (openStart !== null) raw.push({ start: openStart, end: to, flooded: false })
 
   const crossingMs = rules.crossingMinutes * 60 * 1000
   const bufferMs = rules.bufferMinutes * 60 * 1000
@@ -350,6 +355,7 @@ export function findWindows(
       return {
         start: w.start,
         end: w.end,
+        floodsAt: w.flooded ? w.end : null,
         deadline,
         lowAt,
         minLevelCm: Math.round(minLevelCm),

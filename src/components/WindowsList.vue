@@ -44,6 +44,7 @@ const items = computed(() =>
         day: dayTxt(w.start),
         rangeTxt: `${fmtTime(w.start, locale.value)} → ${fmtTime(w.deadline, locale.value)}`,
         deadlineTxt: fmtTime(w.deadline, locale.value),
+        floodsTxt: w.floodsAt !== null ? fmtTime(w.floodsAt, locale.value) : null,
         lowTxt: fmtTime(w.lowAt, locale.value),
         greenPct: total > 0 ? (greenMs / total) * 100 : 0,
         amberPct: total > 0 ? (amberMs / total) * 100 : 0,
@@ -90,6 +91,9 @@ const dayGroups = computed(() => {
           <div v-else class="row footer">
             <span>{{ t('windows.lastDeparture', { time: item.deadlineTxt }) }}</span>
             <span>{{ t('windows.lowTide', { time: item.lowTxt }) }} · {{ item.greenDurationTxt }}</span>
+          </div>
+          <div v-if="item.floodsTxt" class="row floods">
+            <span>{{ t('windows.floodsAt', { time: item.floodsTxt }) }}</span>
           </div>
         </div>
       </div>
@@ -201,6 +205,12 @@ const dayGroups = computed(() => {
 .footer {
   font-size: 11.5px;
   color: var(--text-secondary);
+}
+
+.floods {
+  font-size: 11px;
+  color: var(--verdict-unsafe-fg);
+  font-weight: 600;
 }
 
 .too-short {
