@@ -60,11 +60,20 @@ here are written to be backward-compatible so either order is safe, but keep thi
   entry point; `findWindows()` scans the forecast curve for safe windows; `buildPredictionCurve()`
   interpolates DMI data. Everything downstream derives from its `StatusResult`.
 - `src/lib/api.ts` — Supabase queries + demo-mode fallback. Maps snake_case DB rows ↔ camelCase types.
+  `fetchReadings/fetchPredictions/fetchForecast` all take a `stationId` and filter by `station_id`.
+- `src/lib/stations.ts` — the measuring stations (`STATIONS`: Mandø `9007101`, Ribe Kammersluse `9006701`).
+  Both are valid crossing gauges; **thresholds are shared (v1)**. The `id` is the DMI observation
+  stationId and the key for readings/predictions/forecast rows in Postgres.
 - `src/lib/types.ts` — `SafetyRules`, `StatusResult`, `SafeWindow`, etc.
 - `src/lib/demo.ts` — synthetic tide used when Supabase env vars are absent (**demo mode**).
-- `src/stores/status.ts` — Pinia: polls/refreshes data, holds the effective `now`. Also owns
-  the **admin preview offset** (`previewOffsetMin` / `setPreviewOffset`): `now` is a computed
-  `realNow + offset`, so overriding it time-travels the whole page.
+- `src/stores/status.ts` — Pinia: polls/refreshes **all stations'** data (per-station maps),
+  holds the effective `now`, and the selected station set (`selectedStationIds`, persisted in
+  localStorage). `statusByStation` computes a `StatusResult` per station; `status` is the
+  **primary** — the single selected one, or the most-cautious when several are selected (so we
+  never under-warn), tracked by `primaryStationId`. `readings/predictions/forecast` are exposed as
+  the primary station's series (used by the admin threshold preview). Also owns the **admin preview
+  offset** (`previewOffsetMin` / `setPreviewOffset`): `now` is a computed `realNow + offset`, so
+  overriding it time-travels the whole page.
 - `src/stores/auth.ts` — Supabase auth; `isAdmin` = `profiles.role === 'admin'`.
 - `src/pages/` — `HomePage` (public), `AdminPage` (threshold tuning, gated), `LoginPage`.
 - `src/components/` — `StatusHero`/`StickyVerdict` (verdict), `RoadCrossSection` (road sim),
@@ -72,6 +81,16 @@ here are written to be backward-compatible so either order is safe, but keep thi
 - `src/i18n/locales/*.json` — 7 locales (da, en, de, nl, fr, es, zh). `fallbackLocale: 'en'`.
   **When you add/rename a user-facing key, update `en` (fallback) + `da` (primary) at minimum;
   update all 7 for public-facing strings** so no `{placeholder}` renders raw in another locale.
+
+## Data ingestion (edge function)
+`supabase/functions/fetch-dmi-data/index.ts` runs on cron (~10 min). It ingests observations,
+tide predictions and the DKSS storm-surge forecast for **each station in its `STATIONS` array**
+(Mandø + Ribe Kammersluse), fault-isolated per station (one failing doesn't block the others).
+`water_level_forecast` carries `station_id` (unique `station_id, source, forecast_at`).
+Deploy with `npx supabase functions deploy fetch-dmi-data` (this CLI has no `functions invoke`;
+trigger by waiting for cron or curling the function URL with the anon key). After a new station is
+added, apply the migration + deploy the frontend *before* the edge function starts writing the new
+station's rows (see the migration header).
 
 ## Domain model — safety thresholds (current)
 `safety_rules` (single row, `id = 1`), tuned from `/admin`:

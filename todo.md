@@ -2,23 +2,15 @@
 
 Running list of features/ideas to build. Not prioritised unless noted.
 
-## In progress
-- **Surface flood-reach time** — show the time DMI's prognosis says the water
-  reaches the road (`caution_max_cm`, ~60 cm) in the verdict pane and for each
-  window, so people can do the head-math (subtract crossing + their own buffer)
-  and see how we arrive at the recommendation. *(building now)*
-
-## Agreed, queued
-- **Station switch: Mandø ⇄ Ribe Kammersluse.** v1 = pure data-source swap with
-  the *same* thresholds (both are valid crossing readings locals use). Checkbox
-  selector, pick one or both; when both are on, comparison mode showing both,
-  with the most-cautious of the two driving the single safety verdict (never
-  under-warn). Smarter dual-logic later. DMI station IDs (verified via
-  `find-stations`): observations `9006701` "Ribe Kammersluse I" (backup `9006703`),
-  tide predictions `25343`. Ribe exposes the same measured level + DKSS prognosis
-  as Mandø, so ingest all three the same way. Note: `fetchReadings` must start
-  filtering by `station_id` *before* a second station is ingested, or the
-  unfiltered query would mix both stations.
+## Shipped
+- **Surface flood-reach time** — the time DMI's prognosis says the water reaches
+  the road (`caution_max_cm`) now shows in the verdict pane and per window.
+- **Station switch: Mandø ⇄ Ribe Kammersluse (v1).** Checkbox selector (one or
+  both); one drives the whole page, both shows a comparison with the most-cautious
+  driving the verdict. Shared thresholds. Ingests Ribe (obs `9006701`, tide `25343`)
+  alongside Mandø. Future: per-station thresholds, smarter dual-station logic, a
+  Ribe-specific DKSS grid point (currently sampled near the sluice; falls back to
+  astronomical if the point is dry).
 
 ## Ideas (not yet scoped)
 - **Prognosis drift warnings (high priority — build early).** On each DMI update,
