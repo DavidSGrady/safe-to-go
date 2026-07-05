@@ -204,17 +204,18 @@ async function ingest() {
   const now = Date.now()
   const iso = (ms: number) => new Date(ms).toISOString()
 
-  // One station failing (bad DMI response, etc.) must not block the others.
-  const perStation = await Promise.all(
-    STATIONS.map(async (station) => {
-      try {
-        return await ingestStation(supabase, now, station)
-      } catch (err) {
-        console.error(`ingest failed for ${station.obsId}:`, err)
-        return { stationId: station.obsId, error: String(err) }
-      }
-    }),
-  )
+  // Ingest stations sequentially so we don't fire concurrent DKSS requests at
+  // DMI's forecast API (which returns 429). One station failing must not block
+  // the others.
+  const perStation: unknown[] = []
+  for (const station of STATIONS) {
+    try {
+      perStation.push(await ingestStation(supabase, now, station))
+    } catch (err) {
+      console.error(`ingest failed for ${station.obsId}:`, err)
+      perStation.push({ stationId: station.obsId, error: String(err) })
+    }
+  }
 
   // --- Prune: keep 30 days of readings, drop old predictions/forecast ---
   await supabase
@@ -248,11 +249,21 @@ async function fetchDkss(
     `${DKSS_BASE_URL}/collections/${DKSS_COLLECTION}/position` +
     `?coords=${encodeURIComponent(coords)}` +
     `&parameter-name=sea-mean-deviation&crs=crs84`
-  const res = await fetch(url, {
-    headers: DMI_API_KEY ? { 'X-Gravitee-Api-Key': DMI_API_KEY } : {},
-  })
-  if (!res.ok) {
-    throw new Error(`DKSS ${DKSS_COLLECTION} ${res.status}: ${(await res.text()).slice(0, 200)}`)
+  const headers = DMI_API_KEY ? { 'X-Gravitee-Api-Key': DMI_API_KEY } : {}
+  // Retry on 429 / 5xx with backoff — DMI's forecast API is easily rate-limited.
+  let res: Response | null = null
+  for (let attempt = 0; attempt < 3; attempt++) {
+    res = await fetch(url, { headers })
+    if (res.ok) break
+    if (res.status === 429 || res.status >= 500) {
+      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)))
+      continue
+    }
+    break
+  }
+  if (!res || !res.ok) {
+    const body = res ? (await res.text()).slice(0, 200) : 'no response'
+    throw new Error(`DKSS ${DKSS_COLLECTION} ${res?.status}: ${body}`)
   }
   const json = await res.json()
   const times: string[] = json?.domain?.axes?.t?.values ?? []
