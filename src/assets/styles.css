@@ -33,6 +33,13 @@
   --verdict-unknown-fg: #3d4d48;
   --verdict-unknown-accent: #64756f;
 
+  /* Translucent water fills for the road simulation — same hues as the
+     verdict accents so the water turns amber at the warning threshold and
+     red at the danger threshold. */
+  --water-safe-fill: rgba(31, 122, 77, 0.24);
+  --water-caution-fill: rgba(176, 116, 15, 0.28);
+  --water-unsafe-fill: rgba(179, 54, 43, 0.28);
+
   /* Confidence badges */
   --conf-high-bg: #e7f2e9;
   --conf-high-fg: #14522f;

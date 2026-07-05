@@ -15,8 +15,17 @@ export const useStatusStore = defineStore('status', () => {
   const rules = ref<SafetyRules | null>(null)
   const loading = ref(true)
   const error = ref<string | null>(null)
-  const now = ref(Date.now())
+  const realNow = ref(Date.now())
   const extended = ref(false)
+
+  // Admin preview: when non-null, the whole page is rendered as if it were
+  // this many minutes into the future. null = live. The offset (rather than an
+  // absolute timestamp) keeps the simulated clock advancing with real time.
+  const previewOffsetMin = ref<number | null>(null)
+
+  /** Effective "now" driving every computed on the page — real time, or the
+   *  simulated time when an admin is previewing a future moment. */
+  const now = computed(() => realNow.value + (previewOffsetMin.value ?? 0) * 60_000)
 
   let timersStarted = false
 
@@ -37,6 +46,11 @@ export const useStatusStore = defineStore('status', () => {
     extended.value = !extended.value
   }
 
+  /** Enter/leave admin preview. Pass minutes ahead of now, or null for live. */
+  function setPreviewOffset(min: number | null): void {
+    previewOffsetMin.value = min
+  }
+
   async function refresh(): Promise<void> {
     try {
       const [r, p, f, ru] = await Promise.all([
@@ -54,7 +68,7 @@ export const useStatusStore = defineStore('status', () => {
       error.value = e instanceof Error ? e.message : String(e)
     } finally {
       loading.value = false
-      now.value = Date.now()
+      realNow.value = Date.now()
     }
   }
 
@@ -63,7 +77,7 @@ export const useStatusStore = defineStore('status', () => {
     timersStarted = true
     void refresh()
     setInterval(() => {
-      now.value = Date.now()
+      realNow.value = Date.now()
     }, RECOMPUTE_MS)
     setInterval(() => void refresh(), REFRESH_MS)
 
@@ -93,11 +107,14 @@ export const useStatusStore = defineStore('status', () => {
     rules,
     loading,
     error,
+    realNow,
     now,
     extended,
+    previewOffsetMin,
     status,
     refresh,
     start,
     toggleExtended,
+    setPreviewOffset,
   }
 })

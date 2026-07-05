@@ -120,11 +120,15 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
  *   - off: the plain astronomical tide table only.
  * Either way, the current status uses the live measured level.
  *
- * A "window" is a stretch where the level is at or below `safeMaxCm` (the
- * road is passable). Within it, the **deadline** — window end minus the
- * crossing time minus a safety buffer — is the last moment it's safe to
- * *start* crossing: after the deadline the road is still dry, but there
- * is no longer enough time to reach the other side before it floods again.
+ * A "window" is a stretch where the level is at or below the passable limit
+ * (the road is passable). That limit is *directional*: while the water is
+ * falling we allow up to `safeMaxFallingCm`, but once it turns and starts
+ * rising we hold to the stricter `safeMaxRisingCm` — rising water is about to
+ * flood the road, so a window closes at a lower level than it opened at.
+ * Within a window the **deadline** — window end minus the crossing time minus
+ * a safety buffer — is the last moment it's safe to *start* crossing: after
+ * the deadline the road is still dry, but there is no longer enough time to
+ * reach the other side before it floods again.
  */
 export function computeStatus(
   readings: Reading[],
@@ -230,10 +234,12 @@ export function computeStatus(
     }
   }
 
-  // Return-trip banner: the last window today whose deadline is still ahead.
+  // Return-trip banner: the last window whose *deadline* is still ahead and
+  // still falls today (a late-night window whose deadline slips past midnight
+  // is a tomorrow departure, not a valid "return today" time).
   const dayEnd = startOfNextLocalDay(now)
   const lastDepartureToday =
-    [...windows].reverse().find((w) => w.deadline > now && w.start < dayEnd) ?? null
+    [...windows].reverse().find((w) => w.deadline > now && w.deadline < dayEnd) ?? null
 
   const curve = buildChartCurve(sortedReadings, adjusted, now)
 
@@ -255,8 +261,28 @@ export function computeStatus(
 }
 
 /**
- * Scan the adjusted curve for stretches at or below `safeMaxCm`, and derive
- * the deadline, low point and confidence tier for each.
+ * The passable limit at time `t`, chosen by the local tide direction: the
+ * stricter rising limit while the water is climbing, the more lenient falling
+ * limit while it drops. `prev` is the level one step earlier (null if unknown).
+ */
+export function passableLimitAt(
+  rules: SafetyRules,
+  level: (t: number) => number | null,
+  t: number,
+  prev: number | null,
+): number {
+  const here = level(t)
+  const next = level(t + STEP_MS)
+  let rising: boolean
+  if (here !== null && next !== null) rising = next > here
+  else if (here !== null && prev !== null) rising = here > prev
+  else rising = false
+  return rising ? rules.safeMaxRisingCm : rules.safeMaxFallingCm
+}
+
+/**
+ * Scan the adjusted curve for stretches at or below the (directional) passable
+ * limit, and derive the deadline, low point and confidence tier for each.
  */
 export function findWindows(
   level: (t: number) => number | null,
@@ -269,15 +295,17 @@ export function findWindows(
   const raw: Array<{ start: number; end: number }> = []
 
   let openStart: number | null = null
+  let prev: number | null = null
   for (let t = from; t <= to; t += STEP_MS) {
     const v = level(t)
-    const safe = v !== null && v <= rules.safeMaxCm
+    const safe = v !== null && v <= passableLimitAt(rules, level, t, prev)
     if (safe && openStart === null) {
       openStart = t
     } else if (!safe && openStart !== null) {
       raw.push({ start: openStart, end: t })
       openStart = null
     }
+    prev = v
   }
   if (openStart !== null) raw.push({ start: openStart, end: to })
 

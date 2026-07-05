@@ -54,7 +54,7 @@
     "title": "Die Lage am Damm gerade",
     "roadLabel": "Der Damm · ~{cm} cm",
     "limitLabel": "{cm} cm · sichere Grenze",
-    "caption": "Querschnitt des Damms. Die Fahrbahn liegt bei etwa {road} cm — das Wasser muss unter {limit} cm fallen, bevor eine Überquerung sicher ist. Der Spielraum beträgt nur {margin} cm.",
+    "caption": "Querschnitt des Damms. Die Fahrbahn wird bei etwa {road} cm überflutet. Bei fallendem Wasser ist die Überquerung unter {falling} cm sicher; bei steigendem Wasser sind wir strenger und nutzen {rising} cm.",
     "play": "Abspielen",
     "pause": "Pause",
     "reset": "Zurücksetzen",

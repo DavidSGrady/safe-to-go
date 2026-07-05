@@ -54,7 +54,7 @@
     "title": "La situación en el camino ahora mismo",
     "roadLabel": "El camino elevado · ~{cm} cm",
     "limitLabel": "{cm} cm · límite seguro",
-    "caption": "Corte transversal del camino. La calzada está a unos {road} cm — el agua debe bajar de {limit} cm antes de que sea seguro cruzar. El margen es de solo {margin} cm.",
+    "caption": "Corte transversal del camino. La calzada se inunda hacia los {road} cm. Con marea bajando es seguro cruzar por debajo de {falling} cm; con marea subiendo somos más estrictos y usamos {rising} cm.",
     "play": "Reproducir",
     "pause": "Pausa",
     "reset": "Reiniciar",

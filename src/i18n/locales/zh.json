@@ -54,7 +54,7 @@
     "title": "道路当前状况",
     "roadLabel": "堤道 · 约 {cm} 厘米",
     "limitLabel": "{cm} 厘米 · 安全通行线",
-    "caption": "道路横截面示意图。路面高度约为 {road} 厘米——水位需降至 {limit} 厘米以下才能安全通行。安全余量仅有 {margin} 厘米。",
+    "caption": "道路横截面示意图。路面约在 {road} 厘米时被淹没。退潮时，水位低于 {falling} 厘米可安全通行；涨潮时我们更为谨慎，采用 {rising} 厘米。",
     "play": "播放",
     "pause": "暂停",
     "reset": "重置",

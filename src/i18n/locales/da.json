@@ -54,12 +54,22 @@
     "title": "Situationen ved vejen",
     "roadLabel": "Låningsvejen · ~{cm} cm",
     "limitLabel": "{cm} cm · farbar-grænse",
-    "caption": "Tværsnit af vejen. Vejbanen ligger ved ca. {road} cm — vandet skal under {limit} cm, før det er sikkert at køre. Marginen er kun {margin} cm.",
+    "caption": "Tværsnit af vejen. Vejbanen oversvømmes ved ca. {road} cm. Faldende vand er sikkert at krydse under {falling} cm; mens vandet stiger, er vi strengere og bruger {rising} cm.",
     "play": "Afspil",
     "pause": "Pause",
     "reset": "Nulstil",
     "now": "Nu",
     "inDuration": "om {duration}"
+  },
+  "preview": {
+    "label": "Forhåndsvisning",
+    "live": "Live",
+    "now": "Nu",
+    "enable": "Vis et tidspunkt",
+    "disable": "Tilbage til live",
+    "play": "Afspil",
+    "pause": "Pause",
+    "reset": "Nulstil til nu"
   },
   "windows": {
     "title": "Hvornår kan jeg køre?",
@@ -141,8 +151,10 @@
     "rules": {
       "title": "Grænseværdier",
       "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved Mandø station.",
-      "safeMax": "Farbar-grænse (cm)",
-      "safeMaxHelp": "Ved eller under denne vandstand er vejen farbar. Alle nedtællinger på siden regnes ud fra dette tal.",
+      "safeMaxFalling": "Farbar-grænse — faldende vand (cm)",
+      "safeMaxFallingHelp": "Mens tidevandet falder, regnes vejen som farbar ved eller under dette niveau. Et sikkert vindue åbner, når det faldende vand kommer under grænsen.",
+      "safeMaxRising": "Farbar-grænse — stigende vand (cm)",
+      "safeMaxRisingHelp": "Mens tidevandet stiger, holder vi os til denne strengere (lavere) grænse — stigende vand er ved at oversvømme vejen, så vinduer lukker her. Sæt den lig med eller under den faldende grænse.",
       "cautionMax": "Oversvømmelsespunkt (cm)",
       "cautionMaxHelp": "Vejen er helt under vand ved dette niveau.",
       "crossing": "Krydsningstid, værste fald (minutter)",
@@ -157,7 +169,7 @@
       "windAdjustOff": "Fra — kun astronomisk tidevandstabel",
       "save": "Gem ændringer",
       "saved": "Gemt.",
-      "invalid": "Oversvømmelsespunktet skal være mindst lige så højt som farbar-grænsen.",
+      "invalid": "Oversvømmelsespunktet skal være mindst lige så højt som begge farbar-grænser, og den stigende grænse skal være lig med eller under den faldende.",
       "preview": "Forhåndsvisning med aktuelle data",
       "previewState": "Med disse værdier ville siden lige nu vise: {state}"
     },

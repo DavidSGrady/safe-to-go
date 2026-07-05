@@ -54,12 +54,22 @@
     "title": "The road right now",
     "roadLabel": "The causeway · ~{cm} cm",
     "limitLabel": "{cm} cm · passable limit",
-    "caption": "Cross-section of the road. The roadbed sits at about {road} cm — the water needs to drop below {limit} cm before it is safe to cross. The margin is only {margin} cm.",
+    "caption": "Cross-section of the road. The roadbed floods at about {road} cm. Falling water is safe to cross below {falling} cm; while the water is rising we are stricter and use {rising} cm.",
     "play": "Play",
     "pause": "Pause",
     "reset": "Reset",
     "now": "Now",
     "inDuration": "in {duration}"
+  },
+  "preview": {
+    "label": "Preview",
+    "live": "Live",
+    "now": "Now",
+    "enable": "Preview a time",
+    "disable": "Back to live",
+    "play": "Play",
+    "pause": "Pause",
+    "reset": "Reset to now"
   },
   "windows": {
     "title": "When can I cross?",
@@ -141,8 +151,10 @@
     "rules": {
       "title": "Thresholds",
       "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the Mandø station.",
-      "safeMax": "Passable limit (cm)",
-      "safeMaxHelp": "At or below this water level the road is passable. Every countdown on the site is timed against this number.",
+      "safeMaxFalling": "Passable limit — water falling (cm)",
+      "safeMaxFallingHelp": "While the tide is falling, the road is treated as passable at or below this level. A safe window opens once falling water drops below it.",
+      "safeMaxRising": "Passable limit — water rising (cm)",
+      "safeMaxRisingHelp": "While the tide is rising, we hold to this stricter (lower) level — rising water is about to flood the road, so windows close here. Set it at or below the falling limit.",
       "cautionMax": "Flood point (cm)",
       "cautionMaxHelp": "The road is fully under water at this level.",
       "crossing": "Crossing time, worst case (minutes)",
@@ -157,7 +169,7 @@
       "windAdjustOff": "Off — astronomical tide table only",
       "save": "Save changes",
       "saved": "Saved.",
-      "invalid": "Flood point must be at or above the passable limit.",
+      "invalid": "Flood point must be at or above both passable limits, and the rising limit must be at or below the falling limit.",
       "preview": "Preview with current data",
       "previewState": "With these values the site would now show: {state}"
     },

@@ -54,7 +54,7 @@
     "title": "De situatie bij de weg",
     "roadLabel": "De dam · ~{cm} cm",
     "limitLabel": "{cm} cm · veilige grens",
-    "caption": "Dwarsdoorsnede van de weg. Het wegdek ligt op ongeveer {road} cm — het water moet onder {limit} cm zakken voordat oversteken veilig is. De marge is slechts {margin} cm.",
+    "caption": "Dwarsdoorsnede van de weg. Het wegdek loopt onder bij ongeveer {road} cm. Bij dalend water is oversteken veilig onder {falling} cm; bij stijgend water zijn we strenger en hanteren we {rising} cm.",
     "play": "Afspelen",
     "pause": "Pauze",
     "reset": "Resetten",

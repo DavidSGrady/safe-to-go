@@ -54,7 +54,7 @@
     "title": "La situation sur la route en ce moment",
     "roadLabel": "La digue · ~{cm} cm",
     "limitLabel": "{cm} cm · limite sûre",
-    "caption": "Coupe transversale de la route. La chaussée se trouve à environ {road} cm — l'eau doit descendre sous {limit} cm avant qu'il soit sûr de traverser. La marge n'est que de {margin} cm.",
+    "caption": "Coupe transversale de la route. La chaussée est submergée vers {road} cm. À marée descendante, la traversée est sûre sous {falling} cm ; à marée montante, nous sommes plus stricts et utilisons {rising} cm.",
     "play": "Lecture",
     "pause": "Pause",
     "reset": "Réinitialiser",

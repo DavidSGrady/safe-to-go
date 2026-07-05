@@ -36,7 +36,7 @@ const detail = computed(() => {
 
     <div v-if="detail" class="block calc">
       <div class="block-title">{{ t('dive.calcTitle', { day: detail.dayLabel }) }}</div>
-      <div class="row"><span>{{ t('dive.calcRowLimit', { limit: rules.safeMaxCm }) }}</span><span class="mono strong">{{ detail.endTxt }}</span></div>
+      <div class="row"><span>{{ t('dive.calcRowLimit', { limit: rules.safeMaxRisingCm }) }}</span><span class="mono strong">{{ detail.endTxt }}</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowCrossing') }}</span><span class="mono">− {{ rules.crossingMinutes }} min</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowBuffer') }}</span><span class="mono">− {{ rules.bufferMinutes }} min</span></div>
       <div class="row total"><span>{{ t('dive.calcRowDeadline') }}</span><span class="mono">{{ detail.deadlineTxt }}</span></div>

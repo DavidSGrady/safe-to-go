@@ -17,7 +17,8 @@ const store = useStatusStore()
 const { readings, predictions, forecast, rules, status, now } = storeToRefs(store)
 
 const form = reactive({
-  safeMaxCm: 0,
+  safeMaxRisingCm: 0,
+  safeMaxFallingCm: 0,
   cautionMaxCm: 0,
   crossingMinutes: 0,
   bufferMinutes: 0,
@@ -34,7 +35,8 @@ watch(
   rules,
   (r) => {
     if (r) {
-      form.safeMaxCm = r.safeMaxCm
+      form.safeMaxRisingCm = r.safeMaxRisingCm
+      form.safeMaxFallingCm = r.safeMaxFallingCm
       form.cautionMaxCm = r.cautionMaxCm
       form.crossingMinutes = r.crossingMinutes
       form.bufferMinutes = r.bufferMinutes
@@ -45,7 +47,12 @@ watch(
   { immediate: true },
 )
 
-const invalid = computed(() => form.cautionMaxCm < form.safeMaxCm)
+const invalid = computed(
+  () =>
+    form.cautionMaxCm < form.safeMaxFallingCm ||
+    form.cautionMaxCm < form.safeMaxRisingCm ||
+    form.safeMaxRisingCm > form.safeMaxFallingCm,
+)
 
 /** What the public page would show right now with the edited (unsaved) values. */
 const preview = computed(() => {
@@ -97,7 +104,8 @@ async function signOut(): Promise<void> {
 
 function diff(entry: RuleChangeLogEntry): string {
   const keys = [
-    'safe_max_cm',
+    'safe_max_rising_cm',
+    'safe_max_falling_cm',
     'caution_max_cm',
     'crossing_minutes',
     'buffer_minutes',
@@ -144,9 +152,15 @@ onMounted(async () => {
         <p class="secondary intro">{{ t('admin.rules.intro') }}</p>
 
         <div class="field">
-          <label for="safeMax">{{ t('admin.rules.safeMax') }}: <strong>{{ form.safeMaxCm }}</strong></label>
-          <input id="safeMax" v-model.number="form.safeMaxCm" type="range" min="-100" max="200" step="5" />
-          <p class="muted">{{ t('admin.rules.safeMaxHelp') }}</p>
+          <label for="safeMaxFalling">{{ t('admin.rules.safeMaxFalling') }}: <strong>{{ form.safeMaxFallingCm }}</strong></label>
+          <input id="safeMaxFalling" v-model.number="form.safeMaxFallingCm" type="range" min="-100" max="200" step="5" />
+          <p class="muted">{{ t('admin.rules.safeMaxFallingHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="safeMaxRising">{{ t('admin.rules.safeMaxRising') }}: <strong>{{ form.safeMaxRisingCm }}</strong></label>
+          <input id="safeMaxRising" v-model.number="form.safeMaxRisingCm" type="range" min="-100" max="200" step="5" />
+          <p class="muted">{{ t('admin.rules.safeMaxRisingHelp') }}</p>
         </div>
 
         <div class="field">

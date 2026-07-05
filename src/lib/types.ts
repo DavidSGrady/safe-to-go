@@ -30,8 +30,17 @@ export interface ForecastPoint {
 
 /** Admin-configurable safety thresholds. */
 export interface SafetyRules {
-  /** Water level (cm DVR90) at or below which the road is passable */
-  safeMaxCm: number
+  /**
+   * Passable limit (cm DVR90) while the water is *rising*. A safe window
+   * closes once rising water climbs above this. Set lower than the falling
+   * limit — rising water is about to flood the road, so we stop sooner.
+   */
+  safeMaxRisingCm: number
+  /**
+   * Passable limit (cm DVR90) while the water is *falling*. A safe window
+   * opens once falling water drops below this.
+   */
+  safeMaxFallingCm: number
   /** Water level (cm DVR90) at which the road is fully flooded */
   cautionMaxCm: number
   /** Time it takes to cross the causeway in the worst case (minutes) */
@@ -55,9 +64,9 @@ export type SafetyState = 'safe' | 'caution' | 'unsafe' | 'unknown'
 export type ConfidenceTier = 'high' | 'medium' | 'low' | 'veryLow'
 
 export interface SafeWindow {
-  /** ms epoch — level drops to/below safeMaxCm */
+  /** ms epoch — falling water drops to/below the falling passable limit */
   start: number
-  /** ms epoch — level rises back above safeMaxCm (road floods again) */
+  /** ms epoch — rising water climbs back above the rising passable limit (road floods again) */
   end: number
   /**
    * ms epoch — the last moment it's safe to *start* crossing:

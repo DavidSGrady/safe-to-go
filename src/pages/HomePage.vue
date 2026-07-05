@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
+import { useAuthStore } from '@/stores/auth'
 import { isDemoMode } from '@/lib/supabase'
 import StatusHero from '@/components/StatusHero.vue'
 import StickyVerdict from '@/components/StickyVerdict.vue'
@@ -10,11 +11,17 @@ import ReturnBanner from '@/components/ReturnBanner.vue'
 import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
 import DiveDeeper from '@/components/DiveDeeper.vue'
+import AdminPreviewBar from '@/components/AdminPreviewBar.vue'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 
 const { t } = useI18n()
 const store = useStatusStore()
 const { status, rules, loading, error, now, extended } = storeToRefs(store)
+
+// Admins get a page-wide time-travel bar to preview how every panel looks at
+// a future moment. Non-admins never see it.
+const auth = useAuthStore()
+const { isAdmin } = storeToRefs(auth)
 
 // Show the sticky verdict bar once the main verdict panel is scrolled past.
 const stuck = ref(false)
@@ -32,12 +39,17 @@ watch(heroSentinel, (el) => {
   }
 })
 
-onMounted(() => store.start())
+onMounted(() => {
+  store.start()
+  void auth.init()
+})
 onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
   <div class="page">
+    <AdminPreviewBar v-if="isAdmin" />
+
     <header class="top">
       <div>
         <span class="brand">{{ t('app.title') }}</span>

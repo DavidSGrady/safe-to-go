@@ -60,11 +60,17 @@ const rising = computed(() => {
   return b > a
 })
 
+// The passable limit is stricter while the water is rising — mirror the
+// window logic so the water turns amber at the right level for the direction.
+const passableLimit = computed(() =>
+  rising.value ? props.rules.safeMaxRisingCm : props.rules.safeMaxFallingCm,
+)
+
 const displayState = computed<'safe' | 'caution' | 'unsafe' | 'unknown'>(() => {
   const v = displayLevel.value
   if (v === null) return 'unknown'
   if (v >= props.rules.cautionMaxCm) return 'unsafe'
-  if (v >= props.rules.safeMaxCm) return 'caution'
+  if (v >= passableLimit.value) return 'caution'
   return 'safe'
 })
 
@@ -139,8 +145,8 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
         {{
           t('road.caption', {
             road: rules.cautionMaxCm,
-            limit: rules.safeMaxCm,
-            margin: rules.cautionMaxCm - rules.safeMaxCm,
+            falling: rules.safeMaxFallingCm,
+            rising: rules.safeMaxRisingCm,
           })
         }}
       </p>
@@ -182,16 +188,38 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 110, 102, 0.28);
-  transition: height 0.2s ease;
+  background: var(--water-safe-fill);
+  transition: height 0.2s ease, background 0.3s ease;
 }
 
 .waterline {
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 2px solid var(--accent);
-  transition: bottom 0.2s ease;
+  border-top: 2px solid var(--verdict-safe-accent);
+  transition: bottom 0.2s ease, border-color 0.3s ease;
+}
+
+/* Water tracks the verdict palette: green when safe, amber at the warning
+   threshold, red once the danger threshold is reached. */
+.viz.caution .water {
+  background: var(--water-caution-fill);
+}
+.viz.unsafe .water {
+  background: var(--water-unsafe-fill);
+}
+.viz.unknown .water {
+  background: rgba(100, 117, 111, 0.24);
+}
+
+.viz.caution .waterline {
+  border-top-color: var(--verdict-caution-accent);
+}
+.viz.unsafe .waterline {
+  border-top-color: var(--verdict-unsafe-accent);
+}
+.viz.unknown .waterline {
+  border-top-color: var(--verdict-unknown-accent);
 }
 
 .road-label {
