@@ -51,6 +51,7 @@ const detail = computed(() => {
 
     <div v-if="detail" class="block calc">
       <div class="block-title">{{ t('dive.calcTitle', { day: detail.dayLabel }) }}</div>
+      <p class="calc-note">{{ t('dive.calcNote', { flood: rules.cautionMaxCm, target: detail.target, margin: rules.floodMarginCm }) }}</p>
       <div class="row"><span>{{ t('dive.calcRowLimit', { limit: detail.target }) }}</span><span class="mono strong">{{ detail.targetTxt }}</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowCrossing') }}</span><span class="mono">− {{ rules.crossingMinutes }} min</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowBuffer') }}</span><span class="mono">− {{ rules.bufferMinutes }} min</span></div>
@@ -89,6 +90,14 @@ const detail = computed(() => {
   color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 8px;
+}
+
+.calc-note {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 10px;
+  text-wrap: pretty;
 }
 
 .row {

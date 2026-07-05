@@ -110,6 +110,7 @@
   "dive": {
     "title": "Dive deeper",
     "calcTitle": "How the last departure is calculated · {day}",
+    "calcNote": "The road floods at {flood} cm. We keep a {margin} cm margin, so the crossing must finish before the rising water is back to {target} cm:",
     "calcRowLimit": "Water reaches {limit} cm again",
     "calcRowCrossing": "Crossing, worst case",
     "calcRowBuffer": "Safety buffer",

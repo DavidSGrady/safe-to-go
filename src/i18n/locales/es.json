@@ -100,6 +100,7 @@
   "dive": {
     "title": "Más detalles",
     "calcTitle": "Cómo se calcula la última salida · {day}",
+    "calcNote": "La carretera se inunda a {flood} cm. Con un margen de {margin} cm, el cruce debe completarse antes de que el agua en ascenso vuelva a {target} cm:",
     "calcRowLimit": "El agua vuelve a alcanzar {limit} cm",
     "calcRowCrossing": "Cruce, peor caso",
     "calcRowBuffer": "Margen de seguridad",

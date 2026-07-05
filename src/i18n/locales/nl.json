@@ -100,6 +100,7 @@
   "dive": {
     "title": "Meer details",
     "calcTitle": "Zo wordt het laatste vertrek berekend · {day}",
+    "calcNote": "De weg loopt onder bij {flood} cm. Met {margin} cm marge moet de oversteek klaar zijn voordat het stijgende water weer {target} cm bereikt:",
     "calcRowLimit": "Water bereikt weer {limit} cm",
     "calcRowCrossing": "Oversteek, slechtste geval",
     "calcRowBuffer": "Veiligheidsmarge",

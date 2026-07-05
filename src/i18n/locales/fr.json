@@ -100,6 +100,7 @@
   "dive": {
     "title": "Approfondir",
     "calcTitle": "Comment le dernier départ est calculé · {day}",
+    "calcNote": "La route est submergée à {flood} cm. Avec une marge de {margin} cm, la traversée doit être terminée avant que l'eau montante atteigne à nouveau {target} cm :",
     "calcRowLimit": "L'eau atteint de nouveau {limit} cm",
     "calcRowCrossing": "Traversée, pire cas",
     "calcRowBuffer": "Marge de sécurité",

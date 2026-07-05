@@ -100,6 +100,7 @@
   "dive": {
     "title": "深入了解",
     "calcTitle": "最后出发时间的计算方式 · {day}",
+    "calcNote": "道路在 {flood} 厘米时被淹没。为保留 {margin} 厘米的安全余量，必须在上涨的水位回到 {target} 厘米之前完成通行：",
     "calcRowLimit": "水位再次达到 {limit} 厘米",
     "calcRowCrossing": "通行时间（最不利情况）",
     "calcRowBuffer": "安全缓冲时间",

@@ -110,6 +110,7 @@
   "dive": {
     "title": "Dyk ned",
     "calcTitle": "Sådan beregnes sidste afgang · {day}",
+    "calcNote": "Vejen oversvømmes ved {flood} cm. Vi holder en margin på {margin} cm, så krydsningen skal være færdig, før det stigende vand igen når {target} cm:",
     "calcRowLimit": "Vandet når {limit} cm igen",
     "calcRowCrossing": "Krydsning, værste fald",
     "calcRowBuffer": "Sikkerhedsbuffer",
