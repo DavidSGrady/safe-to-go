@@ -31,6 +31,19 @@ const saveError = ref<string | null>(null)
 const busy = ref(false)
 const log = ref<RuleChangeLogEntry[]>([])
 
+// Which build is live — baked in at build time (vite.config.ts). Lets an admin
+// confirm on the live site that a deploy actually shipped.
+const commitSha = __COMMIT_SHA__
+const shortSha = commitSha === 'unknown' ? commitSha : commitSha.slice(0, 7)
+const commitUrl =
+  commitSha === 'unknown'
+    ? null
+    : `https://github.com/DavidSGrady/safe-to-go/commit/${commitSha}`
+const builtAt = computed(() => {
+  const ms = Date.parse(__BUILD_TIME__)
+  return Number.isNaN(ms) ? __BUILD_TIME__ : fmtDateTime(ms, locale.value)
+})
+
 watch(
   rules,
   (r) => {
@@ -271,6 +284,13 @@ onMounted(async () => {
         </div>
       </section>
     </template>
+
+    <p class="build-info muted">
+      {{ t('admin.build.label') }}
+      <a v-if="commitUrl" :href="commitUrl" target="_blank" rel="noopener" class="mono">{{ shortSha }}</a>
+      <span v-else class="mono">{{ shortSha }}</span>
+      · {{ t('admin.build.builtAt', { time: builtAt }) }}
+    </p>
   </div>
 </template>
 
@@ -414,5 +434,15 @@ onMounted(async () => {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+.build-info {
+  text-align: center;
+  font-size: 0.75rem;
+  margin-top: 20px;
+}
+
+.build-info a {
+  color: var(--text-secondary);
 }
 </style>

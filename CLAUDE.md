@@ -35,6 +35,9 @@ here are written to be backward-compatible so either order is safe, but keep thi
    (`origin` = `github.com/DavidSGrady/safe-to-go`). There is **no** separate deploy step —
    `git push origin main` IS the production deploy. `vercel.json` only sets SPA rewrites.
    - Prod env vars live in Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (anon key only).
+   - **Verify a deploy shipped:** `/admin` shows a "Live build" footer with the commit SHA
+     (links to the GitHub commit) + build time, baked in via Vite `define` in `vite.config.ts`
+     (`__COMMIT_SHA__` from `VERCEL_GIT_COMMIT_SHA`, `__BUILD_TIME__`; typed in `src/build-info.d.ts`).
 
 ### Migration conventions & gotchas
 - Files: `supabase/migrations/YYYYMMDD000000_name.sql`, applied in filename order.

@@ -189,6 +189,10 @@
       "who": "Hvem",
       "change": "Ændring",
       "empty": "Ingen ændringer endnu."
+    },
+    "build": {
+      "label": "Live-build",
+      "builtAt": "udrullet {time}"
     }
   }
 }

@@ -189,6 +189,10 @@
       "who": "Who",
       "change": "Change",
       "empty": "No changes yet."
+    },
+    "build": {
+      "label": "Live build",
+      "builtAt": "deployed {time}"
     }
   }
 }
