@@ -3,20 +3,45 @@ import { computed, ref } from 'vue'
 import { fetchForecast, fetchPredictions, fetchReadings, fetchRules } from '@/lib/api'
 import { computeStatus, DEFAULT_HORIZON_HOURS, EXTENDED_HORIZON_HOURS } from '@/lib/tide'
 import { isDemoMode, getSupabase } from '@/lib/supabase'
-import type { ForecastPoint, Prediction, Reading, SafetyRules } from '@/lib/types'
+import { DEFAULT_STATION_ID, STATIONS, stationName } from '@/lib/stations'
+import type { ForecastPoint, Prediction, Reading, SafetyRules, StatusResult } from '@/lib/types'
 
 const RECOMPUTE_MS = 30 * 1000
 const REFRESH_MS = 5 * 60 * 1000
+const SELECTION_KEY = 'stations'
+
+/** Higher = more restrictive. Used to pick the "worst case" when comparing. */
+const SEVERITY: Record<StatusResult['state'], number> = {
+  unknown: 0,
+  safe: 1,
+  caution: 2,
+  unsafe: 3,
+}
+
+function loadSelection(): string[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SELECTION_KEY) ?? '[]') as unknown
+    if (Array.isArray(raw)) {
+      const valid = raw.filter((id): id is string => STATIONS.some((s) => s.id === id))
+      if (valid.length) return valid
+    }
+  } catch {
+    // ignore malformed storage
+  }
+  return [DEFAULT_STATION_ID]
+}
 
 export const useStatusStore = defineStore('status', () => {
-  const readings = ref<Reading[]>([])
-  const predictions = ref<Prediction[]>([])
-  const forecast = ref<ForecastPoint[]>([])
+  const readingsByStation = ref<Record<string, Reading[]>>({})
+  const predictionsByStation = ref<Record<string, Prediction[]>>({})
+  const forecastByStation = ref<Record<string, ForecastPoint[]>>({})
   const rules = ref<SafetyRules | null>(null)
   const loading = ref(true)
   const error = ref<string | null>(null)
   const realNow = ref(Date.now())
   const extended = ref(false)
+
+  const selectedStationIds = ref<string[]>(loadSelection())
 
   // Admin preview: when non-null, the whole page is rendered as if it were
   // this many minutes into the future. null = live. The offset (rather than an
@@ -29,21 +54,80 @@ export const useStatusStore = defineStore('status', () => {
 
   let timersStarted = false
 
-  const status = computed(() => {
-    if (!rules.value) return null
+  /** Full status per station, from that station's own readings/forecast. */
+  const statusByStation = computed<Record<string, StatusResult | null>>(() => {
+    const out: Record<string, StatusResult | null> = {}
+    if (!rules.value) return out
     const horizon = extended.value ? EXTENDED_HORIZON_HOURS : DEFAULT_HORIZON_HOURS
-    return computeStatus(
-      readings.value,
-      predictions.value,
-      forecast.value,
-      rules.value,
-      now.value,
-      horizon,
-    )
+    for (const s of STATIONS) {
+      out[s.id] = computeStatus(
+        readingsByStation.value[s.id] ?? [],
+        predictionsByStation.value[s.id] ?? [],
+        forecastByStation.value[s.id] ?? [],
+        rules.value,
+        now.value,
+        horizon,
+      )
+    }
+    return out
   })
+
+  /** Is `a` a more cautious (more restrictive) verdict than `b`? */
+  function moreCautious(a: StatusResult | null, b: StatusResult | null): boolean {
+    if (!a) return false
+    if (!b) return true
+    const sa = SEVERITY[a.state]
+    const sb = SEVERITY[b.state]
+    if (sa !== sb) return sa > sb
+    // Tie on state → the one with more water (closer to flooding) is worse.
+    return (a.currentLevelCm ?? -Infinity) > (b.currentLevelCm ?? -Infinity)
+  }
+
+  /**
+   * The station whose verdict drives the page. One selected → that one.
+   * Several → the most cautious, so we never under-warn.
+   */
+  const primaryStationId = computed(() => {
+    const sel = selectedStationIds.value
+    if (sel.length <= 1) return sel[0] ?? DEFAULT_STATION_ID
+    let bestId = sel[0]
+    for (const id of sel.slice(1)) {
+      if (moreCautious(statusByStation.value[id], statusByStation.value[bestId])) bestId = id
+    }
+    return bestId
+  })
+
+  const status = computed(() => statusByStation.value[primaryStationId.value] ?? null)
+
+  /** Selected stations with their individual status, for the comparison row. */
+  const selectedStations = computed(() =>
+    selectedStationIds.value.map((id) => ({
+      id,
+      name: stationName(id),
+      status: statusByStation.value[id] ?? null,
+      primary: id === primaryStationId.value,
+    })),
+  )
+
+  // Primary station's raw series — used by the admin threshold preview.
+  const readings = computed(() => readingsByStation.value[primaryStationId.value] ?? [])
+  const predictions = computed(() => predictionsByStation.value[primaryStationId.value] ?? [])
+  const forecast = computed(() => forecastByStation.value[primaryStationId.value] ?? [])
 
   function toggleExtended(): void {
     extended.value = !extended.value
+  }
+
+  /** Update which stations are shown (at least one). Persisted across visits. */
+  function setSelectedStations(ids: string[]): void {
+    const valid = ids.filter((id) => STATIONS.some((s) => s.id === id))
+    if (valid.length === 0) return
+    selectedStationIds.value = valid
+    try {
+      localStorage.setItem(SELECTION_KEY, JSON.stringify(valid))
+    } catch {
+      // ignore storage failures
+    }
   }
 
   /** Enter/leave admin preview. Pass minutes ahead of now, or null for live. */
@@ -53,15 +137,28 @@ export const useStatusStore = defineStore('status', () => {
 
   async function refresh(): Promise<void> {
     try {
-      const [r, p, f, ru] = await Promise.all([
-        fetchReadings(),
-        fetchPredictions(),
-        fetchForecast(),
-        fetchRules(),
-      ])
-      readings.value = r
-      predictions.value = p
-      forecast.value = f
+      const ru = await fetchRules()
+      const perStation = await Promise.all(
+        STATIONS.map(async (s) => {
+          const [r, p, f] = await Promise.all([
+            fetchReadings(s.id),
+            fetchPredictions(s.id),
+            fetchForecast(s.id),
+          ])
+          return { id: s.id, r, p, f }
+        }),
+      )
+      const rMap: Record<string, Reading[]> = {}
+      const pMap: Record<string, Prediction[]> = {}
+      const fMap: Record<string, ForecastPoint[]> = {}
+      for (const x of perStation) {
+        rMap[x.id] = x.r
+        pMap[x.id] = x.p
+        fMap[x.id] = x.f
+      }
+      readingsByStation.value = rMap
+      predictionsByStation.value = pMap
+      forecastByStation.value = fMap
       rules.value = ru
       error.value = null
     } catch (e) {
@@ -112,9 +209,14 @@ export const useStatusStore = defineStore('status', () => {
     extended,
     previewOffsetMin,
     status,
+    statusByStation,
+    selectedStationIds,
+    selectedStations,
+    primaryStationId,
     refresh,
     start,
     toggleExtended,
+    setSelectedStations,
     setPreviewOffset,
   }
 })

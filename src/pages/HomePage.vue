@@ -12,6 +12,7 @@ import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
 import DiveDeeper from '@/components/DiveDeeper.vue'
 import AdminPreviewBar from '@/components/AdminPreviewBar.vue'
+import StationSelector from '@/components/StationSelector.vue'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 
 const { t } = useI18n()
@@ -59,6 +60,8 @@ onBeforeUnmount(() => observer?.disconnect())
     </header>
 
     <p v-if="isDemoMode" class="demo-banner">{{ t('demo.banner') }}</p>
+
+    <StationSelector />
 
     <div v-if="loading" class="card skeleton" aria-busy="true"></div>
 

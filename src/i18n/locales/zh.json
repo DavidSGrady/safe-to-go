@@ -3,6 +3,10 @@
     "title": "现在能过去吗？",
     "subtitle": "前往曼德岛（Mandø）"
   },
+  "stations": {
+    "label": "测量站",
+    "basedOn": "评估基于 {name}"
+  },
   "common": {
     "measured": "实测值",
     "forecast": "预期值（预测）",

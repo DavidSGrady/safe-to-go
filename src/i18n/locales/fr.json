@@ -3,6 +3,10 @@
     "title": "Peut-on traverser ?",
     "subtitle": "Traversée vers Mandø"
   },
+  "stations": {
+    "label": "Station de mesure",
+    "basedOn": "Évaluation basée sur {name}"
+  },
   "common": {
     "measured": "valeur mesurée",
     "forecast": "valeur attendue (prévision)",

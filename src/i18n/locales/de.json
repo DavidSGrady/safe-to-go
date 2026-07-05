@@ -3,6 +3,10 @@
     "title": "Kann man rüber?",
     "subtitle": "Überfahrt nach Mandø"
   },
+  "stations": {
+    "label": "Messstation",
+    "basedOn": "Bewertung basierend auf {name}"
+  },
   "common": {
     "measured": "Messwert",
     "forecast": "erwarteter Wert (Prognose)",

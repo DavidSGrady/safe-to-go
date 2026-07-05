@@ -3,6 +3,10 @@
     "title": "Kan man køre til Mandø?",
     "subtitle": "Låningsvejen · Vadehavet"
   },
+  "stations": {
+    "label": "Målestation",
+    "basedOn": "Vurdering baseret på {name}"
+  },
   "common": {
     "measured": "målt værdi",
     "forecast": "forventet værdi (prognose)",

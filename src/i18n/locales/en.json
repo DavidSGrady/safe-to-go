@@ -3,6 +3,10 @@
     "title": "Safe to Go?",
     "subtitle": "Crossing to Mandø"
   },
+  "stations": {
+    "label": "Measuring station",
+    "basedOn": "Assessment based on {name}"
+  },
   "common": {
     "measured": "measured value",
     "forecast": "expected value (forecast)",

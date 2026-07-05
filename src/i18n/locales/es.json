@@ -3,6 +3,10 @@
     "title": "¿Se puede cruzar?",
     "subtitle": "Cruce hacia Mandø"
   },
+  "stations": {
+    "label": "Estación de medición",
+    "basedOn": "Evaluación basada en {name}"
+  },
   "common": {
     "measured": "valor medido",
     "forecast": "valor previsto (pronóstico)",

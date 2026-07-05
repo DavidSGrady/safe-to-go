@@ -30,12 +30,13 @@ interface RulesRow {
   updated_at: string
 }
 
-export async function fetchReadings(): Promise<Reading[]> {
+export async function fetchReadings(stationId: string): Promise<Reading[]> {
   if (isDemoMode) return demoReadings(Date.now())
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
   const { data, error } = await getSupabase()
     .from('station_readings')
     .select('observed_at, water_level_cm')
+    .eq('station_id', stationId)
     .gte('observed_at', since)
     .order('observed_at', { ascending: true })
     .limit(500)
@@ -46,7 +47,7 @@ export async function fetchReadings(): Promise<Reading[]> {
   }))
 }
 
-export async function fetchPredictions(): Promise<Prediction[]> {
+export async function fetchPredictions(stationId: string): Promise<Prediction[]> {
   if (isDemoMode) return demoPredictions(Date.now())
   // Fetch far enough ahead to cover the "see further ahead" 7-day toggle.
   const from = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
@@ -54,6 +55,7 @@ export async function fetchPredictions(): Promise<Prediction[]> {
   const { data, error } = await getSupabase()
     .from('tide_predictions')
     .select('predicted_at, prediction_type, value_cm')
+    .eq('station_id', stationId)
     .gte('predicted_at', from)
     .lte('predicted_at', to)
     .order('predicted_at', { ascending: true })
@@ -71,13 +73,14 @@ interface ForecastRow {
   value_cm: number
 }
 
-export async function fetchForecast(): Promise<ForecastPoint[]> {
+export async function fetchForecast(stationId: string): Promise<ForecastPoint[]> {
   if (isDemoMode) return demoForecast(Date.now())
   const from = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
   const to = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString()
   const { data, error } = await getSupabase()
     .from('water_level_forecast')
     .select('forecast_at, value_cm')
+    .eq('station_id', stationId)
     .gte('forecast_at', from)
     .lte('forecast_at', to)
     .order('forecast_at', { ascending: true })

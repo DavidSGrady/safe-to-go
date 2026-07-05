@@ -39,6 +39,24 @@ const DKSS_COLLECTION = Deno.env.get('DKSS_COLLECTION') ?? 'dkss_ws'
 const DKSS_LON = Deno.env.get('DKSS_LON') ?? '8.50'
 const DKSS_LAT = Deno.env.get('DKSS_LAT') ?? '55.28'
 
+interface StationConfig {
+  /** DMI observation stationId — also how rows are keyed in Postgres. */
+  obsId: string
+  /** DMI tidewater stationId (astronomical predictions). */
+  tideId: string
+  /** DKSS grid point (storm-surge forecast). */
+  dkssLon: string
+  dkssLat: string
+}
+
+// Stations to ingest. Mandø stays overridable via the existing secrets; Ribe
+// Kammersluse is added as a second gauge locals cross-reference. If a station's
+// fetch fails, the others still run (see ingest()).
+const STATIONS: StationConfig[] = [
+  { obsId: STATION_OBS, tideId: STATION_TIDE, dkssLon: DKSS_LON, dkssLat: DKSS_LAT },
+  { obsId: '9006701', tideId: '25343', dkssLon: '8.66', dkssLat: '55.31' },
+]
+
 interface DmiFeature {
   properties: Record<string, unknown>
 }
@@ -83,20 +101,16 @@ async function discoverStations(query: string) {
   return { observationStations: match(obs), tidewaterStations: match(tide) }
 }
 
-async function ingest() {
-  if (!STATION_OBS) throw new Error('DMI_STATION_ID_OBS is not set')
+// deno-lint-ignore no-explicit-any
+type Supa = any
 
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  )
-
-  const now = Date.now()
+/** Ingest observations, tide predictions and the DKSS forecast for one station. */
+async function ingestStation(supabase: Supa, now: number, station: StationConfig) {
   const iso = (ms: number) => new Date(ms).toISOString()
 
   // --- Observations: last 24 h of water levels ---
   const obsFeatures = await dmiGet('observation', {
-    stationId: STATION_OBS,
+    stationId: station.obsId,
     parameterId: PARAMETER_ID,
     datetime: `${iso(now - 24 * 3600_000)}/${iso(now)}`,
     limit: '300',
@@ -107,7 +121,7 @@ async function ingest() {
     .map((f) => f.properties)
     .filter((p) => p.observed && typeof p.value === 'number')
     .map((p) => ({
-      station_id: String(p.stationId),
+      station_id: String(p.stationId ?? station.obsId),
       parameter_id: String(p.parameterId ?? PARAMETER_ID),
       observed_at: String(p.observed),
       water_level_cm: p.value as number,
@@ -122,7 +136,7 @@ async function ingest() {
 
   // --- Tide predictions: -12 h to +8 days (covers the "see further ahead" 7-day view) ---
   const tideFeatures = await dmiGet('tidewater', {
-    stationId: STATION_TIDE,
+    stationId: station.tideId,
     datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
     limit: '3000',
   })
@@ -136,7 +150,8 @@ async function ingest() {
         typeof p.predictionType === 'string',
     )
     .map((p) => ({
-      station_id: String(p.stationId),
+      // Store under the observation stationId so the app keys everything by one id.
+      station_id: station.obsId,
       prediction_type: String(p.predictionType),
       predicted_at: String(p.predictionTime ?? p.predicted),
       value_cm: p.value as number,
@@ -150,23 +165,56 @@ async function ingest() {
   }
 
   // --- DKSS storm-surge forecast (weather-inclusive water level) ---
-  // Non-fatal: if DMI's forecast API is briefly unavailable, keep the
-  // observations/tide we already stored. The app falls back to the
-  // astronomical table until the next run refreshes the forecast.
-  let forecast: Array<{ forecast_at: string; value_cm: number; source: string }> = []
+  // Non-fatal: if DMI's forecast API is briefly unavailable (or the grid point
+  // is dry), keep the observations/tide we already stored. The app falls back
+  // to the astronomical table until the next run refreshes the forecast.
+  let forecast: Array<{ station_id: string; forecast_at: string; value_cm: number; source: string }> = []
   let forecastError: string | null = null
   try {
-    forecast = await fetchDkss()
+    forecast = await fetchDkss(station)
     if (forecast.length > 0) {
       const { error } = await supabase
         .from('water_level_forecast')
-        .upsert(forecast, { onConflict: 'source,forecast_at' })
+        .upsert(forecast, { onConflict: 'station_id,source,forecast_at' })
       if (error) throw new Error(error.message)
     }
   } catch (err) {
     forecastError = String(err)
-    console.error('DKSS forecast fetch failed (non-fatal):', forecastError)
+    console.error(`DKSS forecast fetch failed for ${station.obsId} (non-fatal):`, forecastError)
   }
+
+  return {
+    stationId: station.obsId,
+    readingsUpserted: readings.length,
+    predictionsUpserted: predictions.length,
+    forecastUpserted: forecast.length,
+    forecastError,
+    newestReading: readings[0]?.observed_at ?? null,
+  }
+}
+
+async function ingest() {
+  if (!STATION_OBS) throw new Error('DMI_STATION_ID_OBS is not set')
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+  )
+
+  const now = Date.now()
+  const iso = (ms: number) => new Date(ms).toISOString()
+
+  // One station failing (bad DMI response, etc.) must not block the others.
+  const perStation = await Promise.all(
+    STATIONS.map(async (station) => {
+      try {
+        return await ingestStation(supabase, now, station)
+      } catch (err) {
+        console.error(`ingest failed for ${station.obsId}:`, err)
+        return { stationId: station.obsId, error: String(err) }
+      }
+    }),
+  )
 
   // --- Prune: keep 30 days of readings, drop old predictions/forecast ---
   await supabase
@@ -182,13 +230,7 @@ async function ingest() {
     .delete()
     .lt('forecast_at', iso(now - 1 * 24 * 3600_000))
 
-  return {
-    readingsUpserted: readings.length,
-    predictionsUpserted: predictions.length,
-    forecastUpserted: forecast.length,
-    forecastError,
-    newestReading: readings[0]?.observed_at ?? null,
-  }
+  return { stations: perStation }
 }
 
 /**
@@ -198,10 +240,10 @@ async function ingest() {
  * to the gauge at read time (see tide.ts), so a small constant offset here
  * does not matter.
  */
-async function fetchDkss(): Promise<
-  Array<{ forecast_at: string; value_cm: number; source: string }>
-> {
-  const coords = `POINT(${DKSS_LON} ${DKSS_LAT})`
+async function fetchDkss(
+  station: StationConfig,
+): Promise<Array<{ station_id: string; forecast_at: string; value_cm: number; source: string }>> {
+  const coords = `POINT(${station.dkssLon} ${station.dkssLat})`
   const url =
     `${DKSS_BASE_URL}/collections/${DKSS_COLLECTION}/position` +
     `?coords=${encodeURIComponent(coords)}` +
@@ -216,11 +258,12 @@ async function fetchDkss(): Promise<
   const times: string[] = json?.domain?.axes?.t?.values ?? []
   const values: Array<number | null> = json?.ranges?.['sea-mean-deviation']?.values ?? []
 
-  const rows: Array<{ forecast_at: string; value_cm: number; source: string }> = []
+  const rows: Array<{ station_id: string; forecast_at: string; value_cm: number; source: string }> = []
   for (let i = 0; i < times.length; i++) {
     const v = values[i]
     if (typeof v === 'number' && Number.isFinite(v)) {
       rows.push({
+        station_id: station.obsId,
         forecast_at: new Date(times[i]).toISOString(),
         value_cm: Math.round(v * 100),
         source: DKSS_COLLECTION,

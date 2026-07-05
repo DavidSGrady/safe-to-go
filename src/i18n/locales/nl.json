@@ -3,6 +3,10 @@
     "title": "Kun je oversteken?",
     "subtitle": "Oversteek naar Mandø"
   },
+  "stations": {
+    "label": "Meetstation",
+    "basedOn": "Beoordeling op basis van {name}"
+  },
   "common": {
     "measured": "gemeten waarde",
     "forecast": "verwachte waarde (voorspelling)",
