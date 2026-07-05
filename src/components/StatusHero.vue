@@ -80,9 +80,15 @@ const lines = computed(() => {
   }
   if (s.state === 'unsafe') {
     if (next) {
+      // Only show a "last departure" when it falls on the same day the window
+      // opens. An overnight deadline ("tomorrow 05.42") under "next window
+      // today 21.18" reads as nonsense — the window opening is enough there.
+      const deadlineSameDay = dayLabel(next.deadline, next.start, locale.value) === 'today'
       return {
         line1: t('verdict.unsafeLine1WithNext', { day: dayTxt(next.start), time: fmtTime(next.start, locale.value) }),
-        line2: t('verdict.unsafeLine2WithNext', { time: depTime(next.deadline) }),
+        line2: deadlineSameDay
+          ? t('verdict.unsafeLine2WithNext', { time: fmtTime(next.deadline, locale.value) })
+          : '',
       }
     }
     return { line1: t('verdict.unsafeLine1NoNext'), line2: '' }

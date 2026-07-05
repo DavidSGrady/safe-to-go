@@ -45,8 +45,8 @@
     "shortUnsafe": "prochain {time}",
     "shortNone": "aucun créneau",
     "staleBanner": "Dernière mesure réelle du niveau d'eau : {duration} — affichage du niveau d'eau prévu par DMI pour ce moment à la place. Soyez particulièrement prudent.",
-    "freshFresh": "Mesuré il y a {duration}",
-    "freshStale": "Mesure vieille de {duration} — affiche la prévision"
+    "freshFresh": "Mesuré {duration}",
+    "freshStale": "Dernière mesure {duration} — affiche la prévision"
   },
   "retur": {
     "titleOk": "Rentrez-vous aujourd'hui ?",

@@ -45,8 +45,8 @@
     "shortUnsafe": "next {time}",
     "shortNone": "no windows",
     "staleBanner": "The latest actual water-level measurement was {duration} — showing DMI's forecast water level for this time instead. Be extra careful.",
-    "freshFresh": "Measured {duration} ago",
-    "freshStale": "Measurement {duration} old — showing forecast"
+    "freshFresh": "Measured {duration}",
+    "freshStale": "Measurement {duration} — showing forecast"
   },
   "retur": {
     "titleOk": "Heading back today?",

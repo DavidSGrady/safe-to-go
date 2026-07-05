@@ -45,8 +45,8 @@
     "shortUnsafe": "næste {time}",
     "shortNone": "ingen vinduer",
     "staleBanner": "Den seneste aktuelle vandstandsmåling er {duration} — viser DMI's prognosticerede vandstand for dette tidspunkt i stedet. Vær ekstra forsigtig.",
-    "freshFresh": "Målt for {duration} siden",
-    "freshStale": "Måling {duration} gammel — viser prognose"
+    "freshFresh": "Målt {duration}",
+    "freshStale": "Måling {duration} — viser prognose"
   },
   "retur": {
     "titleOk": "Skal du retur i dag?",

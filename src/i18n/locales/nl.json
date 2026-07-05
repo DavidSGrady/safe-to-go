@@ -45,8 +45,8 @@
     "shortUnsafe": "volgende {time}",
     "shortNone": "geen momenten",
     "staleBanner": "De laatste feitelijke waterstandsmeting was {duration} — in plaats daarvan wordt de door DMI voorspelde waterstand voor dit tijdstip getoond. Wees extra voorzichtig.",
-    "freshFresh": "Gemeten {duration} geleden",
-    "freshStale": "Meting {duration} oud — toont voorspelling"
+    "freshFresh": "Gemeten {duration}",
+    "freshStale": "Meting {duration} — toont voorspelling"
   },
   "retur": {
     "titleOk": "Gaat u vandaag terug?",
