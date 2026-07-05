@@ -258,6 +258,7 @@ onMounted(async () => {
           </tbody>
         </table>
         <p class="muted">{{ t('admin.health.surgeHelp') }}</p>
+        <p class="muted">{{ t('admin.health.timePrecisionNote') }}</p>
       </section>
 
       <!-- Change log -->

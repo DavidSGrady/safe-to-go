@@ -183,7 +183,8 @@
       "surgeHelp": "Forskellen mellem den målte vandstand og den astronomiske tidevandstabel — vinden presser vand ind (+) eller ud (−).",
       "ok": "OK",
       "stale": "FORÆLDET",
-      "noData": "Ingen data — er hentejobbet kørt?"
+      "noData": "Ingen data — er hentejobbet kørt?",
+      "timePrecisionNote": "Prognosetider (fx når vandet når vejen) beregnes i 5-minutters opløsning og kan derfor vise op til ~5 min for sent i forhold til den præcise passage — godt inden for DMI's prognoseusikkerhed."
     },
     "log": {
       "title": "Ændringshistorik",

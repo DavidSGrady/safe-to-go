@@ -183,7 +183,8 @@
       "surgeHelp": "Difference between the measured level and the astronomical tide table — wind pushing water in (+) or out (−).",
       "ok": "OK",
       "stale": "STALE",
-      "noData": "No data — has the fetch job run?"
+      "noData": "No data — has the fetch job run?",
+      "timePrecisionNote": "Forecast times (e.g. when the water reaches the road) are computed at 5-minute resolution, so they can read up to ~5 min late versus the exact crossing — well within DMI's forecast uncertainty."
     },
     "log": {
       "title": "Change history",
