@@ -14,8 +14,9 @@ const SELECTION_KEY = 'stations'
 const SEVERITY: Record<StatusResult['state'], number> = {
   unknown: 0,
   safe: 1,
-  caution: 2,
-  unsafe: 3,
+  approaching: 2,
+  caution: 3,
+  unsafe: 4,
 }
 
 // Exactly one station is selected at a time. Accepts the legacy array form
@@ -69,6 +70,7 @@ export const useStatusStore = defineStore('status', () => {
         rules.value,
         now.value,
         horizon,
+        realNow.value,
       )
     }
     return out

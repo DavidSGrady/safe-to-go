@@ -26,6 +26,8 @@
     "safeLine1": "Laatste vertrek {time}",
     "safeLine2": "over {duration}",
     "cautionTitle": "Begin niet met oversteken",
+    "approachingTitle": "Bijna begaanbaar",
+    "approachingLine1": "Wacht tot {time}",
     "cautionSub": "De weg is nog begaanbaar, maar het water bereikt om {time} weer {limit} cm — er is niet langer genoeg tijd ({duration}) voor een veilige oversteek. Bent u al onderweg, rijd dan rustig door.",
     "cautionLine1WithNext": "Volgende veilige start",
     "cautionLine2WithNext": "{day} om {time}",

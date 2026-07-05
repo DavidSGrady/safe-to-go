@@ -137,6 +137,7 @@ export function computeStatus(
   rules: SafetyRules,
   now: number = Date.now(),
   horizonHours: number = DEFAULT_HORIZON_HOURS,
+  realNow: number = now,
 ): StatusResult {
   const sortedReadings = [...readings]
     .map((r) => ({ t: Date.parse(r.observedAt), level: r.levelCm }))
@@ -197,9 +198,15 @@ export function computeStatus(
         }
   const levelAt = adjusted ?? ((): number | null => null)
 
-  // Current level: trust a fresh observation over the model.
+  // When simulating a future time (admin preview), `now` runs ahead of the
+  // real clock — the "current level" is then the forecast at that time, not the
+  // last real measurement (which would otherwise be shown next to a future
+  // verdict).
+  const previewing = now - realNow > 5 * 60 * 1000
+
+  // Current level: a fresh observation when we're live, otherwise the forecast.
   let currentLevelCm: number | null = null
-  if (dataFresh && latest) currentLevelCm = latest.level
+  if (!previewing && dataFresh && latest) currentLevelCm = latest.level
   else if (adjusted) currentLevelCm = adjusted(now)
   else if (latest) currentLevelCm = latest.level
 
@@ -225,10 +232,24 @@ export function computeStatus(
   const currentWindow = allWindows.find((w) => w.start <= now && now < w.end) ?? null
   const windows = allWindows.filter((w) => w.end > now)
 
+  // "Almost there" heads-up shows up to an hour before the next window opens.
+  const APPROACH_LEAD_MS = 60 * 60 * 1000
+
   let state: StatusResult['state'] = 'unknown'
   if (currentLevelCm !== null) {
-    if (currentWindow) {
-      state = now <= currentWindow.deadline ? 'safe' : 'caution'
+    // Hard floor: if the water shown right now is at/above the flood point, the
+    // road is under water — never green, whatever the forecast window says.
+    const floodedNow = currentLevelCm >= rules.cautionMaxCm
+    const next = windows.find((w) => w.start > now)
+    const nearWindow =
+      rising === false && next !== undefined && next.start - now <= APPROACH_LEAD_MS
+    if (!floodedNow && currentWindow && now <= currentWindow.deadline) {
+      state = 'safe'
+    } else if (!floodedNow && currentWindow) {
+      state = 'caution'
+    } else if (nearWindow) {
+      // Falling and a window opens soon — "almost, get ready, but wait".
+      state = 'approaching'
     } else {
       state = 'unsafe'
     }

@@ -13,7 +13,7 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 
 const icon = computed(
-  () => ({ safe: '✓', caution: '!', unsafe: '✕', unknown: '?' })[props.status.state],
+  () => ({ safe: '✓', caution: '!', approaching: '!', unsafe: '✕', unknown: '?' })[props.status.state],
 )
 
 const durationTxt = (ms: number): string => {
@@ -39,6 +39,8 @@ const title = computed(() => {
       return t('verdict.safeTitle')
     case 'caution':
       return t('verdict.cautionTitle')
+    case 'approaching':
+      return t('verdict.approachingTitle')
     case 'unsafe':
       return t('verdict.unsafeTitle')
     default:
@@ -77,6 +79,13 @@ const lines = computed(() => {
       }
     }
     return { line1: t('verdict.cautionLine1NoNext'), line2: '' }
+  }
+  if (s.state === 'approaching' && next) {
+    const { hours, minutes } = splitDuration(next.start - props.now)
+    return {
+      line1: t('verdict.approachingLine1', { time: depTime(next.start) }),
+      line2: hours > 0 ? t('common.inHoursMinutes', { hours, minutes }) : t('common.inMinutes', { minutes }),
+    }
   }
   if (s.state === 'unsafe') {
     if (next) {
@@ -163,7 +172,8 @@ const freshnessTxt = computed(() => {
   border-color: var(--verdict-safe-bd);
   color: var(--verdict-safe-fg);
 }
-.verdict.caution {
+.verdict.caution,
+.verdict.approaching {
   background: var(--verdict-caution-bg);
   border-color: var(--verdict-caution-bd);
   color: var(--verdict-caution-fg);
@@ -193,7 +203,8 @@ const freshnessTxt = computed(() => {
 .safe .badge {
   background: var(--verdict-safe-accent);
 }
-.caution .badge {
+.caution .badge,
+.approaching .badge {
   background: var(--verdict-caution-accent);
 }
 .unsafe .badge {

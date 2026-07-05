@@ -26,6 +26,8 @@
     "safeLine1": "Sidste afgang {time}",
     "safeLine2": "om {duration}",
     "cautionTitle": "Begynd ikke krydsning",
+    "approachingTitle": "Snart farbart",
+    "approachingLine1": "Vent til {time}",
     "cautionSub": "Vejen er stadig farbar, men vandet når {limit} cm igen kl. {time} — der er ikke længere {duration} til en sikker krydsning. Er du allerede på vejen, så fortsæt roligt over.",
     "cautionLine1WithNext": "Næste sikre start",
     "cautionLine2WithNext": "{day} kl. {time}",

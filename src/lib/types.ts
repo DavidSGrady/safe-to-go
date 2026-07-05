@@ -62,7 +62,7 @@ export interface SafetyRules {
   updatedAt?: string
 }
 
-export type SafetyState = 'safe' | 'caution' | 'unsafe' | 'unknown'
+export type SafetyState = 'safe' | 'caution' | 'approaching' | 'unsafe' | 'unknown'
 
 export type ConfidenceTier = 'high' | 'medium' | 'low' | 'veryLow'
 

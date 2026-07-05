@@ -76,6 +76,7 @@ const preview = computed(() => {
 const previewTitleKey = {
   safe: 'verdict.safeTitle',
   caution: 'verdict.cautionTitle',
+  approaching: 'verdict.approachingTitle',
   unsafe: 'verdict.unsafeTitle',
   unknown: 'verdict.unknownTitle',
 } as const
@@ -407,7 +408,8 @@ onMounted(async () => {
   color: var(--verdict-safe-fg);
 }
 
-.preview.caution {
+.preview.caution,
+.preview.approaching {
   background: var(--verdict-caution-bg);
   border-color: var(--verdict-caution-bd);
   color: var(--verdict-caution-fg);

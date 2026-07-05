@@ -26,6 +26,8 @@
     "safeLine1": "Última salida {time}",
     "safeLine2": "en {duration}",
     "cautionTitle": "No inicie el cruce",
+    "approachingTitle": "Casi transitable",
+    "approachingLine1": "Espera hasta las {time}",
     "cautionSub": "El camino sigue siendo transitable, pero el agua vuelve a alcanzar {limit} cm a las {time} — ya no queda tiempo suficiente ({duration}) para un cruce seguro. Si ya está en camino, continúe con calma hasta el otro lado.",
     "cautionLine1WithNext": "Próximo inicio seguro",
     "cautionLine2WithNext": "{day} a las {time}",

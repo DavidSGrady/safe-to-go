@@ -13,7 +13,7 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 
 const icon = computed(
-  () => ({ safe: '✓', caution: '!', unsafe: '✕', unknown: '?' })[props.status.state],
+  () => ({ safe: '✓', caution: '!', approaching: '!', unsafe: '✕', unknown: '?' })[props.status.state],
 )
 
 const title = computed(() => {
@@ -22,6 +22,8 @@ const title = computed(() => {
       return t('verdict.safeTitle')
     case 'caution':
       return t('verdict.cautionTitle')
+    case 'approaching':
+      return t('verdict.approachingTitle')
     case 'unsafe':
       return t('verdict.unsafeTitle')
     default:
@@ -37,7 +39,7 @@ const short = computed(() => {
     return t('verdict.shortSafe', { time: fmtTime(s.currentWindow.deadline, locale.value) })
   }
   if (s.state === 'caution') return t('verdict.shortCaution')
-  if (s.state === 'unsafe') {
+  if (s.state === 'unsafe' || s.state === 'approaching') {
     return next.value
       ? t('verdict.shortUnsafe', { time: fmtTime(next.value.start, locale.value) })
       : t('verdict.shortNone')
@@ -77,7 +79,8 @@ const short = computed(() => {
 .sticky-bar.safe {
   background: var(--verdict-safe-accent);
 }
-.sticky-bar.caution {
+.sticky-bar.caution,
+.sticky-bar.approaching {
   background: var(--verdict-caution-accent);
 }
 .sticky-bar.unsafe {
