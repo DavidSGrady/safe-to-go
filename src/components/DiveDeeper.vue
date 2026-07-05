@@ -8,6 +8,7 @@ const props = defineProps<{
   status: StatusResult
   rules: SafetyRules
   now: number
+  stationName: string
 }>()
 
 const { t, locale } = useI18n()
@@ -34,7 +35,9 @@ const detail = computed(() => {
   const target = props.rules.cautionMaxCm - props.rules.floodMarginCm
   const targetAt = w.deadline + (props.rules.crossingMinutes + props.rules.bufferMinutes) * 60_000
   return {
-    dayLabel: dayTxt(w.start),
+    // The section explains the *last departure*, so label it with the
+    // deadline's day (it can fall on the next day for an overnight window).
+    dayLabel: dayTxt(w.deadline),
     target,
     targetTxt: depTime(targetAt),
     deadlineTxt: depTime(w.deadline),
@@ -56,14 +59,14 @@ const detail = computed(() => {
 
     <div class="block">
       <div class="block-title">{{ t('dive.basisTitle') }}</div>
-      <p class="body">{{ t('dive.basisBody') }}</p>
+      <p class="body">{{ t('dive.basisBody', { station: stationName }) }}</p>
     </div>
 
     <div class="block">
       <div class="block-title">{{ t('dive.factsTitle') }}</div>
       <ul class="facts">
         <li>{{ t('dive.fact1') }}</li>
-        <li>{{ t('dive.fact2', { max: rules.crossingMinutes }) }}</li>
+        <li>{{ t('dive.fact2', { minutes: rules.crossingMinutes }) }}</li>
         <li>{{ t('dive.fact3') }}</li>
       </ul>
     </div>

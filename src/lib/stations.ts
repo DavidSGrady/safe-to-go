@@ -10,11 +10,11 @@ export interface Station {
 }
 
 export const STATIONS: readonly Station[] = [
-  { id: '9007101', name: 'Mandø' },
   { id: '9006701', name: 'Ribe Kammersluse' },
+  { id: '9007101', name: 'Mandø' },
 ]
 
-export const DEFAULT_STATION_ID = STATIONS[0].id
+export const DEFAULT_STATION_ID = '9006701'
 
 export function stationName(id: string): string {
   return STATIONS.find((s) => s.id === id)?.name ?? id

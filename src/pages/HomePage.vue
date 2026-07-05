@@ -17,7 +17,7 @@ import LangSwitcher from '@/components/LangSwitcher.vue'
 
 const { t } = useI18n()
 const store = useStatusStore()
-const { status, rules, loading, error, now, extended } = storeToRefs(store)
+const { status, rules, loading, error, now, extended, primaryStationName } = storeToRefs(store)
 
 // Admins get a page-wide time-travel bar to preview how every panel looks at
 // a future moment. Non-admins never see it.
@@ -77,14 +77,14 @@ onBeforeUnmount(() => observer?.disconnect())
         :extended="extended"
         @toggle-extended="store.toggleExtended"
       />
-      <DiveDeeper :status="status" :rules="rules" :now="now" />
+      <DiveDeeper :status="status" :rules="rules" :now="now" :station-name="primaryStationName" />
     </template>
 
     <p v-if="error" class="card error">{{ t('verdict.unknownSub') }}</p>
 
     <footer>
       <p class="muted">{{ t('footer.disclaimer') }}</p>
-      <p class="muted">{{ t('footer.source') }}</p>
+      <p class="muted">{{ t('footer.source', { station: primaryStationName }) }}</p>
       <p class="muted">
         <RouterLink to="/admin">{{ t('footer.admin') }}</RouterLink>
       </p>

@@ -115,10 +115,10 @@
     "calcRowBuffer": "Sikkerhedsbuffer",
     "calcRowDeadline": "Sidste sikre afgang",
     "basisTitle": "Målinger og prognoser",
-    "basisBody": "Vurderingen lige nu bygger på målt vandstand fra Mandø station. Fremtidige vinduer bygger på DMI's prognose med vejr og vind indregnet — derfor falder sikkerheden, jo længere frem du kigger.",
+    "basisBody": "Vurderingen lige nu bygger på målt vandstand fra {station} station. Fremtidige vinduer bygger på DMI's prognose med vejr og vind indregnet — derfor falder sikkerheden, jo længere frem du kigger.",
     "factsTitle": "Godt at vide",
     "fact1": "Mandø kan kun nås via Låningsvejen ved lavvande — typisk 2 sikre vinduer i døgnet.",
-    "fact2": "Krydsningen tager 20–{max} min i bil.",
+    "fact2": "Regn med at krydsningen tager ca. {minutes} min i bil.",
     "fact3": "Kør aldrig ud, når vandet stiger tæt på grænsen.",
     "showChart": "Vis vandstandskurve",
     "hideChart": "Skjul vandstandskurve"
@@ -136,7 +136,7 @@
   },
   "footer": {
     "disclaimer": "Tjenesten er en hjælp til besøgende. Vejr og tidevand kan ændre forholdene — du er selv ansvarlig for at vurdere sikkerheden før krydsning. Ring 112 i nødstilfælde.",
-    "source": "Live-data: DMI & Kystdirektoratet, målestation ved Mandø.",
+    "source": "Live-data: DMI & Kystdirektoratet, målestation ved {station}.",
     "admin": "Admin"
   },
   "demo": {
@@ -157,7 +157,7 @@
     "prodWarning": "⚠︎ Du redigerer live produktionsindstillinger — gemte ændringer slår igennem på den offentlige side med det samme (også fra din lokale udviklingsserver).",
     "rules": {
       "title": "Grænseværdier",
-      "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved Mandø station.",
+      "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved {station} station.",
       "safeMaxFalling": "Farbar-grænse — faldende vand (cm)",
       "safeMaxFallingHelp": "Mens tidevandet falder, er vejen sikker, så snart niveauet er ved eller under dette — det bliver kun lavere herfra, så der er ikke tidspres.",
       "floodMargin": "Sikkerhedsmargin til oversvømmelse — stigende vand (cm)",

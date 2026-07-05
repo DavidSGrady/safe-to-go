@@ -14,7 +14,7 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const store = useStatusStore()
-const { readings, predictions, forecast, rules, status, now } = storeToRefs(store)
+const { readings, predictions, forecast, rules, status, now, primaryStationName } = storeToRefs(store)
 
 const form = reactive({
   floodMarginCm: 0,
@@ -164,7 +164,7 @@ onMounted(async () => {
       <!-- Thresholds -->
       <section class="card">
         <h2>{{ t('admin.rules.title') }}</h2>
-        <p class="secondary intro">{{ t('admin.rules.intro') }}</p>
+        <p class="secondary intro">{{ t('admin.rules.intro', { station: primaryStationName }) }}</p>
 
         <div class="field">
           <label for="safeMaxFalling">{{ t('admin.rules.safeMaxFalling') }}: <strong>{{ form.safeMaxFallingCm }}</strong></label>

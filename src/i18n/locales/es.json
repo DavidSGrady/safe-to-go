@@ -105,10 +105,10 @@
     "calcRowBuffer": "Margen de seguridad",
     "calcRowDeadline": "Última salida segura",
     "basisTitle": "Mediciones y pronósticos",
-    "basisBody": "La evaluación actual se basa en el nivel del agua medido en la estación de Mandø. Las ventanas futuras se basan en el pronóstico de DMI, incluyendo el viento y el tiempo — por eso la confianza baja cuanto más lejos se mira.",
+    "basisBody": "La evaluación actual se basa en el nivel del agua medido en la estación de {station}. Las ventanas futuras se basan en el pronóstico de DMI, incluyendo el viento y el tiempo — por eso la confianza baja cuanto más lejos se mira.",
     "factsTitle": "Es bueno saberlo",
     "fact1": "Solo se puede llegar a Mandø por el camino elevado de Låningsvej con marea baja — normalmente 2 ventanas seguras al día.",
-    "fact2": "El cruce en coche dura de 20 a {max} minutos.",
+    "fact2": "Cuente con unos {minutes} min para el cruce en coche.",
     "fact3": "Nunca salga cuando el agua esté subiendo cerca del límite.",
     "showChart": "Mostrar gráfico del nivel del agua",
     "hideChart": "Ocultar gráfico del nivel del agua"
@@ -126,7 +126,7 @@
   },
   "footer": {
     "disclaimer": "Este servicio es una ayuda para los visitantes, no un servicio de seguridad oficial. El tiempo y la marea pueden cambiar las condiciones — usted es responsable de evaluar la seguridad antes de cruzar. Llame al 112 en caso de emergencia.",
-    "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de Mandø.",
+    "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de {station}.",
     "admin": "Admin"
   },
   "demo": {

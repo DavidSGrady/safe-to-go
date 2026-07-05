@@ -1,54 +1,36 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { STATIONS, stationName } from '@/lib/stations'
+import { STATIONS } from '@/lib/stations'
 import { useStatusStore } from '@/stores/status'
 
 const { t } = useI18n()
 const store = useStatusStore()
-const { selectedStationIds, selectedStations, primaryStationId } = storeToRefs(store)
+const { selectedStationIds } = storeToRefs(store)
 
-// Toggle a station on/off; never allow zero selected.
-function toggle(id: string): void {
-  const set = new Set(selectedStationIds.value)
-  if (set.has(id)) {
-    if (set.size > 1) set.delete(id)
-  } else {
-    set.add(id)
-  }
-  store.setSelectedStations([...set])
+// Exactly one station at a time — picking one replaces the selection.
+function select(id: string): void {
+  store.setSelectedStations([id])
 }
 </script>
 
 <template>
   <section class="stations">
     <span class="label">{{ t('stations.label') }}</span>
-    <div class="chips">
+    <div class="chips" role="radiogroup" :aria-label="t('stations.label')">
       <button
         v-for="s in STATIONS"
         :key="s.id"
         type="button"
+        role="radio"
         class="chip"
         :class="{ on: selectedStationIds.includes(s.id) }"
-        :aria-pressed="selectedStationIds.includes(s.id)"
-        @click="toggle(s.id)"
+        :aria-checked="selectedStationIds.includes(s.id)"
+        @click="select(s.id)"
       >
         {{ s.name }}
       </button>
     </div>
-
-    <template v-if="selectedStations.length > 1">
-      <div class="compare">
-        <span v-for="c in selectedStations" :key="c.id" class="cmp" :class="{ primary: c.primary }">
-          <span class="cmp-name">{{ c.name }}</span>
-          <span class="cmp-level mono">
-            {{ c.status && c.status.currentLevelCm !== null ? c.status.currentLevelCm : '—' }} {{ t('chart.unit') }}
-            <template v-if="c.status && c.status.rising !== null">{{ c.status.rising ? '↑' : '↓' }}</template>
-          </span>
-        </span>
-      </div>
-      <p class="basedon">{{ t('stations.basedOn', { name: stationName(primaryStationId) }) }}</p>
-    </template>
   </section>
 </template>
 
@@ -91,32 +73,8 @@ function toggle(id: string): void {
   color: #fff;
 }
 
-.compare {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-}
-
-.cmp {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
-.cmp.primary {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.cmp-level {
-  font-weight: 600;
-}
-
-.basedon {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin: 0;
+.chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 </style>

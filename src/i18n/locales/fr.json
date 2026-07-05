@@ -105,10 +105,10 @@
     "calcRowBuffer": "Marge de sécurité",
     "calcRowDeadline": "Dernier départ sûr",
     "basisTitle": "Mesures et prévisions",
-    "basisBody": "L'évaluation actuelle repose sur le niveau d'eau mesuré à la station de Mandø. Les créneaux futurs reposent sur la prévision DMI, météo et vent inclus — c'est pourquoi la confiance diminue plus on regarde loin.",
+    "basisBody": "L'évaluation actuelle repose sur le niveau d'eau mesuré à la station de {station}. Les créneaux futurs reposent sur la prévision DMI, météo et vent inclus — c'est pourquoi la confiance diminue plus on regarde loin.",
     "factsTitle": "Bon à savoir",
     "fact1": "Mandø n'est accessible que par la digue du Låningsvej à marée basse — généralement 2 créneaux sûrs par jour.",
-    "fact2": "La traversée prend 20 à {max} minutes en voiture.",
+    "fact2": "Comptez environ {minutes} min pour la traversée en voiture.",
     "fact3": "Ne partez jamais quand l'eau monte près de la limite.",
     "showChart": "Afficher la courbe du niveau d'eau",
     "hideChart": "Masquer la courbe du niveau d'eau"
@@ -126,7 +126,7 @@
   },
   "footer": {
     "disclaimer": "Ce service est une aide pour les visiteurs, pas un service de sécurité officiel. La météo et la marée peuvent changer les conditions — vous êtes responsable d'évaluer la sécurité avant de traverser. Appelez le 112 en cas d'urgence.",
-    "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de Mandø.",
+    "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de {station}.",
     "admin": "Admin"
   },
   "demo": {

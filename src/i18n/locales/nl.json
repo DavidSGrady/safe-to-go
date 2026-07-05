@@ -105,10 +105,10 @@
     "calcRowBuffer": "Veiligheidsmarge",
     "calcRowDeadline": "Laatste veilige vertrek",
     "basisTitle": "Metingen en voorspellingen",
-    "basisBody": "De inschatting van dit moment is gebaseerd op de gemeten waterstand van het station Mandø. Toekomstige momenten zijn gebaseerd op de DMI-voorspelling inclusief weer en wind — daarom neemt de betrouwbaarheid af naarmate u verder vooruitkijkt.",
+    "basisBody": "De inschatting van dit moment is gebaseerd op de gemeten waterstand van het station {station}. Toekomstige momenten zijn gebaseerd op de DMI-voorspelling inclusief weer en wind — daarom neemt de betrouwbaarheid af naarmate u verder vooruitkijkt.",
     "factsTitle": "Goed om te weten",
     "fact1": "Mandø is alleen bereikbaar via de Låningsvej-dam bij laagwater — meestal 2 veilige momenten per dag.",
-    "fact2": "De oversteek duurt 20–{max} minuten met de auto.",
+    "fact2": "Reken op ongeveer {minutes} min voor de oversteek met de auto.",
     "fact3": "Vertrek nooit wanneer het water dicht bij de grens stijgt.",
     "showChart": "Toon waterstandsgrafiek",
     "hideChart": "Verberg waterstandsgrafiek"
@@ -126,7 +126,7 @@
   },
   "footer": {
     "disclaimer": "Deze dienst is een hulpmiddel voor bezoekers, geen officiële veiligheidsdienst. Weer en getij kunnen de omstandigheden veranderen — u bent zelf verantwoordelijk voor het beoordelen van de veiligheid voor het oversteken. Bel 112 in een noodgeval.",
-    "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij Mandø.",
+    "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij {station}.",
     "admin": "Admin"
   },
   "demo": {

@@ -115,10 +115,10 @@
     "calcRowBuffer": "Safety buffer",
     "calcRowDeadline": "Last safe departure",
     "basisTitle": "Measurements and forecasts",
-    "basisBody": "Right now's assessment is based on the measured water level from the Mandø station. Future windows are based on DMI's forecast, including weather and wind — which is why confidence drops the further ahead you look.",
+    "basisBody": "Right now's assessment is based on the measured water level from the {station} station. Future windows are based on DMI's forecast, including weather and wind — which is why confidence drops the further ahead you look.",
     "factsTitle": "Good to know",
     "fact1": "Mandø can only be reached via the Låningsvej causeway at low tide — typically 2 safe windows a day.",
-    "fact2": "The crossing takes 20–{max} minutes by car.",
+    "fact2": "Expect the crossing to take about {minutes} min by car.",
     "fact3": "Never set out when the water is rising close to the limit.",
     "showChart": "Show water-level chart",
     "hideChart": "Hide water-level chart"
@@ -136,7 +136,7 @@
   },
   "footer": {
     "disclaimer": "This service is a guide for visitors. Weather and tide can change conditions — you are responsible for judging safety before crossing. Call 112 in an emergency.",
-    "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at Mandø.",
+    "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at {station}.",
     "admin": "Admin"
   },
   "demo": {
@@ -157,7 +157,7 @@
     "prodWarning": "⚠︎ You are editing live production settings — saved changes take effect on the public site immediately (including from your local dev server).",
     "rules": {
       "title": "Thresholds",
-      "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the Mandø station.",
+      "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the {station} station.",
       "safeMaxFalling": "Passable limit — water falling (cm)",
       "safeMaxFallingHelp": "While the tide is falling, the road is safe as soon as the level is at or below this — it only gets lower from here, so there's no time pressure.",
       "floodMargin": "Flood safety margin — water rising (cm)",

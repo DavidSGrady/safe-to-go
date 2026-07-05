@@ -105,10 +105,10 @@
     "calcRowBuffer": "Sicherheitspuffer",
     "calcRowDeadline": "Letzte sichere Abfahrt",
     "basisTitle": "Messungen und Prognosen",
-    "basisBody": "Die aktuelle Einschätzung basiert auf dem gemessenen Wasserstand der Station Mandø. Künftige Zeitfenster basieren auf der DMI-Prognose inklusive Wetter und Wind — deshalb sinkt die Sicherheit, je weiter man vorausschaut.",
+    "basisBody": "Die aktuelle Einschätzung basiert auf dem gemessenen Wasserstand der Station {station}. Künftige Zeitfenster basieren auf der DMI-Prognose inklusive Wetter und Wind — deshalb sinkt die Sicherheit, je weiter man vorausschaut.",
     "factsTitle": "Gut zu wissen",
     "fact1": "Mandø ist nur über den Låningsvej-Damm bei Ebbe erreichbar — meist 2 sichere Zeitfenster pro Tag.",
-    "fact2": "Die Überquerung dauert 20–{max} Minuten mit dem Auto.",
+    "fact2": "Rechnen Sie mit etwa {minutes} Min. für die Überquerung mit dem Auto.",
     "fact3": "Fahren Sie nie los, wenn das Wasser nahe der Grenze steigt.",
     "showChart": "Wasserstandskurve anzeigen",
     "hideChart": "Wasserstandskurve ausblenden"
@@ -126,7 +126,7 @@
   },
   "footer": {
     "disclaimer": "Dieser Dienst ist eine Orientierungshilfe für Besucher. Wetter und Gezeiten können die Bedingungen ändern — Sie sind selbst dafür verantwortlich, die Sicherheit vor der Überquerung zu beurteilen. Rufen Sie im Notfall 112 an.",
-    "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei Mandø.",
+    "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei {station}.",
     "admin": "Admin"
   },
   "demo": {

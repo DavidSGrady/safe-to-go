@@ -18,12 +18,14 @@ const SEVERITY: Record<StatusResult['state'], number> = {
   unsafe: 3,
 }
 
+// Exactly one station is selected at a time. Accepts the legacy array form
+// stored by earlier builds and coerces it to a single id.
 function loadSelection(): string[] {
   try {
-    const raw = JSON.parse(localStorage.getItem(SELECTION_KEY) ?? '[]') as unknown
-    if (Array.isArray(raw)) {
-      const valid = raw.filter((id): id is string => STATIONS.some((s) => s.id === id))
-      if (valid.length) return valid
+    const raw = JSON.parse(localStorage.getItem(SELECTION_KEY) ?? 'null') as unknown
+    const candidate = Array.isArray(raw) ? raw[0] : raw
+    if (typeof candidate === 'string' && STATIONS.some((s) => s.id === candidate)) {
+      return [candidate]
     }
   } catch {
     // ignore malformed storage
@@ -99,6 +101,9 @@ export const useStatusStore = defineStore('status', () => {
 
   const status = computed(() => statusByStation.value[primaryStationId.value] ?? null)
 
+  /** Display name of the station currently driving the page. */
+  const primaryStationName = computed(() => stationName(primaryStationId.value))
+
   /** Selected stations with their individual status, for the comparison row. */
   const selectedStations = computed(() =>
     selectedStationIds.value.map((id) => ({
@@ -118,13 +123,13 @@ export const useStatusStore = defineStore('status', () => {
     extended.value = !extended.value
   }
 
-  /** Update which stations are shown (at least one). Persisted across visits. */
+  /** Select the station shown (exactly one). Persisted across visits. */
   function setSelectedStations(ids: string[]): void {
-    const valid = ids.filter((id) => STATIONS.some((s) => s.id === id))
-    if (valid.length === 0) return
-    selectedStationIds.value = valid
+    const first = ids.find((id) => STATIONS.some((s) => s.id === id))
+    if (!first) return
+    selectedStationIds.value = [first]
     try {
-      localStorage.setItem(SELECTION_KEY, JSON.stringify(valid))
+      localStorage.setItem(SELECTION_KEY, JSON.stringify([first]))
     } catch {
       // ignore storage failures
     }
@@ -213,6 +218,7 @@ export const useStatusStore = defineStore('status', () => {
     selectedStationIds,
     selectedStations,
     primaryStationId,
+    primaryStationName,
     refresh,
     start,
     toggleExtended,
