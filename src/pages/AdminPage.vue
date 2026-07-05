@@ -17,7 +17,7 @@ const store = useStatusStore()
 const { readings, predictions, forecast, rules, status, now } = storeToRefs(store)
 
 const form = reactive({
-  safeMaxRisingCm: 0,
+  floodMarginCm: 0,
   safeMaxFallingCm: 0,
   cautionMaxCm: 0,
   crossingMinutes: 0,
@@ -48,7 +48,7 @@ watch(
   rules,
   (r) => {
     if (r) {
-      form.safeMaxRisingCm = r.safeMaxRisingCm
+      form.floodMarginCm = r.floodMarginCm
       form.safeMaxFallingCm = r.safeMaxFallingCm
       form.cautionMaxCm = r.cautionMaxCm
       form.crossingMinutes = r.crossingMinutes
@@ -63,8 +63,8 @@ watch(
 const invalid = computed(
   () =>
     form.cautionMaxCm < form.safeMaxFallingCm ||
-    form.cautionMaxCm < form.safeMaxRisingCm ||
-    form.safeMaxRisingCm > form.safeMaxFallingCm,
+    form.floodMarginCm < 0 ||
+    form.floodMarginCm > form.cautionMaxCm,
 )
 
 /** What the public page would show right now with the edited (unsaved) values. */
@@ -117,7 +117,7 @@ async function signOut(): Promise<void> {
 
 function diff(entry: RuleChangeLogEntry): string {
   const keys = [
-    'safe_max_rising_cm',
+    'flood_margin_cm',
     'safe_max_falling_cm',
     'caution_max_cm',
     'crossing_minutes',
@@ -171,15 +171,15 @@ onMounted(async () => {
         </div>
 
         <div class="field">
-          <label for="safeMaxRising">{{ t('admin.rules.safeMaxRising') }}: <strong>{{ form.safeMaxRisingCm }}</strong></label>
-          <input id="safeMaxRising" v-model.number="form.safeMaxRisingCm" type="range" min="-100" max="200" step="5" />
-          <p class="muted">{{ t('admin.rules.safeMaxRisingHelp') }}</p>
-        </div>
-
-        <div class="field">
           <label for="cautionMax">{{ t('admin.rules.cautionMax') }}: <strong>{{ form.cautionMaxCm }}</strong></label>
           <input id="cautionMax" v-model.number="form.cautionMaxCm" type="range" min="-100" max="250" step="5" />
           <p class="muted">{{ t('admin.rules.cautionMaxHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="floodMargin">{{ t('admin.rules.floodMargin') }}: <strong>{{ form.floodMarginCm }}</strong></label>
+          <input id="floodMargin" v-model.number="form.floodMarginCm" type="range" min="0" max="30" step="1" />
+          <p class="muted">{{ t('admin.rules.floodMarginHelp') }}</p>
         </div>
 
         <div class="field">

@@ -20,7 +20,7 @@ interface PredictionRow {
 }
 
 interface RulesRow {
-  safe_max_rising_cm: number
+  flood_margin_cm: number
   safe_max_falling_cm: number
   caution_max_cm: number
   crossing_minutes: number
@@ -93,13 +93,13 @@ export async function fetchRules(): Promise<SafetyRules> {
   if (isDemoMode) return demoRules
   const { data, error } = await getSupabase()
     .from('safety_rules')
-    .select('safe_max_rising_cm, safe_max_falling_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, updated_at')
+    .select('flood_margin_cm, safe_max_falling_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, updated_at')
     .eq('id', 1)
     .single()
   if (error) throw error
   const row = data as RulesRow
   return {
-    safeMaxRisingCm: row.safe_max_rising_cm,
+    floodMarginCm: row.flood_margin_cm,
     safeMaxFallingCm: row.safe_max_falling_cm,
     cautionMaxCm: row.caution_max_cm,
     crossingMinutes: row.crossing_minutes,
@@ -114,7 +114,7 @@ export async function saveRules(rules: SafetyRules): Promise<void> {
   const { error } = await getSupabase()
     .from('safety_rules')
     .update({
-      safe_max_rising_cm: rules.safeMaxRisingCm,
+      flood_margin_cm: rules.floodMarginCm,
       safe_max_falling_cm: rules.safeMaxFallingCm,
       caution_max_cm: rules.cautionMaxCm,
       crossing_minutes: rules.crossingMinutes,

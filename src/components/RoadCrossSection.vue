@@ -60,18 +60,38 @@ const rising = computed(() => {
   return b > a
 })
 
-// The passable limit is stricter while the water is rising — mirror the
-// window logic so the water turns amber at the right level for the direction.
-const passableLimit = computed(() =>
-  rising.value ? props.rules.safeMaxRisingCm : props.rules.safeMaxFallingCm,
-)
+// Mirror the verdict logic so the water colour matches the real state at the
+// scrubbed moment: red when flooded, green/amber by direction.
+//  - falling: safe as soon as it's at/below the falling limit
+//  - rising: safe only if the crossing can finish before the water reaches
+//    (flood − margin), i.e. there's enough time — otherwise amber.
+const STEP_MS = 5 * 60_000
+const RISE_SCAN_CAP_MS = 12 * 60 * 60_000
 
 const displayState = computed<'safe' | 'caution' | 'unsafe' | 'unknown'>(() => {
   const v = displayLevel.value
   if (v === null) return 'unknown'
-  if (v >= props.rules.cautionMaxCm) return 'unsafe'
-  if (v >= passableLimit.value) return 'caution'
-  return 'safe'
+  const caution = props.rules.cautionMaxCm
+  if (v >= caution) return 'unsafe'
+  if (!rising.value) {
+    return v <= props.rules.safeMaxFallingCm ? 'safe' : 'caution'
+  }
+  const target = caution - props.rules.floodMarginCm
+  if (v >= target) return 'caution'
+  // How long until the rising water reaches the safety target?
+  const base = scrubTime.value
+  let reachMs: number | null = null
+  for (let dt = STEP_MS; dt <= RISE_SCAN_CAP_MS; dt += STEP_MS) {
+    const lv = props.status.levelAt(base + dt)
+    if (lv === null) break
+    if (lv >= target) {
+      reachMs = dt
+      break
+    }
+  }
+  if (reachMs === null) return 'safe' // target not reached soon → no time pressure
+  const needMs = (props.rules.crossingMinutes + props.rules.bufferMinutes) * 60_000
+  return reachMs >= needMs ? 'safe' : 'caution'
 })
 
 // Map cm (DVR90) to a 0-100% viewport height. The flood point sits high in
@@ -146,7 +166,8 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
           t('road.caption', {
             road: rules.cautionMaxCm,
             falling: rules.safeMaxFallingCm,
-            rising: rules.safeMaxRisingCm,
+            margin: rules.floodMarginCm,
+            rising: rules.cautionMaxCm - rules.floodMarginCm,
           })
         }}
       </p>

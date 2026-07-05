@@ -120,15 +120,15 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
  *   - off: the plain astronomical tide table only.
  * Either way, the current status uses the live measured level.
  *
- * A "window" is a stretch where the level is at or below the passable limit
- * (the road is passable). That limit is *directional*: while the water is
- * falling we allow up to `safeMaxFallingCm`, but once it turns and starts
- * rising we hold to the stricter `safeMaxRisingCm` — rising water is about to
- * flood the road, so a window closes at a lower level than it opened at.
- * Within a window the **deadline** — window end minus the crossing time minus
- * a safety buffer — is the last moment it's safe to *start* crossing: after
- * the deadline the road is still dry, but there is no longer enough time to
- * reach the other side before it floods again.
+ * A "window" runs from where *falling* water drops to `safeMaxFallingCm`
+ * (safe as soon as it's that low — it only gets lower) until *rising* water
+ * floods the road at `cautionMaxCm`. The **deadline** (last safe departure)
+ * is time-based on the rising side: it's set so the crossing finishes before
+ * the rising water reaches `cautionMaxCm − floodMarginCm`, keeping the trip at
+ * least `floodMarginCm` below flooding throughout. Before the deadline it's
+ * safe to start; between the deadline and the flood the road is still passable
+ * but there's no longer time to cross safely (amber); above `cautionMaxCm` it's
+ * flooded (red).
  */
 export function computeStatus(
   readings: Reading[],
@@ -261,11 +261,16 @@ export function computeStatus(
 }
 
 /**
- * The passable limit at time `t`, chosen by the local tide direction: the
- * stricter rising limit while the water is climbing, the more lenient falling
- * limit while it drops. `prev` is the level one step earlier (null if unknown).
+ * The level below which the road counts as inside a crossing window at time
+ * `t`, chosen by the local tide direction:
+ *   - falling → `safeMaxFallingCm` (comfort limit; water is only getting lower)
+ *   - rising  → `cautionMaxCm` (the flood point itself; the window stays open
+ *               until the road actually floods — the *time* to reach the flood
+ *               is what constrains a safe departure, handled via the deadline)
+ * `prev` is the level one step earlier (null if unknown). Using a lower level
+ * to open (falling) than to close (rising) gives built-in hysteresis.
  */
-export function passableLimitAt(
+export function windowLimitAt(
   rules: SafetyRules,
   level: (t: number) => number | null,
   t: number,
@@ -277,12 +282,15 @@ export function passableLimitAt(
   if (here !== null && next !== null) rising = next > here
   else if (here !== null && prev !== null) rising = here > prev
   else rising = false
-  return rising ? rules.safeMaxRisingCm : rules.safeMaxFallingCm
+  return rising ? rules.cautionMaxCm : rules.safeMaxFallingCm
 }
 
 /**
- * Scan the adjusted curve for stretches at or below the (directional) passable
- * limit, and derive the deadline, low point and confidence tier for each.
+ * Scan the adjusted curve for crossing windows. A window runs from where
+ * falling water drops to `safeMaxFallingCm` until rising water floods the road
+ * at `cautionMaxCm`. Its **deadline** (last safe departure) is timed so the
+ * crossing finishes before the rising water reaches `cautionMaxCm − floodMarginCm`
+ * — i.e. it stays at least `floodMarginCm` below flooding for the whole trip.
  */
 export function findWindows(
   level: (t: number) => number | null,
@@ -298,10 +306,10 @@ export function findWindows(
   let prev: number | null = null
   for (let t = from; t <= to; t += STEP_MS) {
     const v = level(t)
-    const safe = v !== null && v <= passableLimitAt(rules, level, t, prev)
-    if (safe && openStart === null) {
+    const inWindow = v !== null && v <= windowLimitAt(rules, level, t, prev)
+    if (inWindow && openStart === null) {
       openStart = t
-    } else if (!safe && openStart !== null) {
+    } else if (!inWindow && openStart !== null) {
       raw.push({ start: openStart, end: t })
       openStart = null
     }
@@ -311,6 +319,8 @@ export function findWindows(
 
   const crossingMs = rules.crossingMinutes * 60 * 1000
   const bufferMs = rules.bufferMinutes * 60 * 1000
+  // The crossing must finish while the water is still this far below flooding.
+  const target = rules.cautionMaxCm - rules.floodMarginCm
 
   return raw
     .filter((w) => w.end - w.start >= minWindowMs)
@@ -324,7 +334,18 @@ export function findWindows(
           lowAt = t
         }
       }
-      const deadline = w.end - crossingMs - bufferMs
+      // First moment on the rising limb the water reaches the safety target
+      // (flood minus margin). Defaults to the window end if never reached
+      // (water never floods this cycle → no time pressure).
+      let targetAt = w.end
+      for (let t = lowAt; t <= w.end; t += FINE_STEP_MS) {
+        const v = level(t)
+        if (v !== null && v >= target) {
+          targetAt = t
+          break
+        }
+      }
+      const deadline = targetAt - crossingMs - bufferMs
       const startAheadMin = Math.max(0, (w.start - now) / 60000)
       return {
         start: w.start,

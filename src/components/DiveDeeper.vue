@@ -22,9 +22,14 @@ function dayTxt(ms: number): string {
 const detail = computed(() => {
   const w = first.value
   if (!w) return null
+  // The deadline is timed off when the rising water reaches (flood − margin);
+  // reconstruct that moment for the explanation.
+  const target = props.rules.cautionMaxCm - props.rules.floodMarginCm
+  const targetAt = w.deadline + (props.rules.crossingMinutes + props.rules.bufferMinutes) * 60_000
   return {
     dayLabel: dayTxt(w.start),
-    endTxt: fmtTime(w.end, locale.value),
+    target,
+    targetTxt: fmtTime(targetAt, locale.value),
     deadlineTxt: fmtTime(w.deadline, locale.value),
   }
 })
@@ -36,7 +41,7 @@ const detail = computed(() => {
 
     <div v-if="detail" class="block calc">
       <div class="block-title">{{ t('dive.calcTitle', { day: detail.dayLabel }) }}</div>
-      <div class="row"><span>{{ t('dive.calcRowLimit', { limit: rules.safeMaxRisingCm }) }}</span><span class="mono strong">{{ detail.endTxt }}</span></div>
+      <div class="row"><span>{{ t('dive.calcRowLimit', { limit: detail.target }) }}</span><span class="mono strong">{{ detail.targetTxt }}</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowCrossing') }}</span><span class="mono">− {{ rules.crossingMinutes }} min</span></div>
       <div class="row secondary"><span>{{ t('dive.calcRowBuffer') }}</span><span class="mono">− {{ rules.bufferMinutes }} min</span></div>
       <div class="row total"><span>{{ t('dive.calcRowDeadline') }}</span><span class="mono">{{ detail.deadlineTxt }}</span></div>

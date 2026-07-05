@@ -31,14 +31,17 @@ export interface ForecastPoint {
 /** Admin-configurable safety thresholds. */
 export interface SafetyRules {
   /**
-   * Passable limit (cm DVR90) while the water is *rising*. A safe window
-   * closes once rising water climbs above this. Set lower than the falling
-   * limit — rising water is about to flood the road, so we stop sooner.
+   * Safety headroom (cm) to keep below the flood point while the water is
+   * *rising*. The last safe departure is timed so the crossing finishes
+   * before the rising forecast reaches (cautionMaxCm − floodMarginCm) — i.e.
+   * the water stays at least this many cm below flooding for the whole
+   * crossing. Only applies while rising; falling water is safe as soon as it
+   * is at/below safeMaxFallingCm (no time pressure — it only gets lower).
    */
-  safeMaxRisingCm: number
+  floodMarginCm: number
   /**
-   * Passable limit (cm DVR90) while the water is *falling*. A safe window
-   * opens once falling water drops below this.
+   * Passable limit (cm DVR90) while the water is *falling*. Safe as soon as
+   * the level is at/below this.
    */
   safeMaxFallingCm: number
   /** Water level (cm DVR90) at which the road is fully flooded */
