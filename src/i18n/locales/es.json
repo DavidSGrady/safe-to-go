@@ -44,7 +44,7 @@
     "shortCaution": "demasiado tarde para salir",
     "shortUnsafe": "próxima {time}",
     "shortNone": "sin ventanas",
-    "staleBanner": "La última medición tiene {duration} de antigüedad — se muestra en su lugar el pronóstico de DMI. Sea especialmente prudente.",
+    "staleBanner": "La última medición real del nivel del agua fue {duration} — se muestra en su lugar el nivel de agua previsto por DMI para este momento. Sea especialmente prudente.",
     "freshFresh": "Medido hace {duration}",
     "freshStale": "Medición con {duration} de antigüedad — muestra el pronóstico"
   },

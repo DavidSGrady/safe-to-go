@@ -44,7 +44,7 @@
     "shortCaution": "for sent at starte",
     "shortUnsafe": "næste {time}",
     "shortNone": "ingen vinduer",
-    "staleBanner": "Seneste måling er {duration} gammel — viser DMI-prognosen i stedet. Vær ekstra forsigtig.",
+    "staleBanner": "Den seneste aktuelle vandstandsmåling er {duration} — viser DMI's prognosticerede vandstand for dette tidspunkt i stedet. Vær ekstra forsigtig.",
     "freshFresh": "Målt for {duration} siden",
     "freshStale": "Måling {duration} gammel — viser prognose"
   },
@@ -154,6 +154,7 @@
     "title": "Sikkerhedsindstillinger",
     "signOut": "Log ud",
     "backToSite": "← Tilbage til siden",
+    "prodWarning": "⚠︎ Du redigerer live produktionsindstillinger — gemte ændringer slår igennem på den offentlige side med det samme (også fra din lokale udviklingsserver).",
     "rules": {
       "title": "Grænseværdier",
       "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved Mandø station.",

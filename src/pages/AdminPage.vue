@@ -159,6 +159,8 @@ onMounted(async () => {
     <p v-if="!auth.isAdmin" class="card notadmin">{{ t('login.notAdmin') }}</p>
 
     <template v-else>
+      <p class="prod-warning">{{ t('admin.prodWarning') }}</p>
+
       <!-- Thresholds -->
       <section class="card">
         <h2>{{ t('admin.rules.title') }}</h2>
@@ -318,6 +320,17 @@ onMounted(async () => {
 
 .notadmin {
   color: var(--verdict-unsafe-fg);
+}
+
+.prod-warning {
+  background: var(--verdict-unsafe-bg);
+  border: 1px solid var(--verdict-unsafe-bd);
+  color: var(--verdict-unsafe-fg);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 16px;
 }
 
 .intro {

@@ -44,7 +44,7 @@
     "shortCaution": "te laat om te starten",
     "shortUnsafe": "volgende {time}",
     "shortNone": "geen momenten",
-    "staleBanner": "De laatste meting is {duration} oud — toont in plaats daarvan de DMI-voorspelling. Wees extra voorzichtig.",
+    "staleBanner": "De laatste feitelijke waterstandsmeting was {duration} — in plaats daarvan wordt de door DMI voorspelde waterstand voor dit tijdstip getoond. Wees extra voorzichtig.",
     "freshFresh": "Gemeten {duration} geleden",
     "freshStale": "Meting {duration} oud — toont voorspelling"
   },

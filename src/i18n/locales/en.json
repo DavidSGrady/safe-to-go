@@ -44,7 +44,7 @@
     "shortCaution": "too late to start",
     "shortUnsafe": "next {time}",
     "shortNone": "no windows",
-    "staleBanner": "The latest measurement is {duration} old — showing the DMI forecast instead. Be extra careful.",
+    "staleBanner": "The latest actual water-level measurement was {duration} — showing DMI's forecast water level for this time instead. Be extra careful.",
     "freshFresh": "Measured {duration} ago",
     "freshStale": "Measurement {duration} old — showing forecast"
   },
@@ -154,6 +154,7 @@
     "title": "Safety settings",
     "signOut": "Sign out",
     "backToSite": "← Back to site",
+    "prodWarning": "⚠︎ You are editing live production settings — saved changes take effect on the public site immediately (including from your local dev server).",
     "rules": {
       "title": "Thresholds",
       "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the Mandø station.",

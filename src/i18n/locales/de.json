@@ -44,7 +44,7 @@
     "shortCaution": "zu spät zum Starten",
     "shortUnsafe": "nächste {time}",
     "shortNone": "keine Zeitfenster",
-    "staleBanner": "Die letzte Messung ist {duration} alt — es wird stattdessen die DMI-Prognose angezeigt. Seien Sie besonders vorsichtig.",
+    "staleBanner": "Die letzte tatsächliche Wasserstandsmessung war {duration} — es wird stattdessen der von DMI prognostizierte Wasserstand für diesen Zeitpunkt angezeigt. Seien Sie besonders vorsichtig.",
     "freshFresh": "Gemessen vor {duration}",
     "freshStale": "Messung {duration} alt — zeigt Prognose"
   },

@@ -44,7 +44,7 @@
     "shortCaution": "出发已太晚",
     "shortUnsafe": "下次 {time}",
     "shortNone": "无通行时段",
-    "staleBanner": "最新测量数据已是 {duration} 前的——现改为显示 DMI 预测值。请格外小心。",
+    "staleBanner": "最近一次实际水位测量是在 {duration}，现改为显示 DMI 对该时刻的预测水位。请格外小心。",
     "freshFresh": "{duration}前测量",
     "freshStale": "测量数据已有 {duration}——显示预测值"
   },
