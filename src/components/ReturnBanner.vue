@@ -1,43 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { dayLabel, fmtTime } from '@/lib/format'
+import { fmtTime } from '@/lib/format'
 import type { StatusResult } from '@/lib/types'
 
-const props = defineProps<{
-  status: StatusResult
-  now: number
-}>()
+// The return banner only appears when it adds something the verdict pane
+// doesn't: a still-possible same-day return trip. `lastDepartureToday` is the
+// last window whose deadline is still today, so its deadline is today's time.
+// In every other case the verdict already answers "when can I cross?", so the
+// banner stays hidden rather than repeating it.
+defineProps<{ status: StatusResult }>()
 
 const { t, locale } = useI18n()
-
-const ok = computed(() => props.status.lastDepartureToday !== null)
-
-const nextWindow = computed(() => props.status.windows.find((w) => w.start > props.now) ?? null)
-
-function dayTxt(ms: number): string {
-  const label = dayLabel(ms, props.now, locale.value)
-  return label === 'today' ? t('common.today') : label === 'tomorrow' ? t('common.tomorrow') : label
-}
 </script>
 
 <template>
-  <div class="banner" :class="{ ok }">
-    <div class="title">{{ ok ? t('retur.titleOk') : t('retur.titleNone') }}</div>
+  <div v-if="status.lastDepartureToday" class="banner ok">
+    <div class="title">{{ t('retur.titleOk') }}</div>
     <div class="body">
-      <template v-if="ok && status.lastDepartureToday">
-        {{ t('retur.bodyOk', { time: fmtTime(status.lastDepartureToday.deadline, locale) }) }}
-      </template>
-      <template v-else-if="nextWindow">
-        {{
-          t('retur.bodyWithNext', {
-            day: dayTxt(nextWindow.start),
-            time: fmtTime(nextWindow.start, locale),
-            deadline: fmtTime(nextWindow.deadline, locale),
-          })
-        }}
-      </template>
-      <template v-else>{{ t('retur.bodyNoNext') }}</template>
+      {{ t('retur.bodyOk', { time: fmtTime(status.lastDepartureToday.deadline, locale) }) }}
     </div>
   </div>
 </template>

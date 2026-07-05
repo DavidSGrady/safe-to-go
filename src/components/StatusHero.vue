@@ -26,6 +26,13 @@ const dayTxt = (ms: number): string => {
   return label === 'today' ? t('common.today') : label === 'tomorrow' ? t('common.tomorrow') : label
 }
 
+// Time with a day label when it isn't today, so a tomorrow deadline never
+// reads as a time in the past (e.g. "tomorrow 15.33" instead of "15.33").
+const depTime = (ms: number): string =>
+  dayLabel(ms, props.now, locale.value) === 'today'
+    ? fmtTime(ms, locale.value)
+    : `${dayTxt(ms)} ${fmtTime(ms, locale.value)}`
+
 const title = computed(() => {
   switch (props.status.state) {
     case 'safe':
@@ -55,7 +62,7 @@ const lines = computed(() => {
   const next = s.windows.find((w) => w.start > props.now)
   if (s.state === 'safe' && s.currentWindow) {
     return {
-      line1: t('verdict.safeLine1', { time: fmtTime(s.currentWindow.deadline, locale.value) }),
+      line1: t('verdict.safeLine1', { time: depTime(s.currentWindow.deadline) }),
       line2: durationTxt(s.currentWindow.deadline - props.now),
     }
   }
@@ -75,7 +82,7 @@ const lines = computed(() => {
     if (next) {
       return {
         line1: t('verdict.unsafeLine1WithNext', { day: dayTxt(next.start), time: fmtTime(next.start, locale.value) }),
-        line2: t('verdict.unsafeLine2WithNext', { time: fmtTime(next.deadline, locale.value) }),
+        line2: t('verdict.unsafeLine2WithNext', { time: depTime(next.deadline) }),
       }
     }
     return { line1: t('verdict.unsafeLine1NoNext'), line2: '' }
@@ -87,7 +94,7 @@ const lines = computed(() => {
 // behind the deadline, so people can subtract their own crossing time + buffer.
 const floodsAtTxt = computed(() => {
   const w = props.status.currentWindow
-  if (w && w.floodsAt !== null) return fmtTime(w.floodsAt, locale.value)
+  if (w && w.floodsAt !== null) return depTime(w.floodsAt)
   return null
 })
 

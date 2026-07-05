@@ -19,6 +19,13 @@ function dayTxt(ms: number): string {
   return label === 'today' ? t('common.today') : label === 'tomorrow' ? t('common.tomorrow') : label
 }
 
+// Time with a day label when it isn't today (so a next-day time never reads as the past).
+function depTime(ms: number): string {
+  return dayLabel(ms, props.now, locale.value) === 'today'
+    ? fmtTime(ms, locale.value)
+    : `${dayTxt(ms)} ${fmtTime(ms, locale.value)}`
+}
+
 const detail = computed(() => {
   const w = first.value
   if (!w) return null
@@ -29,8 +36,8 @@ const detail = computed(() => {
   return {
     dayLabel: dayTxt(w.start),
     target,
-    targetTxt: fmtTime(targetAt, locale.value),
-    deadlineTxt: fmtTime(w.deadline, locale.value),
+    targetTxt: depTime(targetAt),
+    deadlineTxt: depTime(w.deadline),
   }
 })
 </script>

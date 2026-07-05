@@ -19,6 +19,14 @@ function dayTxt(ms: number): string {
   return label === 'today' ? t('common.today') : label === 'tomorrow' ? t('common.tomorrow') : label
 }
 
+// Time with a day label when it isn't today, so a deadline or flood time that
+// slips past midnight never reads as a time in the past.
+function depTime(ms: number): string {
+  return dayLabel(ms, props.now, locale.value) === 'today'
+    ? fmtTime(ms, locale.value)
+    : `${dayTxt(ms)} ${fmtTime(ms, locale.value)}`
+}
+
 function durationTxt(ms: number): string {
   const { hours, minutes } = splitDuration(ms)
   return t('windows.duration', { hours, minutes })
@@ -42,9 +50,9 @@ const items = computed(() =>
         key: w.start,
         open,
         day: dayTxt(w.start),
-        rangeTxt: `${fmtTime(w.start, locale.value)} → ${fmtTime(w.deadline, locale.value)}`,
-        deadlineTxt: fmtTime(w.deadline, locale.value),
-        floodsTxt: w.floodsAt !== null ? fmtTime(w.floodsAt, locale.value) : null,
+        rangeTxt: `${fmtTime(w.start, locale.value)} → ${depTime(w.deadline)}`,
+        deadlineTxt: depTime(w.deadline),
+        floodsTxt: w.floodsAt !== null ? depTime(w.floodsAt) : null,
         lowTxt: fmtTime(w.lowAt, locale.value),
         greenPct: total > 0 ? (greenMs / total) * 100 : 0,
         amberPct: total > 0 ? (amberMs / total) * 100 : 0,

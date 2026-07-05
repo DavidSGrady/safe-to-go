@@ -69,7 +69,7 @@ onBeforeUnmount(() => observer?.disconnect())
       <StickyVerdict :status="status" :now="now" :visible="stuck" />
       <StatusHero :status="status" :rules="rules" :now="now" />
       <div ref="heroSentinel" class="hero-sentinel" aria-hidden="true"></div>
-      <ReturnBanner :status="status" :now="now" />
+      <ReturnBanner :status="status" />
       <RoadCrossSection :status="status" :rules="rules" :now="now" />
       <WindowsList
         :windows="status.windows"
