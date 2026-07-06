@@ -74,7 +74,7 @@
     "nowOpen": "Ouvert maintenant",
     "none": "Aucun créneau sûr dans la période de prévision. En général, une tempête pousse l'eau vers la côte — revenez plus tard.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Dernier départ {time}",
+    "lastDeparture": "Partez au plus tard à {time} pour ce créneau",
     "lowTide": "marée basse {time}",
     "floodsAt": "Route submergée à {time}",
     "confidenceHigh": "Haute confiance",

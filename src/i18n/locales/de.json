@@ -74,7 +74,7 @@
     "nowOpen": "Jetzt offen",
     "none": "Keine sicheren Zeitfenster im Prognosezeitraum. Meist drückt dann ein Sturm das Wasser hoch — später erneut prüfen.",
     "duration": "{hours} Std. {minutes} Min.",
-    "lastDeparture": "Letzte Abfahrt {time}",
+    "lastDeparture": "Spätestens {time} losfahren, um dieses Fenster zu schaffen",
     "lowTide": "Ebbe {time}",
     "floodsAt": "Straße überflutet um {time}",
     "confidenceHigh": "Hohe Sicherheit",

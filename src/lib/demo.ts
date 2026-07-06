@@ -58,7 +58,7 @@ export function demoForecast(now: number): ForecastPoint[] {
 
 export const demoRules: SafetyRules = {
   floodMarginCm: 5,
-  safeMaxFallingCm: 50,
+  fallMarginCm: 10,
   cautionMaxCm: 60,
   crossingMinutes: 30,
   bufferMinutes: 10,

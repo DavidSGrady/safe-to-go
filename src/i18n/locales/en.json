@@ -84,7 +84,7 @@
     "nowOpen": "Open now",
     "none": "No safe crossing windows in the forecast period. This usually means a storm is pushing the water up — check again later.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Last departure {time}",
+    "lastDeparture": "Depart by {time} at the latest to make this window",
     "lowTide": "low tide {time}",
     "floodsAt": "Road floods at {time}",
     "confidenceHigh": "High confidence",
@@ -161,8 +161,8 @@
     "rules": {
       "title": "Thresholds",
       "intro": "These knobs decide when the site shows green, amber and red. Levels are in cm relative to DVR90 (the Danish height reference), as measured at the {station} station.",
-      "safeMaxFalling": "Passable limit — water falling (cm)",
-      "safeMaxFallingHelp": "While the tide is falling, the road is safe as soon as the level is at or below this — it only gets lower from here, so there's no time pressure.",
+      "fallMargin": "Flood safety margin — water falling (cm)",
+      "fallMarginHelp": "While the tide is falling, the road counts as safe once the water is this many cm below the flood point — it only drops from there, so there's no time pressure.",
       "floodMargin": "Flood safety margin — water rising (cm)",
       "floodMarginHelp": "While the tide is rising, aim to finish the crossing while the water is still this many cm below the flood point. The last safe departure is timed so the whole crossing stays below (flood point − this margin). The crossing time is the other safety knob.",
       "cautionMax": "Flood point (cm)",
@@ -179,7 +179,7 @@
       "windAdjustOff": "Off — astronomical tide table only",
       "save": "Save changes",
       "saved": "Saved.",
-      "invalid": "Flood point must be at or above the falling passable limit, and the flood margin must be between 0 and the flood point.",
+      "invalid": "Each safety margin must be between 0 and the flood point.",
       "preview": "Preview with current data",
       "previewState": "With these values the site would now show: {state}"
     },

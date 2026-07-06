@@ -18,7 +18,7 @@ const { readings, predictions, forecast, rules, status, now, primaryStationName 
 
 const form = reactive({
   floodMarginCm: 0,
-  safeMaxFallingCm: 0,
+  fallMarginCm: 0,
   cautionMaxCm: 0,
   crossingMinutes: 0,
   bufferMinutes: 0,
@@ -49,7 +49,7 @@ watch(
   (r) => {
     if (r) {
       form.floodMarginCm = r.floodMarginCm
-      form.safeMaxFallingCm = r.safeMaxFallingCm
+      form.fallMarginCm = r.fallMarginCm
       form.cautionMaxCm = r.cautionMaxCm
       form.crossingMinutes = r.crossingMinutes
       form.bufferMinutes = r.bufferMinutes
@@ -62,7 +62,8 @@ watch(
 
 const invalid = computed(
   () =>
-    form.cautionMaxCm < form.safeMaxFallingCm ||
+    form.fallMarginCm < 0 ||
+    form.fallMarginCm > form.cautionMaxCm ||
     form.floodMarginCm < 0 ||
     form.floodMarginCm > form.cautionMaxCm,
 )
@@ -119,7 +120,7 @@ async function signOut(): Promise<void> {
 function diff(entry: RuleChangeLogEntry): string {
   const keys = [
     'flood_margin_cm',
-    'safe_max_falling_cm',
+    'fall_margin_cm',
     'caution_max_cm',
     'crossing_minutes',
     'buffer_minutes',
@@ -168,9 +169,9 @@ onMounted(async () => {
         <p class="secondary intro">{{ t('admin.rules.intro', { station: primaryStationName }) }}</p>
 
         <div class="field">
-          <label for="safeMaxFalling">{{ t('admin.rules.safeMaxFalling') }}: <strong>{{ form.safeMaxFallingCm }}</strong></label>
-          <input id="safeMaxFalling" v-model.number="form.safeMaxFallingCm" type="range" min="-100" max="200" step="5" />
-          <p class="muted">{{ t('admin.rules.safeMaxFallingHelp') }}</p>
+          <label for="fallMargin">{{ t('admin.rules.fallMargin') }}: <strong>{{ form.fallMarginCm }}</strong></label>
+          <input id="fallMargin" v-model.number="form.fallMarginCm" type="range" min="0" max="30" step="1" />
+          <p class="muted">{{ t('admin.rules.fallMarginHelp') }}</p>
         </div>
 
         <div class="field">

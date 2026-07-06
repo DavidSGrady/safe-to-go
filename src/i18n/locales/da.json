@@ -84,7 +84,7 @@
     "nowOpen": "Åbent nu",
     "none": "Ingen sikre tidsvinduer i prognoseperioden. Det betyder normalt, at en storm presser vandet op — tjek igen senere.",
     "duration": "{hours} t {minutes} min",
-    "lastDeparture": "Sidste afgang {time}",
+    "lastDeparture": "Kør senest {time} for at nå med i dette vindue",
     "lowTide": "lavvande {time}",
     "floodsAt": "Vejen oversvømmes kl. {time}",
     "confidenceHigh": "Høj sikkerhed",
@@ -161,8 +161,8 @@
     "rules": {
       "title": "Grænseværdier",
       "intro": "Disse knapper afgør, hvornår siden viser grønt, gult og rødt. Niveauer er i cm i forhold til DVR90, målt ved {station} station.",
-      "safeMaxFalling": "Farbar-grænse — faldende vand (cm)",
-      "safeMaxFallingHelp": "Mens tidevandet falder, er vejen sikker, så snart niveauet er ved eller under dette — det bliver kun lavere herfra, så der er ikke tidspres.",
+      "fallMargin": "Sikkerhedsmargin til oversvømmelse — faldende vand (cm)",
+      "fallMarginHelp": "Mens tidevandet falder, regnes vejen som sikker, så snart vandet er så mange cm under oversvømmelsespunktet — det bliver kun lavere herfra, så der er ikke tidspres.",
       "floodMargin": "Sikkerhedsmargin til oversvømmelse — stigende vand (cm)",
       "floodMarginHelp": "Mens tidevandet stiger, sigt efter at afslutte krydsningen, mens vandet stadig er så mange cm under oversvømmelsespunktet. Sidste sikre afgang beregnes, så hele krydsningen holder sig under (oversvømmelsespunkt − denne margin). Krydsningstiden er den anden sikkerhedsknap.",
       "cautionMax": "Oversvømmelsespunkt (cm)",
@@ -179,7 +179,7 @@
       "windAdjustOff": "Fra — kun astronomisk tidevandstabel",
       "save": "Gem ændringer",
       "saved": "Gemt.",
-      "invalid": "Oversvømmelsespunktet skal være mindst lige så højt som den faldende farbar-grænse, og sikkerhedsmarginen skal være mellem 0 og oversvømmelsespunktet.",
+      "invalid": "Hver sikkerhedsmargin skal være mellem 0 og oversvømmelsespunktet.",
       "preview": "Forhåndsvisning med aktuelle data",
       "previewState": "Med disse værdier ville siden lige nu vise: {state}"
     },

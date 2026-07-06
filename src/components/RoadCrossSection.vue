@@ -74,7 +74,7 @@ const displayState = computed<'safe' | 'caution' | 'unsafe' | 'unknown'>(() => {
   const caution = props.rules.cautionMaxCm
   if (v >= caution) return 'unsafe'
   if (!rising.value) {
-    return v <= props.rules.safeMaxFallingCm ? 'safe' : 'caution'
+    return v <= props.rules.cautionMaxCm - props.rules.fallMarginCm ? 'safe' : 'caution'
   }
   const target = caution - props.rules.floodMarginCm
   if (v >= target) return 'caution'
@@ -165,7 +165,7 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
         {{
           t('road.caption', {
             road: rules.cautionMaxCm,
-            falling: rules.safeMaxFallingCm,
+            falling: rules.cautionMaxCm - rules.fallMarginCm,
             margin: rules.floodMarginCm,
             rising: rules.cautionMaxCm - rules.floodMarginCm,
           })

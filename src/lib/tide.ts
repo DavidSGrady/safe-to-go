@@ -120,7 +120,7 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
  *   - off: the plain astronomical tide table only.
  * Either way, the current status uses the live measured level.
  *
- * A "window" runs from where *falling* water drops to `safeMaxFallingCm`
+ * A "window" runs from where *falling* water drops to `cautionMaxCm − fallMarginCm`
  * (safe as soon as it's that low — it only gets lower) until *rising* water
  * floods the road at `cautionMaxCm`. The **deadline** (last safe departure)
  * is time-based on the rising side: it's set so the crossing finishes before
@@ -284,7 +284,7 @@ export function computeStatus(
 /**
  * The level below which the road counts as inside a crossing window at time
  * `t`, chosen by the local tide direction:
- *   - falling → `safeMaxFallingCm` (comfort limit; water is only getting lower)
+ *   - falling → `cautionMaxCm − fallMarginCm` (safety margin; water only drops)
  *   - rising  → `cautionMaxCm` (the flood point itself; the window stays open
  *               until the road actually floods — the *time* to reach the flood
  *               is what constrains a safe departure, handled via the deadline)
@@ -303,12 +303,12 @@ export function windowLimitAt(
   if (here !== null && next !== null) rising = next > here
   else if (here !== null && prev !== null) rising = here > prev
   else rising = false
-  return rising ? rules.cautionMaxCm : rules.safeMaxFallingCm
+  return rising ? rules.cautionMaxCm : rules.cautionMaxCm - rules.fallMarginCm
 }
 
 /**
  * Scan the adjusted curve for crossing windows. A window runs from where
- * falling water drops to `safeMaxFallingCm` until rising water floods the road
+ * falling water drops to `cautionMaxCm − fallMarginCm` until rising water floods the road
  * at `cautionMaxCm`. Its **deadline** (last safe departure) is timed so the
  * crossing finishes before the rising water reaches `cautionMaxCm − floodMarginCm`
  * — i.e. it stays at least `floodMarginCm` below flooding for the whole trip.

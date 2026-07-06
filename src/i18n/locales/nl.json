@@ -74,7 +74,7 @@
     "nowOpen": "Nu open",
     "none": "Geen veilige oversteekmomenten in de voorspelperiode. Meestal stuwt een storm dan het water op — kijk later opnieuw.",
     "duration": "{hours} u {minutes} min",
-    "lastDeparture": "Laatste vertrek {time}",
+    "lastDeparture": "Vertrek uiterlijk {time} om dit venster te halen",
     "lowTide": "laagwater {time}",
     "floodsAt": "Weg loopt onder om {time}",
     "confidenceHigh": "Hoge betrouwbaarheid",

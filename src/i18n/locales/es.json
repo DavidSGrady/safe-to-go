@@ -74,7 +74,7 @@
     "nowOpen": "Abierta ahora",
     "none": "No hay ventanas seguras en el periodo de pronóstico. Normalmente significa que una tormenta está empujando el agua — vuelva a consultar más tarde.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Última salida {time}",
+    "lastDeparture": "Salga a más tardar a las {time} para este intervalo",
     "lowTide": "marea baja {time}",
     "floodsAt": "Carretera inundada a las {time}",
     "confidenceHigh": "Alta confianza",

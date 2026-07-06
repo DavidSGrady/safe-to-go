@@ -3,6 +3,7 @@
 Running list of features/ideas to build. Not prioritised unless noted.
 
 ## Shipped
+
 - **Surface flood-reach time** — the time DMI's prognosis says the water reaches
   the road (`caution_max_cm`) now shows in the verdict pane and per window.
 - **Station switch: Mandø ⇄ Ribe Kammersluse (v1).** Checkbox selector (one or
@@ -13,11 +14,12 @@ Running list of features/ideas to build. Not prioritised unless noted.
   astronomical if the point is dry).
 
 ## Ideas (not yet scoped)
+
 - **Prognosis drift warnings (high priority — build early).** On each DMI update,
-  check whether the prognosis is trending *worse* (e.g. the estimated time the
+  check whether the prognosis is trending _worse_ (e.g. the estimated time the
   water reaches the road keeps moving earlier). If so, warn: "Prognosis may be
   unstable — consider adding extra buffer / leaving a bit earlier than planned."
-  Also surface how the latest *measurements* have differed from the prognosis.
+  Also surface how the latest _measurements_ have differed from the prognosis.
   Locals reportedly already do this by eye to sanity-check estimates. Needs us to
   retain prognosis history (snapshots per update) to compare against.
 
@@ -32,3 +34,5 @@ Running list of features/ideas to build. Not prioritised unless noted.
   the causeway crossing. Expand to account for the user's current location: time
   to leave = crossing deadline − travel time from where they are now. Would need
   geolocation + a travel-time estimate to the causeway.
+
+- **SEO.** We need to rank well and make our website discoverable.

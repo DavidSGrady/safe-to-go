@@ -74,7 +74,7 @@
     "nowOpen": "现在开放",
     "none": "预测期内没有安全通行时段。这通常意味着风暴正在推高水位——请稍后再查看。",
     "duration": "{hours} 小时 {minutes} 分钟",
-    "lastDeparture": "最后出发时间 {time}",
+    "lastDeparture": "最迟 {time} 出发以赶上此时段",
     "lowTide": "低潮 {time}",
     "floodsAt": "道路于 {time} 被淹没",
     "confidenceHigh": "高可信度",
