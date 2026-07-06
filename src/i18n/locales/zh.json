@@ -40,6 +40,7 @@
     "unknownTitle": "暂无实时数据",
     "unknownSub": "目前无法连接测量站。请勿仅凭本页面通行——请在现场确认情况。",
     "levelNow": "当前水位为 {cm} 厘米",
+    "puddleWarning": "请谨慎通行。部分路段可能仍有积水——如遇积水，请等待其退去。",
     "floodsAt": "水将于 {time} 到达路面",
     "stormBanner": "天气与风力：比天文潮位高 {cm} 厘米，已计入预测。",
     "shortSafe": "最晚 {time} 出发",

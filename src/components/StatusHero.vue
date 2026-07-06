@@ -113,6 +113,18 @@ const floodsAtTxt = computed(() => {
   return null
 })
 
+// "Puddles may remain" caution: only while the water is falling (receding) and
+// within the admin-set band below the flood point. Shown alongside the verdict.
+const puddleWarning = computed(() => {
+  const r = props.rules
+  const s = props.status
+  if (!r.puddleWarningEnabled || s.rising !== false || s.currentLevelCm === null) return false
+  return (
+    s.currentLevelCm >= r.cautionMaxCm - r.puddleWarningRangeCm &&
+    s.currentLevelCm <= r.cautionMaxCm
+  )
+})
+
 const freshnessTxt = computed(() => {
   if (props.status.lastObservedAt === null) return null
   const { hours, minutes } = splitDuration(props.now - props.status.lastObservedAt)
@@ -135,6 +147,8 @@ const freshnessTxt = computed(() => {
     </div>
 
     <p v-if="floodsAtTxt" class="floods">{{ t('verdict.floodsAt', { time: floodsAtTxt }) }}</p>
+
+    <p v-if="puddleWarning" class="banner banner-puddle">{{ t('verdict.puddleWarning') }}</p>
 
     <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">
       {{
@@ -268,10 +282,17 @@ const freshnessTxt = computed(() => {
   margin: 0;
 }
 
-.banner-stale {
+.banner-stale,
+.banner-puddle {
   color: var(--verdict-caution-fg);
   background: var(--verdict-caution-bg);
   border-color: var(--verdict-caution-bd);
+}
+
+.banner-puddle {
+  max-width: 42ch;
+  line-height: 1.4;
+  border-radius: 12px;
 }
 
 .freshness {

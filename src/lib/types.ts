@@ -57,6 +57,14 @@ export interface SafetyRules {
    * astronomical tide only.
    */
   windAdjustmentEnabled: boolean
+  /** Show a "parts of the road may still be flooded / puddles" caution. */
+  puddleWarningEnabled: boolean
+  /**
+   * How many cm below the flood point the puddle caution shows while the water
+   * is *falling* (receding). The warning appears when a falling level is within
+   * this band below cautionMaxCm.
+   */
+  puddleWarningRangeCm: number
   updatedAt?: string
 }
 

@@ -40,6 +40,7 @@
     "unknownTitle": "Pas de données en direct",
     "unknownSub": "La station de mesure est injoignable pour le moment. Ne traversez pas sur la base de cette page — renseignez-vous sur place.",
     "levelNow": "Le niveau d'eau est de {cm} cm actuellement",
+    "puddleWarning": "Roulez prudemment. Certaines parties de la route peuvent être encore inondées — attendez que les flaques se retirent si vous en rencontrez.",
     "floodsAt": "L'eau atteint la route à {time}",
     "stormBanner": "Météo & vent : {cm} cm au-dessus de la marée astronomique, pris en compte dans la prévision.",
     "shortSafe": "départ avant {time}",

@@ -40,6 +40,7 @@
     "unknownTitle": "Keine Live-Daten",
     "unknownSub": "Die Messstation ist derzeit nicht erreichbar. Überqueren Sie nicht aufgrund dieser Seite — informieren Sie sich vor Ort.",
     "levelNow": "Der Wasserstand beträgt gerade {cm} cm",
+    "puddleWarning": "Vorsichtig fahren. Teile der Straße können noch überflutet sein — warten Sie, bis sich Pfützen zurückziehen, falls Sie welche antreffen.",
     "floodsAt": "Das Wasser erreicht die Straße um {time}",
     "stormBanner": "Wetter & Wind: {cm} cm über der astronomischen Tide, in der Prognose berücksichtigt.",
     "shortSafe": "Abfahrt bis {time}",

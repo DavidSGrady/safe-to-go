@@ -64,4 +64,6 @@ export const demoRules: SafetyRules = {
   bufferMinutes: 10,
   minWindowMinutes: 10,
   windAdjustmentEnabled: true,
+  puddleWarningEnabled: true,
+  puddleWarningRangeCm: 15,
 }

@@ -24,6 +24,8 @@ const form = reactive({
   bufferMinutes: 0,
   minWindowMinutes: 0,
   windAdjustmentEnabled: true,
+  puddleWarningEnabled: false,
+  puddleWarningRangeCm: 15,
 })
 
 const saved = ref(false)
@@ -55,6 +57,8 @@ watch(
       form.bufferMinutes = r.bufferMinutes
       form.minWindowMinutes = r.minWindowMinutes
       form.windAdjustmentEnabled = r.windAdjustmentEnabled
+      form.puddleWarningEnabled = r.puddleWarningEnabled
+      form.puddleWarningRangeCm = r.puddleWarningRangeCm
     }
   },
   { immediate: true },
@@ -126,6 +130,8 @@ function diff(entry: RuleChangeLogEntry): string {
     'buffer_minutes',
     'min_window_minutes',
     'wind_adjustment_enabled',
+    'puddle_warning_enabled',
+    'puddle_warning_range_cm',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -215,6 +221,25 @@ onMounted(async () => {
             </span>
           </label>
           <p class="muted">{{ t('admin.rules.windAdjustHelp') }}</p>
+        </div>
+
+        <div class="field toggle-field">
+          <label class="toggle">
+            <input v-model="form.puddleWarningEnabled" type="checkbox" />
+            <span class="toggle-text">
+              <span class="toggle-title">{{ t('admin.rules.puddleToggle') }}</span>
+              <span class="toggle-state">
+                {{ form.puddleWarningEnabled ? t('admin.rules.puddleOn') : t('admin.rules.puddleOff') }}
+              </span>
+            </span>
+          </label>
+          <p class="muted">{{ t('admin.rules.puddleHelp') }}</p>
+        </div>
+
+        <div v-if="form.puddleWarningEnabled" class="field">
+          <label for="puddleRange">{{ t('admin.rules.puddleRange') }}: <strong>{{ form.puddleWarningRangeCm }}</strong></label>
+          <input id="puddleRange" v-model.number="form.puddleWarningRangeCm" type="range" min="0" max="40" step="1" />
+          <p class="muted">{{ t('admin.rules.puddleRangeHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

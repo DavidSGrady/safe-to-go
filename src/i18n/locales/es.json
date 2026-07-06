@@ -40,6 +40,7 @@
     "unknownTitle": "Sin datos en vivo",
     "unknownSub": "No podemos conectar con la estación de medición ahora mismo. No cruce basándose en esta página — infórmese en el lugar.",
     "levelNow": "El nivel del agua es de {cm} cm ahora mismo",
+    "puddleWarning": "Conduzca con precaución. Algunas partes del camino pueden seguir inundadas — espere a que los charcos bajen si los encuentra.",
     "floodsAt": "El agua llega a la carretera a las {time}",
     "stormBanner": "Tiempo y viento: {cm} cm por encima de la marea astronómica, incluidos en el pronóstico.",
     "shortSafe": "salida antes de {time}",

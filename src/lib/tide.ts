@@ -237,9 +237,11 @@ export function computeStatus(
 
   let state: StatusResult['state'] = 'unknown'
   if (currentLevelCm !== null) {
-    // Hard floor: if the water shown right now is at/above the flood point, the
+    // Hard floor: if the water shown right now is above the flood point, the
     // road is under water — never green, whatever the forecast window says.
-    const floodedNow = currentLevelCm >= rules.cautionMaxCm
+    // (Strictly above, so a falling margin of 0 can treat the road level itself
+    // as the safe-to-go threshold — the receding-tide behaviour the locals want.)
+    const floodedNow = currentLevelCm > rules.cautionMaxCm
     const next = windows.find((w) => w.start > now)
     const nearWindow =
       rising === false && next !== undefined && next.start - now <= APPROACH_LEAD_MS
