@@ -28,6 +28,7 @@
     "cautionTitle": "Do not start crossing",
     "approachingTitle": "Almost passable",
     "approachingLine1": "Wait until {time}",
+    "approachingSoon": "The water is right at the road level and falling — give it a moment.",
     "cautionSub": "The road is still passable, but the water reaches {limit} cm again at {time} — there is no longer enough time ({duration}) for a safe crossing. If you are already on the road, continue calmly across.",
     "cautionLine1WithNext": "Next safe start",
     "cautionLine2WithNext": "{day} at {time}",

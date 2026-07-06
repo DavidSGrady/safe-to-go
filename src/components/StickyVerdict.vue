@@ -39,7 +39,13 @@ const short = computed(() => {
     return t('verdict.shortSafe', { time: fmtTime(s.currentWindow.deadline, locale.value) })
   }
   if (s.state === 'caution') return t('verdict.shortCaution')
-  if (s.state === 'unsafe' || s.state === 'approaching') {
+  if (s.state === 'approaching') {
+    if (s.currentWindow) return t('verdict.approachingTitle')
+    return next.value
+      ? t('verdict.shortUnsafe', { time: fmtTime(next.value.start, locale.value) })
+      : t('verdict.approachingTitle')
+  }
+  if (s.state === 'unsafe') {
     return next.value
       ? t('verdict.shortUnsafe', { time: fmtTime(next.value.start, locale.value) })
       : t('verdict.shortNone')

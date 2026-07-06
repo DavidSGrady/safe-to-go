@@ -80,11 +80,18 @@ const lines = computed(() => {
     }
     return { line1: t('verdict.cautionLine1NoNext'), line2: '' }
   }
-  if (s.state === 'approaching' && next) {
-    const { hours, minutes } = splitDuration(next.start - props.now)
-    return {
-      line1: t('verdict.approachingLine1', { time: depTime(next.start) }),
-      line2: hours > 0 ? t('common.inHoursMinutes', { hours, minutes }) : t('common.inMinutes', { minutes }),
+  if (s.state === 'approaching') {
+    // A window the forecast has already opened, but the live reading is still
+    // right at the flood line — it's imminent, so don't cite a clock time.
+    if (s.currentWindow) {
+      return { line1: t('verdict.approachingSoon'), line2: '' }
+    }
+    if (next) {
+      const { hours, minutes } = splitDuration(next.start - props.now)
+      return {
+        line1: t('verdict.approachingLine1', { time: depTime(next.start) }),
+        line2: hours > 0 ? t('common.inHoursMinutes', { hours, minutes }) : t('common.inMinutes', { minutes }),
+      }
     }
   }
   if (s.state === 'unsafe') {

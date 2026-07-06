@@ -28,6 +28,7 @@
     "cautionTitle": "Überquerung nicht mehr beginnen",
     "approachingTitle": "Bald befahrbar",
     "approachingLine1": "Warten bis {time}",
+    "approachingSoon": "Das Wasser ist genau auf Straßenhöhe und fällt — einen Moment warten.",
     "cautionSub": "Der Damm ist noch passierbar, aber das Wasser erreicht um {time} wieder {limit} cm — es bleibt keine ausreichende Zeit ({duration}) mehr für eine sichere Überquerung. Sind Sie bereits unterwegs, fahren Sie ruhig weiter.",
     "cautionLine1WithNext": "Nächster sicherer Start",
     "cautionLine2WithNext": "{day} um {time}",

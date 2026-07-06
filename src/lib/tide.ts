@@ -243,8 +243,13 @@ export function computeStatus(
     // as the safe-to-go threshold — the receding-tide behaviour the locals want.)
     const floodedNow = currentLevelCm > rules.cautionMaxCm
     const next = windows.find((w) => w.start > now)
+    // "Almost" while falling: a window opens within the lead time, OR the
+    // forecast already has us inside one but the live reading is still right at
+    // the flood line (the boundary case) — either way it's imminent, not unsafe.
     const nearWindow =
-      rising === false && next !== undefined && next.start - now <= APPROACH_LEAD_MS
+      rising === false &&
+      (currentWindow !== null ||
+        (next !== undefined && next.start - now <= APPROACH_LEAD_MS))
     if (!floodedNow && currentWindow && now <= currentWindow.deadline) {
       state = 'safe'
     } else if (!floodedNow && currentWindow) {

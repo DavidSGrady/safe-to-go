@@ -28,6 +28,7 @@
     "cautionTitle": "Begynd ikke krydsning",
     "approachingTitle": "Snart farbart",
     "approachingLine1": "Vent til {time}",
+    "approachingSoon": "Vandet er lige ved vejhøjde og falder — vent et øjeblik.",
     "cautionSub": "Vejen er stadig farbar, men vandet når {limit} cm igen kl. {time} — der er ikke længere {duration} til en sikker krydsning. Er du allerede på vejen, så fortsæt roligt over.",
     "cautionLine1WithNext": "Næste sikre start",
     "cautionLine2WithNext": "{day} kl. {time}",

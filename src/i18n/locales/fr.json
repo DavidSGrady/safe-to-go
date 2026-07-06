@@ -28,6 +28,7 @@
     "cautionTitle": "Ne commencez pas la traversée",
     "approachingTitle": "Bientôt praticable",
     "approachingLine1": "Attendez jusqu'à {time}",
+    "approachingSoon": "L'eau est juste au niveau de la route et baisse — patientez un instant.",
     "cautionSub": "La digue est encore praticable, mais l'eau atteint de nouveau {limit} cm à {time} — il ne reste plus assez de temps ({duration}) pour une traversée sûre. Si vous êtes déjà en route, continuez calmement.",
     "cautionLine1WithNext": "Prochain départ sûr",
     "cautionLine2WithNext": "{day} à {time}",

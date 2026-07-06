@@ -28,6 +28,7 @@
     "cautionTitle": "请勿开始通行",
     "approachingTitle": "即将可通行",
     "approachingLine1": "请等到 {time}",
+    "approachingSoon": "水位正好在路面高度且正在下降——请稍候。",
     "cautionSub": "道路目前仍可通行，但水位将在 {time} 再次达到 {limit} 厘米——已没有足够时间（{duration}）安全通过。如果您已经在路上，请保持冷静继续前行。",
     "cautionLine1WithNext": "下一个安全出发时段",
     "cautionLine2WithNext": "{day} {time}",
