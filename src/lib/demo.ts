@@ -69,4 +69,5 @@ export const demoRules: SafetyRules = {
   playbackSpeedPct: 100,
   dayTripMode: 'daytrip',
   minDaytripMinutes: 120,
+  absoluteMinDaytripMinutes: 30,
 }

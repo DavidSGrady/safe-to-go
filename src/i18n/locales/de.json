@@ -69,6 +69,7 @@
     "twoWindowNote": "Heute zwei Zeitfenster — im ersten hinüberfahren, im zweiten zurück. Dazwischen wird die Straße überflutet, Sie bleiben also bis zur nächsten Öffnung auf der Insel.",
     "singleWindowNote": "Heute nur ein Zeitfenster — Hin- und Rückfahrt liegen darin, halten Sie den Besuch also kurz.",
     "extendedWarning": "Das erfordert eine frühe oder späte Überfahrt. Die meisten Geschäfte auf Mandø schließen gegen {time}, planen Sie also einen kürzeren Tag ein.",
+    "shortWarning": "Heute nur Zeit für einen kurzen Besuch — etwa {duration} auf Mandø, weniger als die üblicherweise empfohlenen {recommended}.",
     "noneBody": "Heute gibt es bei Tageslicht kein ausreichend langes Hin-und-zurück-Zeitfenster.",
     "noneNext": "Nächste Überfahrt öffnet {day} {time}."
   },

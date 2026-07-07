@@ -79,11 +79,16 @@ export interface SafetyRules {
    */
   dayTripMode: 'daytrip' | 'return' | 'off'
   /**
-   * Shortest visit (minutes on the island) worth suggesting a daytrip for. The
-   * daytrip planner ignores windows that only leave less than this on Mandø —
-   * no point crossing over just to turn straight around.
+   * Recommended visit length (minutes on the island). At/above this the daytrip
+   * planner shows a full (green) daytrip; between this and
+   * `absoluteMinDaytripMinutes` it shows a short-trip amber warning.
    */
   minDaytripMinutes: number
+  /**
+   * Absolute minimum visit (minutes). Below this there's no worthwhile trip, so
+   * the daytrip planner shows "no daytrip today" rather than a short trip.
+   */
+  absoluteMinDaytripMinutes: number
   updatedAt?: string
 }
 

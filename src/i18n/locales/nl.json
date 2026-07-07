@@ -69,6 +69,7 @@
     "twoWindowNote": "Vandaag twee momenten — rijd heen in het eerste en terug in het tweede. De weg overstroomt ertussen, dus je blijft op het eiland tot hij weer opengaat.",
     "singleWindowNote": "Vandaag maar één moment — je rijdt er heen en terug binnen dat moment, dus houd het bezoek kort.",
     "extendedWarning": "Dit vraagt een vroege of late oversteek. De meeste winkels op Mandø sluiten rond {time}, dus plan een kortere dag.",
+    "shortWarning": "Vandaag maar tijd voor een kort bezoek — ongeveer {duration} op Mandø, minder dan de {recommended} die we meestal aanraden.",
     "noneBody": "Er is vandaag geen voldoende lang heen-en-terugmoment bij daglicht.",
     "noneNext": "Volgende oversteek opent {day} {time}."
   },

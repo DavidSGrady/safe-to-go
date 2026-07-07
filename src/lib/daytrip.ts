@@ -40,6 +40,13 @@ export interface DayTripPlan {
   comfort: DayTripComfort
   outbound: DayTripCrossing | null
   inbound: DayTripCrossing | null
+  /** Island time (ms) of the chosen plan — shown to the user; 0 when infeasible. */
+  islandMs: number
+  /**
+   * True when a trip is possible but shorter than the recommended length (it
+   * still clears the absolute minimum). Render amber with a "short trip" note.
+   */
+  short: boolean
   /** For the infeasible case: ms epoch of the next crossing window, if any. */
   nextWindowStart: number | null
 }
@@ -87,9 +94,13 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
   const extStart = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.start)
   const extEnd = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.end)
   const crossingMs = rules.crossingMinutes * 60_000
-  // Admin-set floor: a daytrip is only worth suggesting if you'd get at least
-  // this long on the island (otherwise it's drive-over-drive-straight-back).
-  const minIslandMs = rules.minDaytripMinutes * 60_000
+  // Two admin-set thresholds on island time:
+  //   recommendedMs — at/above this it's a full daytrip.
+  //   floorMs       — below this there's no worthwhile trip → "no daytrip".
+  // Between the two it's a short trip (shown with an amber warning). The floor
+  // is clamped to the recommended length so it can never exceed it.
+  const recommendedMs = rules.minDaytripMinutes * 60_000
+  const floorMs = Math.min(rules.absoluteMinDaytripMinutes, rules.minDaytripMinutes) * 60_000
 
   const nextWindowStart = windows.find((w) => w.start > now)?.start ?? null
   const none = (): DayTripPlan => ({
@@ -98,6 +109,8 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     comfort: 'comfortable',
     outbound: null,
     inbound: null,
+    islandMs: 0,
+    short: false,
     nextWindowStart,
   })
 
@@ -114,7 +127,8 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
 
   // Build every sensible plan, each with its usable island time, then choose.
   // Island time ≈ (time you can start heading back) − (arrival = first start +
-  // one crossing). Plans that don't clear the minimum are dropped.
+  // one crossing). Only trips with some positive time are kept here; the
+  // recommended/floor thresholds are applied when choosing below.
   const candidates: Candidate[] = []
 
   const addSingle = (b: Bracket): void => {
@@ -122,15 +136,16 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     const lo = c.earliest
     const hi = c.latest
     const islandMs = hi - lo - crossingMs
-    if (islandMs < minIslandMs) return
+    if (islandMs <= 0) return
     candidates.push({
       feasible: true,
       mode: 'single-window',
       comfort: c.comfortable ? 'comfortable' : 'extended',
       outbound: { earliest: lo, latest: hi - crossingMs, comfortable: c.comfortable },
       inbound: { earliest: lo + crossingMs, latest: hi, comfortable: c.comfortable },
-      nextWindowStart: null,
       islandMs,
+      short: false,
+      nextWindowStart: null,
     })
   }
 
@@ -138,15 +153,16 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     const out = crossingFrom(a)
     const inn = crossingFrom(b)
     const islandMs = inn.latest - out.earliest - crossingMs
-    if (islandMs < minIslandMs) return
+    if (islandMs <= 0) return
     candidates.push({
       feasible: true,
       mode: 'two-window',
       comfort: out.comfortable && inn.comfortable ? 'comfortable' : 'extended',
       outbound: out,
       inbound: inn,
-      nextWindowStart: null,
       islandMs,
+      short: false,
+      nextWindowStart: null,
     })
   }
 
@@ -162,20 +178,35 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     addTwo(comfortableWindows[0].b, comfortableWindows[comfortableWindows.length - 1].b)
   }
 
-  if (candidates.length === 0) return none()
-
   // Prefer a comfortable (daylight) plan over an early/late amber one; among
   // equal comfort, prefer the one that leaves the most time on the island.
-  candidates.sort((p, q) =>
-    p.comfort !== q.comfort ? (p.comfort === 'comfortable' ? -1 : 1) : q.islandMs - p.islandMs,
-  )
-  const best = candidates[0]
+  const pickBest = (list: Candidate[]): Candidate =>
+    [...list].sort((p, q) =>
+      p.comfort !== q.comfort ? (p.comfort === 'comfortable' ? -1 : 1) : q.islandMs - p.islandMs,
+    )[0]
+
+  // Three states: a full daytrip (≥ recommended) wins outright; otherwise a
+  // short trip (≥ floor) shown with a warning; otherwise nothing worth it.
+  const full = candidates.filter((c) => c.islandMs >= recommendedMs)
+  const shortTrips = candidates.filter((c) => c.islandMs >= floorMs && c.islandMs < recommendedMs)
+
+  let best: Candidate | undefined
+  let short = false
+  if (full.length) best = pickBest(full)
+  else if (shortTrips.length) {
+    best = pickBest(shortTrips)
+    short = true
+  }
+  if (!best) return none()
+
   return {
     feasible: true,
     mode: best.mode,
     comfort: best.comfort,
     outbound: best.outbound,
     inbound: best.inbound,
+    islandMs: best.islandMs,
+    short,
     nextWindowStart: null,
   }
 }

@@ -29,6 +29,7 @@ const form = reactive({
   playbackSpeedPct: 100,
   dayTripMode: 'daytrip' as 'daytrip' | 'return' | 'off',
   minDaytripMinutes: 120,
+  absoluteMinDaytripMinutes: 30,
 })
 
 const saved = ref(false)
@@ -65,6 +66,7 @@ watch(
       form.playbackSpeedPct = r.playbackSpeedPct
       form.dayTripMode = r.dayTripMode
       form.minDaytripMinutes = r.minDaytripMinutes
+      form.absoluteMinDaytripMinutes = r.absoluteMinDaytripMinutes
     }
   },
   { immediate: true },
@@ -141,6 +143,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'playback_speed_pct',
     'day_trip_mode',
     'min_daytrip_minutes',
+    'absolute_min_daytrip_minutes',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -273,8 +276,21 @@ onMounted(async () => {
 
         <div v-if="form.dayTripMode === 'daytrip'" class="field">
           <label for="minDaytrip">{{ t('admin.rules.minDaytrip') }}: <strong>{{ form.minDaytripMinutes }}</strong></label>
-          <input id="minDaytrip" v-model.number="form.minDaytripMinutes" type="range" min="0" max="480" step="15" />
+          <input id="minDaytrip" v-model.number="form.minDaytripMinutes" type="range" min="30" max="480" step="15" />
           <p class="muted">{{ t('admin.rules.minDaytripHelp') }}</p>
+        </div>
+
+        <div v-if="form.dayTripMode === 'daytrip'" class="field">
+          <label for="absMinDaytrip">{{ t('admin.rules.absMinDaytrip') }}: <strong>{{ form.absoluteMinDaytripMinutes }}</strong></label>
+          <input
+            id="absMinDaytrip"
+            v-model.number="form.absoluteMinDaytripMinutes"
+            type="range"
+            min="0"
+            :max="form.minDaytripMinutes"
+            step="15"
+          />
+          <p class="muted">{{ t('admin.rules.absMinDaytripHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

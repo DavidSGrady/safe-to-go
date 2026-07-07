@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { dayLabel, fmtTime, localTimeMs } from '@/lib/format'
+import { dayLabel, fmtTime, localTimeMs, splitDuration } from '@/lib/format'
 import { DAYTRIP_SHOPS_CLOSE_HOUR, planDayTrip, type DayTripCrossing } from '@/lib/daytrip'
 import type { SafetyRules, StatusResult } from '@/lib/types'
 
@@ -15,10 +15,28 @@ const { t, locale } = useI18n()
 
 const plan = computed(() => planDayTrip(props.status.windows, props.rules, props.now))
 
-// green when the whole trip fits comfortable hours, amber when it needs an
-// early/late crossing, neutral when no daytrip is possible today.
+// green for a full comfortable daytrip; amber when it's short or needs an
+// early/late crossing; neutral when no daytrip is possible today.
 const theme = computed(() =>
-  !plan.value.feasible ? 'none' : plan.value.comfort === 'extended' ? 'warn' : 'ok',
+  !plan.value.feasible
+    ? 'none'
+    : plan.value.short || plan.value.comfort === 'extended'
+      ? 'warn'
+      : 'ok',
+)
+
+const durationTxt = (ms: number): string => {
+  const { hours, minutes } = splitDuration(ms)
+  return t('windows.duration', { hours, minutes })
+}
+
+// The actual time on the island vs. the recommended length — spelled out so the
+// short-trip warning is transparent about the reasoning.
+const shortWarningTxt = computed(() =>
+  t('daytrip.shortWarning', {
+    duration: durationTxt(plan.value.islandMs),
+    recommended: durationTxt(props.rules.minDaytripMinutes * 60_000),
+  }),
 )
 
 const title = computed(() =>
@@ -68,6 +86,7 @@ const nextWindowTxt = computed(() => {
       <p class="dt-note">
         {{ plan.mode === 'two-window' ? t('daytrip.twoWindowNote') : t('daytrip.singleWindowNote') }}
       </p>
+      <p v-if="plan.short" class="dt-warn">{{ shortWarningTxt }}</p>
       <p v-if="plan.comfort === 'extended'" class="dt-warn">
         {{ t('daytrip.extendedWarning', { time: shopsCloseTxt }) }}
       </p>

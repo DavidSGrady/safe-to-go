@@ -69,6 +69,7 @@
     "twoWindowNote": "今天有两个时段——第一个时段过岛，第二个时段返回。两者之间道路会被淹没，因此你需要在岛上等到道路重新开放。",
     "singleWindowNote": "今天只有一个时段——在同一时段内往返，因此请安排较短的行程。",
     "extendedWarning": "这需要很早或很晚通行。曼德岛上大多数商店约在 {time} 关门，请安排较短的一天。",
+    "shortWarning": "今天只够短暂停留——在曼德岛约 {duration}，少于我们通常建议的 {recommended}。",
     "noneBody": "今天白天没有足够长的往返通行时段。",
     "noneNext": "下一个通行时段将于 {day} {time} 开放。"
   },
