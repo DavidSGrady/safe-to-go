@@ -47,6 +47,8 @@ export interface DayTripPlan {
    * still clears the absolute minimum). Render amber with a "short trip" note.
    */
   short: boolean
+  /** True when the plan is for tomorrow (it's past the rollover hour today). */
+  forTomorrow: boolean
   /** For the infeasible case: ms epoch of the next crossing window, if any. */
   nextWindowStart: number | null
 }
@@ -88,11 +90,18 @@ function crossingFrom(b: Bracket): DayTripCrossing {
 }
 
 export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: number): DayTripPlan {
-  const dayEnd = startOfNextLocalDay(now)
-  const comfStart = localTimeMs(now, DAYTRIP_COMFORT_HOURS.start)
-  const comfEnd = localTimeMs(now, DAYTRIP_COMFORT_HOURS.end)
-  const extStart = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.start)
-  const extEnd = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.end)
+  // Once it's past the admin-set rollover hour, nobody's starting a daytrip
+  // today — plan for tomorrow instead. `anchor` is a moment on the day we're
+  // planning; `dayStart`/`dayEnd` bound that whole day (for today, dayStart is
+  // "now" so past crossings are excluded).
+  const forTomorrow = now >= localTimeMs(now, rules.daytripRolloverHour)
+  const anchor = forTomorrow ? now + 24 * 60 * 60_000 : now
+  const dayStart = forTomorrow ? startOfNextLocalDay(now) : now
+  const dayEnd = startOfNextLocalDay(anchor)
+  const comfStart = localTimeMs(anchor, DAYTRIP_COMFORT_HOURS.start)
+  const comfEnd = localTimeMs(anchor, DAYTRIP_COMFORT_HOURS.end)
+  const extStart = localTimeMs(anchor, DAYTRIP_EXTENDED_HOURS.start)
+  const extEnd = localTimeMs(anchor, DAYTRIP_EXTENDED_HOURS.end)
   const crossingMs = rules.crossingMinutes * 60_000
   // Two admin-set thresholds on island time:
   //   recommendedMs — at/above this it's a full daytrip.
@@ -102,7 +111,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
   const recommendedMs = rules.minDaytripMinutes * 60_000
   const floorMs = Math.min(rules.absoluteMinDaytripMinutes, rules.minDaytripMinutes) * 60_000
 
-  const nextWindowStart = windows.find((w) => w.start > now)?.start ?? null
+  const nextWindowStart = windows.find((w) => w.start > dayStart)?.start ?? null
   const none = (): DayTripPlan => ({
     feasible: false,
     mode: 'none',
@@ -111,15 +120,16 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     inbound: null,
     islandMs: 0,
     short: false,
+    forTomorrow,
     nextWindowStart,
   })
 
-  // Windows whose green (safe-to-start) period offers a crossing later today
-  // within extended daylight. Each supports at least a one-way crossing.
+  // Windows whose green (safe-to-start) period offers a crossing on the planned
+  // day within extended daylight. Each supports at least a one-way crossing.
   const usable = windows
     .map((w) => ({
       w,
-      b: bracketFor(w.start, w.deadline, now, dayEnd, comfStart, comfEnd, extStart, extEnd),
+      b: bracketFor(w.start, w.deadline, dayStart, dayEnd, comfStart, comfEnd, extStart, extEnd),
     }))
     .filter((x) => x.b.extOk)
 
@@ -145,6 +155,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
       inbound: { earliest: lo + crossingMs, latest: hi, comfortable: c.comfortable },
       islandMs,
       short: false,
+      forTomorrow,
       nextWindowStart: null,
     })
   }
@@ -162,6 +173,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
       inbound: inn,
       islandMs,
       short: false,
+      forTomorrow,
       nextWindowStart: null,
     })
   }
@@ -207,6 +219,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     inbound: best.inbound,
     islandMs: best.islandMs,
     short,
+    forTomorrow,
     nextWindowStart: null,
   }
 }

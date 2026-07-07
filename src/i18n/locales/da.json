@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "Planlægger du en dagstur?",
+    "titleTomorrow": "Planlægger du en dagstur i morgen?",
     "noneTitle": "Ingen dagstur i dag",
+    "noneTitleTomorrow": "Ingen dagstur i morgen",
     "there": "Turen derover",
     "back": "Turen hjem",
     "crossBetween": "Kør mellem kl. {from} og {to}",
@@ -213,6 +215,8 @@
       "minDaytripHelp": "Ved eller over dette får du en fuld dagstur (vises grøn). Under det — men over det absolutte minimum — vises turen stadig med en advarsel om en kort tur.",
       "absMinDaytrip": "Absolut mindste dagstur-længde (minutter)",
       "absMinDaytripHelp": "Under dette er turen slet ikke umagen værd, så feltet viser 'ingen dagstur i dag' i stedet for en anbefaling.",
+      "rolloverHour": "Skift til planlægning af i morgen kl.",
+      "rolloverHourHelp": "Efter dette lokale klokkeslæt planlægger dagstur-feltet for i morgen i stedet for i dag (det er for sent at starte en tur i dag). Titlen skifter til 'Planlægger du en dagstur i morgen?' og viser i morgens vinduer.",
       "save": "Gem ændringer",
       "saved": "Gemt.",
       "invalid": "Hver sikkerhedsmargin skal være mellem 0 og oversvømmelsespunktet.",

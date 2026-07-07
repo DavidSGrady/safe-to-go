@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "¿Planeas una excursión de un día?",
+    "titleTomorrow": "¿Planeas una excursión mañana?",
     "noneTitle": "Hoy no hay excursión",
+    "noneTitleTomorrow": "Mañana no hay excursión",
     "there": "Ida",
     "back": "Vuelta",
     "crossBetween": "Cruza entre las {from} y las {to}",

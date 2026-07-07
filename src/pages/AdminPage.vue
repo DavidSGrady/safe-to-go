@@ -30,6 +30,7 @@ const form = reactive({
   dayTripMode: 'daytrip' as 'daytrip' | 'return' | 'off',
   minDaytripMinutes: 120,
   absoluteMinDaytripMinutes: 30,
+  daytripRolloverHour: 18,
 })
 
 const saved = ref(false)
@@ -67,6 +68,7 @@ watch(
       form.dayTripMode = r.dayTripMode
       form.minDaytripMinutes = r.minDaytripMinutes
       form.absoluteMinDaytripMinutes = r.absoluteMinDaytripMinutes
+      form.daytripRolloverHour = r.daytripRolloverHour
     }
   },
   { immediate: true },
@@ -144,6 +146,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'day_trip_mode',
     'min_daytrip_minutes',
     'absolute_min_daytrip_minutes',
+    'daytrip_rollover_hour',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -291,6 +294,15 @@ onMounted(async () => {
             step="15"
           />
           <p class="muted">{{ t('admin.rules.absMinDaytripHelp') }}</p>
+        </div>
+
+        <div v-if="form.dayTripMode === 'daytrip'" class="field">
+          <label for="rolloverHour">
+            {{ t('admin.rules.rolloverHour') }}:
+            <strong>{{ String(form.daytripRolloverHour).padStart(2, '0') }}:00</strong>
+          </label>
+          <input id="rolloverHour" v-model.number="form.daytripRolloverHour" type="range" min="12" max="22" step="1" />
+          <p class="muted">{{ t('admin.rules.rolloverHourHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

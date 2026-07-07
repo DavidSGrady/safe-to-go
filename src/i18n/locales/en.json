@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "Planning a daytrip?",
+    "titleTomorrow": "Planning a daytrip tomorrow?",
     "noneTitle": "No daytrip today",
+    "noneTitleTomorrow": "No daytrip tomorrow",
     "there": "Getting there",
     "back": "Getting back",
     "crossBetween": "Cross between {from} and {to}",
@@ -213,6 +215,8 @@
       "minDaytripHelp": "At or above this you'd get a full daytrip (shown green). Below it — but above the absolute minimum — the pane still shows the trip with a 'short trip' warning.",
       "absMinDaytrip": "Absolute minimum daytrip length (minutes)",
       "absMinDaytripHelp": "Below this there's no worthwhile trip at all, so the pane shows 'no daytrip today' instead of a recommendation.",
+      "rolloverHour": "Switch to planning tomorrow at",
+      "rolloverHourHelp": "After this local time the daytrip pane plans for tomorrow instead of today (it's too late to start a trip today). Its title changes to 'Planning a daytrip tomorrow?' and it shows tomorrow's windows.",
       "save": "Save changes",
       "saved": "Saved.",
       "invalid": "Each safety margin must be between 0 and the flood point.",

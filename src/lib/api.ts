@@ -33,6 +33,7 @@ interface RulesRow {
   day_trip_mode: 'daytrip' | 'return' | 'off'
   min_daytrip_minutes: number
   absolute_min_daytrip_minutes: number
+  daytrip_rollover_hour: number
   updated_at: string
 }
 
@@ -102,7 +103,7 @@ export async function fetchRules(): Promise<SafetyRules> {
   if (isDemoMode) return demoRules
   const { data, error } = await getSupabase()
     .from('safety_rules')
-    .select('flood_margin_cm, fall_margin_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, puddle_warning_enabled, puddle_warning_range_cm, playback_speed_pct, day_trip_mode, min_daytrip_minutes, absolute_min_daytrip_minutes, updated_at')
+    .select('flood_margin_cm, fall_margin_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, puddle_warning_enabled, puddle_warning_range_cm, playback_speed_pct, day_trip_mode, min_daytrip_minutes, absolute_min_daytrip_minutes, daytrip_rollover_hour, updated_at')
     .eq('id', 1)
     .single()
   if (error) throw error
@@ -121,6 +122,7 @@ export async function fetchRules(): Promise<SafetyRules> {
     dayTripMode: row.day_trip_mode,
     minDaytripMinutes: row.min_daytrip_minutes,
     absoluteMinDaytripMinutes: row.absolute_min_daytrip_minutes,
+    daytripRolloverHour: row.daytrip_rollover_hour,
     updatedAt: row.updated_at,
   }
 }
@@ -142,6 +144,7 @@ export async function saveRules(rules: SafetyRules): Promise<void> {
       day_trip_mode: rules.dayTripMode,
       min_daytrip_minutes: rules.minDaytripMinutes,
       absolute_min_daytrip_minutes: rules.absoluteMinDaytripMinutes,
+      daytrip_rollover_hour: rules.daytripRolloverHour,
     })
     .eq('id', 1)
   if (error) throw error

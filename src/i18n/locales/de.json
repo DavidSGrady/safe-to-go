@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "Planen Sie einen Tagesausflug?",
+    "titleTomorrow": "Planen Sie morgen einen Tagesausflug?",
     "noneTitle": "Heute kein Tagesausflug",
+    "noneTitleTomorrow": "Morgen kein Tagesausflug",
     "there": "Hinweg",
     "back": "Rückweg",
     "crossBetween": "Überfahrt zwischen {from} und {to}",

@@ -89,6 +89,11 @@ export interface SafetyRules {
    * the daytrip planner shows "no daytrip today" rather than a short trip.
    */
   absoluteMinDaytripMinutes: number
+  /**
+   * Local hour (0–23) after which the daytrip planner switches to planning for
+   * tomorrow instead of today — by then it's too late to start a trip today.
+   */
+  daytripRolloverHour: number
   updatedAt?: string
 }
 

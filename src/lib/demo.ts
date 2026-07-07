@@ -70,4 +70,5 @@ export const demoRules: SafetyRules = {
   dayTripMode: 'daytrip',
   minDaytripMinutes: 120,
   absoluteMinDaytripMinutes: 30,
+  daytripRolloverHour: 18,
 }

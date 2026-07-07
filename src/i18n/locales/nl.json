@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "Plan je een dagtrip?",
+    "titleTomorrow": "Plan je morgen een dagtrip?",
     "noneTitle": "Vandaag geen dagtrip",
+    "noneTitleTomorrow": "Morgen geen dagtrip",
     "there": "Heenreis",
     "back": "Terugreis",
     "crossBetween": "Steek over tussen {from} en {to}",

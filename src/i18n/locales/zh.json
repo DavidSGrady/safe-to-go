@@ -61,7 +61,9 @@
   },
   "daytrip": {
     "title": "计划一日往返？",
+    "titleTomorrow": "计划明天一日往返？",
     "noneTitle": "今天不适合一日往返",
+    "noneTitleTomorrow": "明天不适合一日往返",
     "there": "去程",
     "back": "返程",
     "crossBetween": "在 {from} 至 {to} 之间通行",

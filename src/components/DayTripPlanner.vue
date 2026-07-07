@@ -39,9 +39,11 @@ const shortWarningTxt = computed(() =>
   }),
 )
 
-const title = computed(() =>
-  plan.value.feasible ? t('daytrip.title') : t('daytrip.noneTitle'),
-)
+const title = computed(() => {
+  const p = plan.value
+  if (p.feasible) return p.forTomorrow ? t('daytrip.titleTomorrow') : t('daytrip.title')
+  return p.forTomorrow ? t('daytrip.noneTitleTomorrow') : t('daytrip.noneTitle')
+})
 
 // A crossing bracket, collapsed to a single time when it's essentially a point.
 function bracketTxt(c: DayTripCrossing): string {
