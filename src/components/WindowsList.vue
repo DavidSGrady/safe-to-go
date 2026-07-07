@@ -87,7 +87,7 @@ const dayGroups = computed(() => {
       <div v-for="group in dayGroups" :key="group.day" class="group">
         <div class="day-label">{{ group.day }}</div>
         <div v-for="item in group.items" :key="item.key" class="window" :class="{ open: item.open }">
-          <div class="row">
+          <div class="row title-row">
             <span class="range mono">{{ item.rangeTxt }}</span>
             <span class="conf" :class="item.confidenceKey">{{ t(`windows.${item.confidenceKey}`) }}</span>
           </div>
@@ -160,6 +160,16 @@ const dayGroups = computed(() => {
   justify-content: space-between;
   align-items: baseline;
   gap: 8px;
+}
+
+/* On narrow screens (e.g. iPhone SE) the time range + confidence badge can't
+   sit side by side — let the badge drop to its own line, still right-aligned. */
+.title-row {
+  flex-wrap: wrap;
+}
+
+.title-row .conf {
+  margin-left: auto;
 }
 
 .range {

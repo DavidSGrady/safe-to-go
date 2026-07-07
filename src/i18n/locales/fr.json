@@ -59,6 +59,19 @@
     "bodyWithNext": "Prochain créneau : {day} {time} → dernier départ {deadline}.",
     "bodyNoNext": "Aucun créneau dans la prévision."
   },
+  "daytrip": {
+    "title": "Vous planifiez une excursion ?",
+    "noneTitle": "Pas d'excursion aujourd'hui",
+    "there": "Aller",
+    "back": "Retour",
+    "crossBetween": "Traversez entre {from} et {to}",
+    "crossAround": "Traversez vers {time}",
+    "twoWindowNote": "Deux créneaux aujourd'hui — traversez à l'aller sur le premier et au retour sur le second. La route est submergée entre les deux, vous resterez donc sur l'île jusqu'à sa réouverture.",
+    "singleWindowNote": "Un seul créneau aujourd'hui — l'aller et le retour s'y font, gardez donc la visite courte.",
+    "extendedWarning": "Cela impose une traversée tôt ou tard. La plupart des commerces de Mandø ferment vers {time}, prévoyez donc une journée plus courte.",
+    "noneBody": "Aucun créneau aller-retour en journée aujourd'hui.",
+    "noneNext": "Prochaine traversée : {day} {time}."
+  },
   "road": {
     "title": "La situation sur la route en ce moment",
     "roadLabel": "La digue · ~{cm} cm",

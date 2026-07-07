@@ -59,6 +59,19 @@
     "bodyWithNext": "Next window: {day} {time} → last departure {deadline}.",
     "bodyNoNext": "No windows in the forecast."
   },
+  "daytrip": {
+    "title": "Planning a daytrip?",
+    "noneTitle": "No daytrip today",
+    "there": "Getting there",
+    "back": "Getting back",
+    "crossBetween": "Cross between {from} and {to}",
+    "crossAround": "Cross around {time}",
+    "twoWindowNote": "Two windows today — drive over in the first and back in the second. The road floods in between, so you'll stay on the island until it reopens.",
+    "singleWindowNote": "Just one window today — you cross over and back within it, so keep the visit short.",
+    "extendedWarning": "This needs an early or late crossing. Most shops on Mandø close around {time}, so plan for a shorter day.",
+    "noneBody": "There's no there-and-back window in daylight hours today.",
+    "noneNext": "Next crossing opens {day} {time}."
+  },
   "road": {
     "title": "The road right now",
     "roadLabel": "The causeway · ~{cm} cm",
@@ -190,6 +203,11 @@
       "playbackNormal": "Normal",
       "playbackHalf": "Half speed",
       "playbackThird": "A third of the speed",
+      "dayTripPane": "Planning pane under the verdict",
+      "dayTripPaneHelp": "Which helper pane to show beneath the main verdict.",
+      "dayTripModeDaytrip": "Planning a daytrip? (there-and-back planner)",
+      "dayTripModeReturn": "Heading back today? (return banner)",
+      "dayTripModeOff": "Hidden",
       "save": "Save changes",
       "saved": "Saved.",
       "invalid": "Each safety margin must be between 0 and the flood point.",

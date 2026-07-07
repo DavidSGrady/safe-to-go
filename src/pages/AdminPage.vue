@@ -27,6 +27,7 @@ const form = reactive({
   puddleWarningEnabled: false,
   puddleWarningRangeCm: 15,
   playbackSpeedPct: 100,
+  dayTripMode: 'daytrip' as 'daytrip' | 'return' | 'off',
 })
 
 const saved = ref(false)
@@ -61,6 +62,7 @@ watch(
       form.puddleWarningEnabled = r.puddleWarningEnabled
       form.puddleWarningRangeCm = r.puddleWarningRangeCm
       form.playbackSpeedPct = r.playbackSpeedPct
+      form.dayTripMode = r.dayTripMode
     }
   },
   { immediate: true },
@@ -135,6 +137,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'puddle_warning_enabled',
     'puddle_warning_range_cm',
     'playback_speed_pct',
+    'day_trip_mode',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -253,6 +256,16 @@ onMounted(async () => {
             <option :value="33">{{ t('admin.rules.playbackThird') }}</option>
           </select>
           <p class="muted">{{ t('admin.rules.playbackSpeedHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="dayTripMode">{{ t('admin.rules.dayTripPane') }}</label>
+          <select id="dayTripMode" v-model="form.dayTripMode" class="select">
+            <option value="daytrip">{{ t('admin.rules.dayTripModeDaytrip') }}</option>
+            <option value="return">{{ t('admin.rules.dayTripModeReturn') }}</option>
+            <option value="off">{{ t('admin.rules.dayTripModeOff') }}</option>
+          </select>
+          <p class="muted">{{ t('admin.rules.dayTripPaneHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

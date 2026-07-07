@@ -71,6 +71,13 @@ export interface SafetyRules {
    * 50 = half, 33 = a third. Purely presentational — does not affect safety.
    */
   playbackSpeedPct: number
+  /**
+   * Which planning pane shows under the verdict:
+   *   - 'daytrip' — the "Planning a daytrip?" there-and-back planner
+   *   - 'return'  — the older "Heading back today?" last-departure banner
+   *   - 'off'     — neither
+   */
+  dayTripMode: 'daytrip' | 'return' | 'off'
   updatedAt?: string
 }
 

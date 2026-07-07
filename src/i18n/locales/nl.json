@@ -59,6 +59,19 @@
     "bodyWithNext": "Volgend moment: {day} {time} → laatste vertrek {deadline}.",
     "bodyNoNext": "Geen momenten in de voorspelling."
   },
+  "daytrip": {
+    "title": "Plan je een dagtrip?",
+    "noneTitle": "Vandaag geen dagtrip",
+    "there": "Heenreis",
+    "back": "Terugreis",
+    "crossBetween": "Steek over tussen {from} en {to}",
+    "crossAround": "Steek over rond {time}",
+    "twoWindowNote": "Vandaag twee momenten — rijd heen in het eerste en terug in het tweede. De weg overstroomt ertussen, dus je blijft op het eiland tot hij weer opengaat.",
+    "singleWindowNote": "Vandaag maar één moment — je rijdt er heen en terug binnen dat moment, dus houd het bezoek kort.",
+    "extendedWarning": "Dit vraagt een vroege of late oversteek. De meeste winkels op Mandø sluiten rond {time}, dus plan een kortere dag.",
+    "noneBody": "Er is vandaag geen heen-en-terugmoment bij daglicht.",
+    "noneNext": "Volgende oversteek opent {day} {time}."
+  },
   "road": {
     "title": "De situatie bij de weg",
     "roadLabel": "De dam · ~{cm} cm",

@@ -67,4 +67,5 @@ export const demoRules: SafetyRules = {
   puddleWarningEnabled: true,
   puddleWarningRangeCm: 15,
   playbackSpeedPct: 100,
+  dayTripMode: 'daytrip',
 }

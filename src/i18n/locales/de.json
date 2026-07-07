@@ -59,6 +59,19 @@
     "bodyWithNext": "Nächstes Zeitfenster: {day} {time} → letzte Abfahrt {deadline}.",
     "bodyNoNext": "Keine Zeitfenster in der Prognose."
   },
+  "daytrip": {
+    "title": "Planen Sie einen Tagesausflug?",
+    "noneTitle": "Heute kein Tagesausflug",
+    "there": "Hinweg",
+    "back": "Rückweg",
+    "crossBetween": "Überfahrt zwischen {from} und {to}",
+    "crossAround": "Überfahrt gegen {time}",
+    "twoWindowNote": "Heute zwei Zeitfenster — im ersten hinüberfahren, im zweiten zurück. Dazwischen wird die Straße überflutet, Sie bleiben also bis zur nächsten Öffnung auf der Insel.",
+    "singleWindowNote": "Heute nur ein Zeitfenster — Hin- und Rückfahrt liegen darin, halten Sie den Besuch also kurz.",
+    "extendedWarning": "Das erfordert eine frühe oder späte Überfahrt. Die meisten Geschäfte auf Mandø schließen gegen {time}, planen Sie also einen kürzeren Tag ein.",
+    "noneBody": "Heute gibt es kein Hin-und-zurück-Zeitfenster bei Tageslicht.",
+    "noneNext": "Nächste Überfahrt öffnet {day} {time}."
+  },
   "road": {
     "title": "Die Lage am Damm gerade",
     "roadLabel": "Der Damm · ~{cm} cm",

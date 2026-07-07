@@ -8,6 +8,7 @@ import { isDemoMode } from '@/lib/supabase'
 import StatusHero from '@/components/StatusHero.vue'
 import StickyVerdict from '@/components/StickyVerdict.vue'
 import ReturnBanner from '@/components/ReturnBanner.vue'
+import DayTripPlanner from '@/components/DayTripPlanner.vue'
 import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
 import DiveDeeper from '@/components/DiveDeeper.vue'
@@ -69,7 +70,13 @@ onBeforeUnmount(() => observer?.disconnect())
       <StickyVerdict :status="status" :now="now" :visible="stuck" />
       <StatusHero :status="status" :rules="rules" :now="now" />
       <div ref="heroSentinel" class="hero-sentinel" aria-hidden="true"></div>
-      <ReturnBanner :status="status" />
+      <DayTripPlanner
+        v-if="rules.dayTripMode === 'daytrip'"
+        :status="status"
+        :rules="rules"
+        :now="now"
+      />
+      <ReturnBanner v-else-if="rules.dayTripMode === 'return'" :status="status" />
       <RoadCrossSection :status="status" :rules="rules" :now="now" />
       <WindowsList
         :windows="status.windows"

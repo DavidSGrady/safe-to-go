@@ -59,6 +59,19 @@
     "bodyWithNext": "Próxima ventana: {day} {time} → última salida {deadline}.",
     "bodyNoNext": "No hay ventanas en el pronóstico."
   },
+  "daytrip": {
+    "title": "¿Planeas una excursión de un día?",
+    "noneTitle": "Hoy no hay excursión",
+    "there": "Ida",
+    "back": "Vuelta",
+    "crossBetween": "Cruza entre las {from} y las {to}",
+    "crossAround": "Cruza hacia las {time}",
+    "twoWindowNote": "Hoy hay dos ventanas — cruza en la primera para ir y en la segunda para volver. La carretera se inunda entre ambas, así que te quedarás en la isla hasta que se reabra.",
+    "singleWindowNote": "Hoy solo hay una ventana — cruzas de ida y vuelta dentro de ella, así que haz una visita corta.",
+    "extendedWarning": "Esto exige un cruce temprano o tardío. La mayoría de las tiendas de Mandø cierran hacia las {time}, así que planea un día más corto.",
+    "noneBody": "Hoy no hay una ventana de ida y vuelta con luz de día.",
+    "noneNext": "El próximo cruce abre {day} {time}."
+  },
   "road": {
     "title": "La situación en el camino ahora mismo",
     "roadLabel": "El camino elevado · ~{cm} cm",

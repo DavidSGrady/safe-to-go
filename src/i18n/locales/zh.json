@@ -59,6 +59,19 @@
     "bodyWithNext": "下一个时段：{day} {time} → 最后出发时间 {deadline}。",
     "bodyNoNext": "预测中没有可通行时段。"
   },
+  "daytrip": {
+    "title": "计划一日往返？",
+    "noneTitle": "今天不适合一日往返",
+    "there": "去程",
+    "back": "返程",
+    "crossBetween": "在 {from} 至 {to} 之间通行",
+    "crossAround": "约 {time} 通行",
+    "twoWindowNote": "今天有两个时段——第一个时段过岛，第二个时段返回。两者之间道路会被淹没，因此你需要在岛上等到道路重新开放。",
+    "singleWindowNote": "今天只有一个时段——在同一时段内往返，因此请安排较短的行程。",
+    "extendedWarning": "这需要很早或很晚通行。曼德岛上大多数商店约在 {time} 关门，请安排较短的一天。",
+    "noneBody": "今天没有可在白天往返的通行时段。",
+    "noneNext": "下一个通行时段将于 {day} {time} 开放。"
+  },
   "road": {
     "title": "道路当前状况",
     "roadLabel": "堤道 · 约 {cm} 厘米",
