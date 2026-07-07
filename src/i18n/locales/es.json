@@ -69,7 +69,7 @@
     "twoWindowNote": "Hoy hay dos ventanas — cruza en la primera para ir y en la segunda para volver. La carretera se inunda entre ambas, así que te quedarás en la isla hasta que se reabra.",
     "singleWindowNote": "Hoy solo hay una ventana — cruzas de ida y vuelta dentro de ella, así que haz una visita corta.",
     "extendedWarning": "Esto exige un cruce temprano o tardío. La mayoría de las tiendas de Mandø cierran hacia las {time}, así que planea un día más corto.",
-    "noneBody": "Hoy no hay una ventana de ida y vuelta con luz de día.",
+    "noneBody": "Hoy no hay una ventana de ida y vuelta lo bastante larga con luz de día.",
     "noneNext": "El próximo cruce abre {day} {time}."
   },
   "road": {

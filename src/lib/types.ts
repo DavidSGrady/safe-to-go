@@ -78,6 +78,12 @@ export interface SafetyRules {
    *   - 'off'     — neither
    */
   dayTripMode: 'daytrip' | 'return' | 'off'
+  /**
+   * Shortest visit (minutes on the island) worth suggesting a daytrip for. The
+   * daytrip planner ignores windows that only leave less than this on Mandø —
+   * no point crossing over just to turn straight around.
+   */
+  minDaytripMinutes: number
   updatedAt?: string
 }
 

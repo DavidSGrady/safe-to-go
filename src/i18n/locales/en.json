@@ -69,7 +69,7 @@
     "twoWindowNote": "Two windows today — drive over in the first and back in the second. The road floods in between, so you'll stay on the island until it reopens.",
     "singleWindowNote": "Just one window today — you cross over and back within it, so keep the visit short.",
     "extendedWarning": "This needs an early or late crossing. Most shops on Mandø close around {time}, so plan for a shorter day.",
-    "noneBody": "There's no there-and-back window in daylight hours today.",
+    "noneBody": "There isn't a long enough there-and-back window in daylight today.",
     "noneNext": "Next crossing opens {day} {time}."
   },
   "road": {
@@ -208,6 +208,8 @@
       "dayTripModeDaytrip": "Planning a daytrip? (there-and-back planner)",
       "dayTripModeReturn": "Heading back today? (return banner)",
       "dayTripModeOff": "Hidden",
+      "minDaytrip": "Minimum daytrip length (minutes on the island)",
+      "minDaytripHelp": "A daytrip is only suggested when you'd get at least this long on Mandø — otherwise there's no point crossing over just to turn straight around.",
       "save": "Save changes",
       "saved": "Saved.",
       "invalid": "Each safety margin must be between 0 and the flood point.",

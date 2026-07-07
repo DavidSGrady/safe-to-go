@@ -28,6 +28,7 @@ const form = reactive({
   puddleWarningRangeCm: 15,
   playbackSpeedPct: 100,
   dayTripMode: 'daytrip' as 'daytrip' | 'return' | 'off',
+  minDaytripMinutes: 120,
 })
 
 const saved = ref(false)
@@ -63,6 +64,7 @@ watch(
       form.puddleWarningRangeCm = r.puddleWarningRangeCm
       form.playbackSpeedPct = r.playbackSpeedPct
       form.dayTripMode = r.dayTripMode
+      form.minDaytripMinutes = r.minDaytripMinutes
     }
   },
   { immediate: true },
@@ -138,6 +140,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'puddle_warning_range_cm',
     'playback_speed_pct',
     'day_trip_mode',
+    'min_daytrip_minutes',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -266,6 +269,12 @@ onMounted(async () => {
             <option value="off">{{ t('admin.rules.dayTripModeOff') }}</option>
           </select>
           <p class="muted">{{ t('admin.rules.dayTripPaneHelp') }}</p>
+        </div>
+
+        <div v-if="form.dayTripMode === 'daytrip'" class="field">
+          <label for="minDaytrip">{{ t('admin.rules.minDaytrip') }}: <strong>{{ form.minDaytripMinutes }}</strong></label>
+          <input id="minDaytrip" v-model.number="form.minDaytripMinutes" type="range" min="0" max="480" step="15" />
+          <p class="muted">{{ t('admin.rules.minDaytripHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

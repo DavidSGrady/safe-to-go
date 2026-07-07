@@ -69,7 +69,7 @@
     "twoWindowNote": "To vinduer i dag — kør derover i det første og hjem i det andet. Vejen oversvømmes imellem dem, så du bliver på øen, indtil den åbner igen.",
     "singleWindowNote": "Kun ét vindue i dag — du kører over og hjem inden for det, så hold besøget kort.",
     "extendedWarning": "Det kræver en tidlig eller sen overkørsel. De fleste butikker på Mandø lukker omkring kl. {time}, så planlæg en kortere dag.",
-    "noneBody": "Der er ikke et tur-retur-vindue i dagslys i dag.",
+    "noneBody": "Der er ikke et langt nok tur-retur-vindue i dagslys i dag.",
     "noneNext": "Næste vindue åbner {day} kl. {time}."
   },
   "road": {
@@ -208,6 +208,8 @@
       "dayTripModeDaytrip": "Planlægger du en dagstur? (tur-retur-planlægger)",
       "dayTripModeReturn": "Skal du retur i dag? (retur-banner)",
       "dayTripModeOff": "Skjult",
+      "minDaytrip": "Mindste dagstur-længde (minutter på øen)",
+      "minDaytripHelp": "En dagstur foreslås kun, når du får mindst så lang tid på Mandø — ellers er der ingen grund til at køre over blot for at vende om med det samme.",
       "save": "Gem ændringer",
       "saved": "Gemt.",
       "invalid": "Hver sikkerhedsmargin skal være mellem 0 og oversvømmelsespunktet.",

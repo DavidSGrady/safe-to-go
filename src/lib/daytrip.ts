@@ -71,6 +71,15 @@ function bracketFor(
   return { comfLo, comfHi, comfOk: comfHi > comfLo, extLo, extHi, extOk: extHi > extLo }
 }
 
+type Candidate = DayTripPlan & { islandMs: number }
+
+/** A crossing bracket from a window bracket, preferring comfortable hours. */
+function crossingFrom(b: Bracket): DayTripCrossing {
+  return b.comfOk
+    ? { earliest: b.comfLo, latest: b.comfHi, comfortable: true }
+    : { earliest: b.extLo, latest: b.extHi, comfortable: false }
+}
+
 export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: number): DayTripPlan {
   const dayEnd = startOfNextLocalDay(now)
   const comfStart = localTimeMs(now, DAYTRIP_COMFORT_HOURS.start)
@@ -78,6 +87,9 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
   const extStart = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.start)
   const extEnd = localTimeMs(now, DAYTRIP_EXTENDED_HOURS.end)
   const crossingMs = rules.crossingMinutes * 60_000
+  // Admin-set floor: a daytrip is only worth suggesting if you'd get at least
+  // this long on the island (otherwise it's drive-over-drive-straight-back).
+  const minIslandMs = rules.minDaytripMinutes * 60_000
 
   const nextWindowStart = windows.find((w) => w.start > now)?.start ?? null
   const none = (): DayTripPlan => ({
@@ -100,50 +112,70 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
 
   if (usable.length === 0) return none()
 
-  if (usable.length === 1) {
-    // One window today: cross over and back within it. Prefer comfortable hours,
-    // falling back to extended only if the round trip actually needs them. Needs
-    // at least one crossing time of slack so there's room to get over and back.
-    const b = usable[0].b
-    let lo: number
-    let hi: number
-    let comfortable: boolean
-    if (b.comfOk && b.comfHi - b.comfLo >= crossingMs) {
-      lo = b.comfLo
-      hi = b.comfHi
-      comfortable = true
-    } else if (b.extHi - b.extLo >= crossingMs) {
-      lo = b.extLo
-      hi = b.extHi
-      comfortable = false
-    } else {
-      // Only time for a one-way crossing — not a there-and-back daytrip.
-      return none()
-    }
-    return {
+  // Build every sensible plan, each with its usable island time, then choose.
+  // Island time ≈ (time you can start heading back) − (arrival = first start +
+  // one crossing). Plans that don't clear the minimum are dropped.
+  const candidates: Candidate[] = []
+
+  const addSingle = (b: Bracket): void => {
+    const c = crossingFrom(b)
+    const lo = c.earliest
+    const hi = c.latest
+    const islandMs = hi - lo - crossingMs
+    if (islandMs < minIslandMs) return
+    candidates.push({
       feasible: true,
       mode: 'single-window',
-      comfort: comfortable ? 'comfortable' : 'extended',
-      outbound: { earliest: lo, latest: hi - crossingMs, comfortable },
-      inbound: { earliest: lo + crossingMs, latest: hi, comfortable },
+      comfort: c.comfortable ? 'comfortable' : 'extended',
+      outbound: { earliest: lo, latest: hi - crossingMs, comfortable: c.comfortable },
+      inbound: { earliest: lo + crossingMs, latest: hi, comfortable: c.comfortable },
       nextWindowStart: null,
-    }
+      islandMs,
+    })
   }
 
-  // Two or more usable windows: drive over in the first, back in the last, so
-  // the visit spans the day (the road floods between — you wait on the island).
-  const toCrossing = (b: Bracket): DayTripCrossing =>
-    b.comfOk
-      ? { earliest: b.comfLo, latest: b.comfHi, comfortable: true }
-      : { earliest: b.extLo, latest: b.extHi, comfortable: false }
-  const outbound = toCrossing(usable[0].b)
-  const inbound = toCrossing(usable[usable.length - 1].b)
+  const addTwo = (a: Bracket, b: Bracket): void => {
+    const out = crossingFrom(a)
+    const inn = crossingFrom(b)
+    const islandMs = inn.latest - out.earliest - crossingMs
+    if (islandMs < minIslandMs) return
+    candidates.push({
+      feasible: true,
+      mode: 'two-window',
+      comfort: out.comfortable && inn.comfortable ? 'comfortable' : 'extended',
+      outbound: out,
+      inbound: inn,
+      nextWindowStart: null,
+      islandMs,
+    })
+  }
+
+  // A round trip inside each single window.
+  for (const x of usable) addSingle(x.b)
+  // Span the day: over in the first window, back in the last (road floods
+  // between — you wait on the island). Also the first/last *comfortable*
+  // windows, so a fully-comfortable pairing is on the table even when an
+  // earlier/later window would otherwise drag the plan into amber.
+  if (usable.length >= 2) addTwo(usable[0].b, usable[usable.length - 1].b)
+  const comfortableWindows = usable.filter((x) => x.b.comfOk)
+  if (comfortableWindows.length >= 2) {
+    addTwo(comfortableWindows[0].b, comfortableWindows[comfortableWindows.length - 1].b)
+  }
+
+  if (candidates.length === 0) return none()
+
+  // Prefer a comfortable (daylight) plan over an early/late amber one; among
+  // equal comfort, prefer the one that leaves the most time on the island.
+  candidates.sort((p, q) =>
+    p.comfort !== q.comfort ? (p.comfort === 'comfortable' ? -1 : 1) : q.islandMs - p.islandMs,
+  )
+  const best = candidates[0]
   return {
     feasible: true,
-    mode: 'two-window',
-    comfort: outbound.comfortable && inbound.comfortable ? 'comfortable' : 'extended',
-    outbound,
-    inbound,
+    mode: best.mode,
+    comfort: best.comfort,
+    outbound: best.outbound,
+    inbound: best.inbound,
     nextWindowStart: null,
   }
 }
