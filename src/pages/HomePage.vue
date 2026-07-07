@@ -93,6 +93,9 @@ onBeforeUnmount(() => observer?.disconnect())
       <p class="muted">{{ t('footer.disclaimer') }}</p>
       <p class="muted">{{ t('footer.source', { station: primaryStationName }) }}</p>
       <p class="muted">
+        <RouterLink to="/data">{{ t('footer.data') }}</RouterLink>
+      </p>
+      <p class="muted">
         <RouterLink to="/admin">{{ t('footer.admin') }}</RouterLink>
       </p>
     </footer>

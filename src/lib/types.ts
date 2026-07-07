@@ -94,6 +94,8 @@ export interface SafetyRules {
    * tomorrow instead of today — by then it's too late to start a trip today.
    */
   daytripRolloverHour: number
+  /** Row resolution (minutes) for the raw data / observations table page. */
+  tableGranularityMinutes: number
   updatedAt?: string
 }
 

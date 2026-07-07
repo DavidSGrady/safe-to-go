@@ -18,6 +18,11 @@ const router = createRouter({
       component: () => import('@/pages/AdminPage.vue'),
       meta: { requiresAdmin: true },
     },
+    {
+      path: '/data',
+      name: 'data',
+      component: () => import('@/pages/DataPage.vue'),
+    },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
 })

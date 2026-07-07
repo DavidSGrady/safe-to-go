@@ -70,8 +70,8 @@
     "roundTrip": "Hin und zurück",
     "crossBetween": "Überfahrt zwischen {from} und {to}",
     "crossAround": "Überfahrt gegen {time}",
-    "twoWindowNote": "Heute zwei Zeitfenster — im ersten hinüberfahren, im zweiten zurück. Dazwischen wird die Straße überflutet, Sie bleiben also bis zur nächsten Öffnung auf der Insel.",
-    "singleWindowNote": "Heute nur ein Zeitfenster — Hin- und Rückfahrt liegen darin, halten Sie den Besuch also kurz.",
+    "twoWindowNote": "Zwei Zeitfenster — im ersten hinüberfahren, im zweiten zurück. Dazwischen wird die Straße überflutet, Sie bleiben also bis zur nächsten Öffnung auf der Insel.",
+    "singleWindowNote": "Nur ein Zeitfenster — Hin- und Rückfahrt liegen darin, halten Sie den Besuch also kurz.",
     "extendedWarning": "Das erfordert eine frühe oder späte Überfahrt. Die meisten Geschäfte auf Mandø schließen gegen {time}, planen Sie also einen kürzeren Tag ein.",
     "shortWarning": "Heute nur Zeit für einen kurzen Besuch — etwa {duration} auf Mandø, weniger als die üblicherweise empfohlenen {recommended}.",
     "noneBody": "Heute gibt es bei Tageslicht kein ausreichend langes Hin-und-zurück-Zeitfenster.",
@@ -150,7 +150,21 @@
   "footer": {
     "disclaimer": "Dieser Dienst ist eine Orientierungshilfe für Besucher. Wetter und Gezeiten können die Bedingungen ändern — Sie sind selbst dafür verantwortlich, die Sicherheit vor der Überquerung zu beurteilen. Rufen Sie im Notfall 112 an.",
     "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei {station}.",
+    "data": "Rohdaten (für Einheimische)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Rohdaten",
+    "back": "Zurück zur Seite",
+    "intro": "Gemessener Wasserstand und Prognose bei {station}, in cm bezogen auf DVR90.",
+    "selectDay": "Tag",
+    "legend": "Die Straße wird bei {road} cm überflutet.",
+    "belowRoad": "unter der Straße",
+    "aboveRoad": "über der Straße",
+    "driftKey": "gemessen − Prognose",
+    "roadMarker": "Straßenhöhe",
+    "forecastTag": "Prognose",
+    "noData": "Noch keine Daten für diesen Tag."
   },
   "demo": {
     "banner": "Demo-Modus — synthetische Gezeitendaten, keine echten Messungen."

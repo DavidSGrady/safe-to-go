@@ -70,8 +70,8 @@
     "roundTrip": "There and back",
     "crossBetween": "Cross between {from} and {to}",
     "crossAround": "Cross around {time}",
-    "twoWindowNote": "Two windows today — drive over in the first and back in the second. The road floods in between, so you'll stay on the island until it reopens.",
-    "singleWindowNote": "Just one window today — you cross over and back within it, so keep the visit short.",
+    "twoWindowNote": "Two windows — drive over in the first and back in the second. The road floods in between, so you'll stay on the island until it reopens.",
+    "singleWindowNote": "Just one window — you cross over and back within it, so keep the visit short.",
     "extendedWarning": "This needs an early or late crossing. Most shops on Mandø close around {time}, so plan for a shorter day.",
     "shortWarning": "Only time for a short visit today — about {duration} on Mandø, below the {recommended} we usually suggest.",
     "noneBody": "There isn't a long enough there-and-back window in daylight today.",
@@ -160,7 +160,21 @@
   "footer": {
     "disclaimer": "This service is a guide for visitors. Weather and tide can change conditions — you are responsible for judging safety before crossing. Call 112 in an emergency.",
     "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at {station}.",
+    "data": "Raw data (for locals)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Raw data",
+    "back": "Back to the site",
+    "intro": "Measured water level and forecast at {station}, in cm relative to DVR90.",
+    "selectDay": "Day",
+    "legend": "Road floods at {road} cm.",
+    "belowRoad": "below road",
+    "aboveRoad": "above road",
+    "driftKey": "measured − forecast",
+    "roadMarker": "Road level",
+    "forecastTag": "forecast",
+    "noData": "No data for this day yet."
   },
   "demo": {
     "banner": "Demo mode — synthetic tide data, not real measurements."
@@ -219,6 +233,12 @@
       "absMinDaytripHelp": "Below this there's no worthwhile trip at all, so the pane shows 'no daytrip today' instead of a recommendation.",
       "rolloverHour": "Switch to planning tomorrow at",
       "rolloverHourHelp": "After this local time the daytrip pane plans for tomorrow instead of today (it's too late to start a trip today). Its title changes to 'Planning a daytrip tomorrow?' and it shows tomorrow's windows.",
+      "tableGranularity": "Raw-data table resolution",
+      "tableGranularityHelp": "Row spacing on the public raw-data page (observations & forecast). DMI measures every 10 minutes; coarser values make the list easier to scan.",
+      "granularity10": "Every 10 minutes",
+      "granularity20": "Every 20 minutes",
+      "granularity30": "Every 30 minutes",
+      "granularity60": "Every hour",
       "save": "Save changes",
       "saved": "Saved.",
       "invalid": "Each safety margin must be between 0 and the flood point.",

@@ -70,8 +70,8 @@
     "roundTrip": "Heen en terug",
     "crossBetween": "Steek over tussen {from} en {to}",
     "crossAround": "Steek over rond {time}",
-    "twoWindowNote": "Vandaag twee momenten — rijd heen in het eerste en terug in het tweede. De weg overstroomt ertussen, dus je blijft op het eiland tot hij weer opengaat.",
-    "singleWindowNote": "Vandaag maar één moment — je rijdt er heen en terug binnen dat moment, dus houd het bezoek kort.",
+    "twoWindowNote": "Twee momenten — rijd heen in het eerste en terug in het tweede. De weg overstroomt ertussen, dus je blijft op het eiland tot hij weer opengaat.",
+    "singleWindowNote": "Maar één moment — je rijdt er heen en terug binnen dat moment, dus houd het bezoek kort.",
     "extendedWarning": "Dit vraagt een vroege of late oversteek. De meeste winkels op Mandø sluiten rond {time}, dus plan een kortere dag.",
     "shortWarning": "Vandaag maar tijd voor een kort bezoek — ongeveer {duration} op Mandø, minder dan de {recommended} die we meestal aanraden.",
     "noneBody": "Er is vandaag geen voldoende lang heen-en-terugmoment bij daglicht.",
@@ -150,7 +150,21 @@
   "footer": {
     "disclaimer": "Deze dienst is een hulpmiddel voor bezoekers, geen officiële veiligheidsdienst. Weer en getij kunnen de omstandigheden veranderen — u bent zelf verantwoordelijk voor het beoordelen van de veiligheid voor het oversteken. Bel 112 in een noodgeval.",
     "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij {station}.",
+    "data": "Ruwe data (voor locals)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Ruwe data",
+    "back": "Terug naar de site",
+    "intro": "Gemeten waterstand en voorspelling bij {station}, in cm ten opzichte van DVR90.",
+    "selectDay": "Dag",
+    "legend": "De weg overstroomt bij {road} cm.",
+    "belowRoad": "onder de weg",
+    "aboveRoad": "boven de weg",
+    "driftKey": "gemeten − voorspelling",
+    "roadMarker": "Weghoogte",
+    "forecastTag": "voorspelling",
+    "noData": "Nog geen gegevens voor deze dag."
   },
   "demo": {
     "banner": "Demomodus — synthetische getijdengegevens, geen echte metingen."

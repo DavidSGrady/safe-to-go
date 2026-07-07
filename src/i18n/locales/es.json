@@ -70,8 +70,8 @@
     "roundTrip": "Ida y vuelta",
     "crossBetween": "Cruza entre las {from} y las {to}",
     "crossAround": "Cruza hacia las {time}",
-    "twoWindowNote": "Hoy hay dos ventanas — cruza en la primera para ir y en la segunda para volver. La carretera se inunda entre ambas, así que te quedarás en la isla hasta que se reabra.",
-    "singleWindowNote": "Hoy solo hay una ventana — cruzas de ida y vuelta dentro de ella, así que haz una visita corta.",
+    "twoWindowNote": "Dos ventanas — cruza en la primera para ir y en la segunda para volver. La carretera se inunda entre ambas, así que te quedarás en la isla hasta que se reabra.",
+    "singleWindowNote": "Una sola ventana — cruzas de ida y vuelta dentro de ella, así que haz una visita corta.",
     "extendedWarning": "Esto exige un cruce temprano o tardío. La mayoría de las tiendas de Mandø cierran hacia las {time}, así que planea un día más corto.",
     "shortWarning": "Hoy solo da tiempo para una visita corta — unas {duration} en Mandø, menos de las {recommended} que solemos recomendar.",
     "noneBody": "Hoy no hay una ventana de ida y vuelta lo bastante larga con luz de día.",
@@ -150,7 +150,21 @@
   "footer": {
     "disclaimer": "Este servicio es una ayuda para los visitantes, no un servicio de seguridad oficial. El tiempo y la marea pueden cambiar las condiciones — usted es responsable de evaluar la seguridad antes de cruzar. Llame al 112 en caso de emergencia.",
     "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de {station}.",
+    "data": "Datos sin procesar (locales)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Datos sin procesar",
+    "back": "Volver al sitio",
+    "intro": "Nivel del agua medido y pronóstico en {station}, en cm respecto al DVR90.",
+    "selectDay": "Día",
+    "legend": "La carretera se inunda a {road} cm.",
+    "belowRoad": "bajo la carretera",
+    "aboveRoad": "sobre la carretera",
+    "driftKey": "medido − pronóstico",
+    "roadMarker": "Nivel de la carretera",
+    "forecastTag": "pronóstico",
+    "noData": "Aún no hay datos para este día."
   },
   "demo": {
     "banner": "Modo demo — datos de marea sintéticos, no mediciones reales."

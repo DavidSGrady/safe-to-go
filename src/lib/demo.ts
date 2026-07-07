@@ -71,4 +71,5 @@ export const demoRules: SafetyRules = {
   minDaytripMinutes: 120,
   absoluteMinDaytripMinutes: 30,
   daytripRolloverHour: 18,
+  tableGranularityMinutes: 10,
 }

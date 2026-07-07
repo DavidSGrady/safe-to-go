@@ -70,8 +70,8 @@
     "roundTrip": "Aller-retour",
     "crossBetween": "Traversez entre {from} et {to}",
     "crossAround": "Traversez vers {time}",
-    "twoWindowNote": "Deux créneaux aujourd'hui — traversez à l'aller sur le premier et au retour sur le second. La route est submergée entre les deux, vous resterez donc sur l'île jusqu'à sa réouverture.",
-    "singleWindowNote": "Un seul créneau aujourd'hui — l'aller et le retour s'y font, gardez donc la visite courte.",
+    "twoWindowNote": "Deux créneaux — traversez à l'aller sur le premier et au retour sur le second. La route est submergée entre les deux, vous resterez donc sur l'île jusqu'à sa réouverture.",
+    "singleWindowNote": "Un seul créneau — l'aller et le retour s'y font, gardez donc la visite courte.",
     "extendedWarning": "Cela impose une traversée tôt ou tard. La plupart des commerces de Mandø ferment vers {time}, prévoyez donc une journée plus courte.",
     "shortWarning": "Aujourd'hui, seulement le temps d'une courte visite — environ {duration} sur Mandø, moins que les {recommended} conseillées.",
     "noneBody": "Aucun créneau aller-retour assez long en journée aujourd'hui.",
@@ -150,7 +150,21 @@
   "footer": {
     "disclaimer": "Ce service est une aide pour les visiteurs, pas un service de sécurité officiel. La météo et la marée peuvent changer les conditions — vous êtes responsable d'évaluer la sécurité avant de traverser. Appelez le 112 en cas d'urgence.",
     "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de {station}.",
+    "data": "Données brutes (pour les locaux)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Données brutes",
+    "back": "Retour au site",
+    "intro": "Niveau d'eau mesuré et prévision à {station}, en cm par rapport au DVR90.",
+    "selectDay": "Jour",
+    "legend": "La route est submergée à {road} cm.",
+    "belowRoad": "sous la route",
+    "aboveRoad": "au-dessus de la route",
+    "driftKey": "mesuré − prévision",
+    "roadMarker": "Niveau de la route",
+    "forecastTag": "prévision",
+    "noData": "Pas encore de données pour ce jour."
   },
   "demo": {
     "banner": "Mode démo — données de marée synthétiques, pas de vraies mesures."

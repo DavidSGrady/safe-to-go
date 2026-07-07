@@ -31,6 +31,7 @@ const form = reactive({
   minDaytripMinutes: 120,
   absoluteMinDaytripMinutes: 30,
   daytripRolloverHour: 18,
+  tableGranularityMinutes: 10,
 })
 
 const saved = ref(false)
@@ -69,6 +70,7 @@ watch(
       form.minDaytripMinutes = r.minDaytripMinutes
       form.absoluteMinDaytripMinutes = r.absoluteMinDaytripMinutes
       form.daytripRolloverHour = r.daytripRolloverHour
+      form.tableGranularityMinutes = r.tableGranularityMinutes
     }
   },
   { immediate: true },
@@ -147,6 +149,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'min_daytrip_minutes',
     'absolute_min_daytrip_minutes',
     'daytrip_rollover_hour',
+    'table_granularity_minutes',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -303,6 +306,17 @@ onMounted(async () => {
           </label>
           <input id="rolloverHour" v-model.number="form.daytripRolloverHour" type="range" min="12" max="22" step="1" />
           <p class="muted">{{ t('admin.rules.rolloverHourHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="tableGranularity">{{ t('admin.rules.tableGranularity') }}</label>
+          <select id="tableGranularity" v-model.number="form.tableGranularityMinutes" class="select">
+            <option :value="10">{{ t('admin.rules.granularity10') }}</option>
+            <option :value="20">{{ t('admin.rules.granularity20') }}</option>
+            <option :value="30">{{ t('admin.rules.granularity30') }}</option>
+            <option :value="60">{{ t('admin.rules.granularity60') }}</option>
+          </select>
+          <p class="muted">{{ t('admin.rules.tableGranularityHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>

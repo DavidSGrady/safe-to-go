@@ -70,8 +70,8 @@
     "roundTrip": "Tur/retur",
     "crossBetween": "Kør mellem kl. {from} og {to}",
     "crossAround": "Kør omkring kl. {time}",
-    "twoWindowNote": "To vinduer i dag — kør derover i det første og hjem i det andet. Vejen oversvømmes imellem dem, så du bliver på øen, indtil den åbner igen.",
-    "singleWindowNote": "Kun ét vindue i dag — du kører over og hjem inden for det, så hold besøget kort.",
+    "twoWindowNote": "To vinduer — kør derover i det første og hjem i det andet. Vejen oversvømmes imellem dem, så du bliver på øen, indtil den åbner igen.",
+    "singleWindowNote": "Kun ét vindue — du kører over og hjem inden for det, så hold besøget kort.",
     "extendedWarning": "Det kræver en tidlig eller sen overkørsel. De fleste butikker på Mandø lukker omkring kl. {time}, så planlæg en kortere dag.",
     "shortWarning": "Kun tid til et kort besøg i dag — omkring {duration} på Mandø, under de {recommended}, vi normalt anbefaler.",
     "noneBody": "Der er ikke et langt nok tur-retur-vindue i dagslys i dag.",
@@ -160,7 +160,21 @@
   "footer": {
     "disclaimer": "Tjenesten er en hjælp til besøgende. Vejr og tidevand kan ændre forholdene — du er selv ansvarlig for at vurdere sikkerheden før krydsning. Ring 112 i nødstilfælde.",
     "source": "Live-data: DMI & Kystdirektoratet, målestation ved {station}.",
+    "data": "Rådata (for lokale)",
     "admin": "Admin"
+  },
+  "data": {
+    "title": "Rådata",
+    "back": "Tilbage til siden",
+    "intro": "Målt vandstand og prognose ved {station}, i cm i forhold til DVR90.",
+    "selectDay": "Dag",
+    "legend": "Vejen oversvømmes ved {road} cm.",
+    "belowRoad": "under vejen",
+    "aboveRoad": "over vejen",
+    "driftKey": "målt − prognose",
+    "roadMarker": "Vejhøjde",
+    "forecastTag": "prognose",
+    "noData": "Ingen data for denne dag endnu."
   },
   "demo": {
     "banner": "Demotilstand — syntetiske tidevandsdata, ikke rigtige målinger."
@@ -219,6 +233,12 @@
       "absMinDaytripHelp": "Under dette er turen slet ikke umagen værd, så feltet viser 'ingen dagstur i dag' i stedet for en anbefaling.",
       "rolloverHour": "Skift til planlægning af i morgen kl.",
       "rolloverHourHelp": "Efter dette lokale klokkeslæt planlægger dagstur-feltet for i morgen i stedet for i dag (det er for sent at starte en tur i dag). Titlen skifter til 'Planlægger du en dagstur i morgen?' og viser i morgens vinduer.",
+      "tableGranularity": "Opløsning for rådata-tabel",
+      "tableGranularityHelp": "Rækkeafstand på den offentlige rådata-side (observationer og prognose). DMI måler hvert 10. minut; grovere værdier gør listen lettere at skimme.",
+      "granularity10": "Hvert 10. minut",
+      "granularity20": "Hvert 20. minut",
+      "granularity30": "Hvert 30. minut",
+      "granularity60": "Hver time",
       "save": "Gem ændringer",
       "saved": "Gemt.",
       "invalid": "Hver sikkerhedsmargin skal være mellem 0 og oversvømmelsespunktet.",

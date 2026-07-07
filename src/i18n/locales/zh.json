@@ -70,8 +70,8 @@
     "roundTrip": "往返",
     "crossBetween": "在 {from} 至 {to} 之间通行",
     "crossAround": "约 {time} 通行",
-    "twoWindowNote": "今天有两个时段——第一个时段过岛，第二个时段返回。两者之间道路会被淹没，因此你需要在岛上等到道路重新开放。",
-    "singleWindowNote": "今天只有一个时段——在同一时段内往返，因此请安排较短的行程。",
+    "twoWindowNote": "两个时段——第一个时段过岛，第二个时段返回。两者之间道路会被淹没，因此你需要在岛上等到道路重新开放。",
+    "singleWindowNote": "只有一个时段——在同一时段内往返，因此请安排较短的行程。",
     "extendedWarning": "这需要很早或很晚通行。曼德岛上大多数商店约在 {time} 关门，请安排较短的一天。",
     "shortWarning": "今天只够短暂停留——在曼德岛约 {duration}，少于我们通常建议的 {recommended}。",
     "noneBody": "今天白天没有足够长的往返通行时段。",
@@ -150,7 +150,21 @@
   "footer": {
     "disclaimer": "本服务仅为访客提供参考，并非官方安全服务。天气和潮汐可能改变实际情况——您需自行判断通行是否安全并承担相应责任。紧急情况请拨打 112。",
     "source": "实时数据：丹麦气象局（DMI）与丹麦海岸管理局，{station}测量站。",
+    "data": "原始数据（当地人）",
     "admin": "管理"
+  },
+  "data": {
+    "title": "原始数据",
+    "back": "返回主页",
+    "intro": "{station}的实测水位与预测，单位为相对于 DVR90 的厘米。",
+    "selectDay": "日期",
+    "legend": "道路在 {road} 厘米时被淹没。",
+    "belowRoad": "低于路面",
+    "aboveRoad": "高于路面",
+    "driftKey": "实测 − 预测",
+    "roadMarker": "路面高度",
+    "forecastTag": "预测",
+    "noData": "这一天暂无数据。"
   },
   "demo": {
     "banner": "演示模式 — 显示的是模拟潮汐数据，并非真实测量。"
