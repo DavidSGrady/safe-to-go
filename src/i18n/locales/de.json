@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "Morgen kein Tagesausflug",
     "there": "Hinweg",
     "back": "Rückweg",
+    "roundTrip": "Hin und zurück",
     "crossBetween": "Überfahrt zwischen {from} und {to}",
     "crossAround": "Überfahrt gegen {time}",
     "twoWindowNote": "Heute zwei Zeitfenster — im ersten hinüberfahren, im zweiten zurück. Dazwischen wird die Straße überflutet, Sie bleiben also bis zur nächsten Öffnung auf der Insel.",

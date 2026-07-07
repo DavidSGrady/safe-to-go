@@ -82,14 +82,21 @@ const nextWindowTxt = computed(() => {
       <p v-if="plan.todayUnavailable" class="dt-lead">{{ t('daytrip.todayUnavailableNote') }}</p>
 
       <div class="legs">
-        <div class="leg">
-          <span class="leg-label">{{ t('daytrip.there') }}</span>
+        <!-- Same window for both crossings → one round-trip line. -->
+        <div v-if="plan.mode === 'single-window'" class="leg">
+          <span class="leg-label">{{ t('daytrip.roundTrip') }}</span>
           <span class="leg-time mono">{{ bracketTxt(plan.outbound) }}</span>
         </div>
-        <div class="leg">
-          <span class="leg-label">{{ t('daytrip.back') }}</span>
-          <span class="leg-time mono">{{ bracketTxt(plan.inbound) }}</span>
-        </div>
+        <template v-else>
+          <div class="leg">
+            <span class="leg-label">{{ t('daytrip.there') }}</span>
+            <span class="leg-time mono">{{ bracketTxt(plan.outbound) }}</span>
+          </div>
+          <div class="leg">
+            <span class="leg-label">{{ t('daytrip.back') }}</span>
+            <span class="leg-time mono">{{ bracketTxt(plan.inbound) }}</span>
+          </div>
+        </template>
       </div>
 
       <p class="dt-note">

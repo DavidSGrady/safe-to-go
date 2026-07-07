@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "Ingen dagstur i morgen",
     "there": "Turen derover",
     "back": "Turen hjem",
+    "roundTrip": "Tur/retur",
     "crossBetween": "Kør mellem kl. {from} og {to}",
     "crossAround": "Kør omkring kl. {time}",
     "twoWindowNote": "To vinduer i dag — kør derover i det første og hjem i det andet. Vejen oversvømmes imellem dem, så du bliver på øen, indtil den åbner igen.",

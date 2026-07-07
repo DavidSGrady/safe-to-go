@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "Morgen geen dagtrip",
     "there": "Heenreis",
     "back": "Terugreis",
+    "roundTrip": "Heen en terug",
     "crossBetween": "Steek over tussen {from} en {to}",
     "crossAround": "Steek over rond {time}",
     "twoWindowNote": "Vandaag twee momenten — rijd heen in het eerste en terug in het tweede. De weg overstroomt ertussen, dus je blijft op het eiland tot hij weer opengaat.",

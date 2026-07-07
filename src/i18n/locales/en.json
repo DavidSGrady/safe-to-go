@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "No daytrip tomorrow",
     "there": "Getting there",
     "back": "Getting back",
+    "roundTrip": "There and back",
     "crossBetween": "Cross between {from} and {to}",
     "crossAround": "Cross around {time}",
     "twoWindowNote": "Two windows today — drive over in the first and back in the second. The road floods in between, so you'll stay on the island until it reopens.",

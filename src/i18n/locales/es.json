@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "Mañana no hay excursión",
     "there": "Ida",
     "back": "Vuelta",
+    "roundTrip": "Ida y vuelta",
     "crossBetween": "Cruza entre las {from} y las {to}",
     "crossAround": "Cruza hacia las {time}",
     "twoWindowNote": "Hoy hay dos ventanas — cruza en la primera para ir y en la segunda para volver. La carretera se inunda entre ambas, así que te quedarás en la isla hasta que se reabra.",

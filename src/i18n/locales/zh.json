@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "明天不适合一日往返",
     "there": "去程",
     "back": "返程",
+    "roundTrip": "往返",
     "crossBetween": "在 {from} 至 {to} 之间通行",
     "crossAround": "约 {time} 通行",
     "twoWindowNote": "今天有两个时段——第一个时段过岛，第二个时段返回。两者之间道路会被淹没，因此你需要在岛上等到道路重新开放。",

@@ -67,6 +67,7 @@
     "noneTitleTomorrow": "Pas d'excursion demain",
     "there": "Aller",
     "back": "Retour",
+    "roundTrip": "Aller-retour",
     "crossBetween": "Traversez entre {from} et {to}",
     "crossAround": "Traversez vers {time}",
     "twoWindowNote": "Deux créneaux aujourd'hui — traversez à l'aller sur le premier et au retour sur le second. La route est submergée entre les deux, vous resterez donc sur l'île jusqu'à sa réouverture.",

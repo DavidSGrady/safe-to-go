@@ -156,12 +156,14 @@ function planForDay(
     const hi = c.latest
     const islandMs = hi - lo - crossingMs
     if (islandMs <= 0) return
+    // Show the raw safe-to-go window (no crossing time folded in) — for a single
+    // window both crossings happen within [lo, hi], shown as one round-trip line.
     candidates.push({
       feasible: true,
       mode: 'single-window',
       comfort: c.comfortable ? 'comfortable' : 'extended',
-      outbound: { earliest: lo, latest: hi - crossingMs, comfortable: c.comfortable },
-      inbound: { earliest: lo + crossingMs, latest: hi, comfortable: c.comfortable },
+      outbound: { earliest: lo, latest: hi, comfortable: c.comfortable },
+      inbound: { earliest: lo, latest: hi, comfortable: c.comfortable },
       islandMs,
       short: false,
       forTomorrow,
