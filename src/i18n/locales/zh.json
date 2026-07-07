@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "计划一日往返？",
     "titleTomorrow": "计划明天一日往返？",
+    "todayUnavailableNote": "今天没有足够时间进行一日往返——以下是明天的通行时段：",
     "noneTitle": "今天不适合一日往返",
     "noneTitleTomorrow": "明天不适合一日往返",
     "there": "去程",

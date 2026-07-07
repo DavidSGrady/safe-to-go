@@ -41,7 +41,12 @@ const shortWarningTxt = computed(() =>
 
 const title = computed(() => {
   const p = plan.value
-  if (p.feasible) return p.forTomorrow ? t('daytrip.titleTomorrow') : t('daytrip.title')
+  if (p.feasible) {
+    // Fallback-to-tomorrow keeps the present-tense title; the lead-in note
+    // explains that today's out and these are tomorrow's crossings.
+    if (p.todayUnavailable) return t('daytrip.title')
+    return p.forTomorrow ? t('daytrip.titleTomorrow') : t('daytrip.title')
+  }
   return p.forTomorrow ? t('daytrip.noneTitleTomorrow') : t('daytrip.noneTitle')
 })
 
@@ -74,6 +79,8 @@ const nextWindowTxt = computed(() => {
     <div class="dt-title">{{ title }}</div>
 
     <template v-if="plan.feasible && plan.outbound && plan.inbound">
+      <p v-if="plan.todayUnavailable" class="dt-lead">{{ t('daytrip.todayUnavailableNote') }}</p>
+
       <div class="legs">
         <div class="leg">
           <span class="leg-label">{{ t('daytrip.there') }}</span>
@@ -156,6 +163,14 @@ const nextWindowTxt = computed(() => {
   font-size: 0.9rem;
   font-weight: 600;
   margin-left: auto;
+}
+
+.dt-lead {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 0 8px;
+  text-wrap: pretty;
 }
 
 .dt-note {

@@ -47,8 +47,13 @@ export interface DayTripPlan {
    * still clears the absolute minimum). Render amber with a "short trip" note.
    */
   short: boolean
-  /** True when the plan is for tomorrow (it's past the rollover hour today). */
+  /** True when the plan is for tomorrow (past the rollover hour, or today was a bust). */
   forTomorrow: boolean
+  /**
+   * True when this is a tomorrow plan shown *because today doesn't work* even
+   * though it's still before the rollover hour — drives a "no time today" note.
+   */
+  todayUnavailable: boolean
   /** For the infeasible case: ms epoch of the next crossing window, if any. */
   nextWindowStart: number | null
 }
@@ -89,12 +94,15 @@ function crossingFrom(b: Bracket): DayTripCrossing {
     : { earliest: b.extLo, latest: b.extHi, comfortable: false }
 }
 
-export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: number): DayTripPlan {
-  // Once it's past the admin-set rollover hour, nobody's starting a daytrip
-  // today — plan for tomorrow instead. `anchor` is a moment on the day we're
-  // planning; `dayStart`/`dayEnd` bound that whole day (for today, dayStart is
-  // "now" so past crossings are excluded).
-  const forTomorrow = now >= localTimeMs(now, rules.daytripRolloverHour)
+/** Plan a there-and-back daytrip for one specific day (today, or tomorrow). */
+function planForDay(
+  windows: SafeWindow[],
+  rules: SafetyRules,
+  now: number,
+  forTomorrow: boolean,
+): DayTripPlan {
+  // `anchor` is a moment on the day we're planning; `dayStart`/`dayEnd` bound
+  // that whole day (for today, dayStart is "now" so past crossings are excluded).
   const anchor = forTomorrow ? now + 24 * 60 * 60_000 : now
   const dayStart = forTomorrow ? startOfNextLocalDay(now) : now
   const dayEnd = startOfNextLocalDay(anchor)
@@ -121,6 +129,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     islandMs: 0,
     short: false,
     forTomorrow,
+    todayUnavailable: false,
     nextWindowStart,
   })
 
@@ -156,6 +165,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
       islandMs,
       short: false,
       forTomorrow,
+      todayUnavailable: false,
       nextWindowStart: null,
     })
   }
@@ -174,6 +184,7 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
       islandMs,
       short: false,
       forTomorrow,
+      todayUnavailable: false,
       nextWindowStart: null,
     })
   }
@@ -220,6 +231,23 @@ export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: numb
     islandMs: best.islandMs,
     short,
     forTomorrow,
+    todayUnavailable: false,
     nextWindowStart: null,
   }
+}
+
+/**
+ * Plan a daytrip for the right day. Past the rollover hour it plans tomorrow.
+ * Before it, it plans today — but if today has no worthwhile trip, it falls
+ * back to tomorrow (flagged `todayUnavailable`) so the pane can say "no time
+ * today, here's tomorrow" rather than dead-ending.
+ */
+export function planDayTrip(windows: SafeWindow[], rules: SafetyRules, now: number): DayTripPlan {
+  const rolloverReached = now >= localTimeMs(now, rules.daytripRolloverHour)
+  const primary = planForDay(windows, rules, now, rolloverReached)
+  if (primary.feasible || rolloverReached) return primary
+
+  // Before the rollover but nothing works today → offer tomorrow instead.
+  const tomorrow = planForDay(windows, rules, now, true)
+  return tomorrow.feasible ? { ...tomorrow, todayUnavailable: true } : primary
 }

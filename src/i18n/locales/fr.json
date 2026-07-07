@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "Vous planifiez une excursion ?",
     "titleTomorrow": "Vous planifiez une excursion demain ?",
+    "todayUnavailableNote": "Pas assez de temps pour une excursion aujourd'hui — voici les traversées de demain :",
     "noneTitle": "Pas d'excursion aujourd'hui",
     "noneTitleTomorrow": "Pas d'excursion demain",
     "there": "Aller",

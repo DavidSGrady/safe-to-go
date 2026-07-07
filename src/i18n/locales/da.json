@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "Planlægger du en dagstur?",
     "titleTomorrow": "Planlægger du en dagstur i morgen?",
+    "todayUnavailableNote": "Der er ikke tid til en dagstur i dag — her er i morgens overkørsler i stedet:",
     "noneTitle": "Ingen dagstur i dag",
     "noneTitleTomorrow": "Ingen dagstur i morgen",
     "there": "Turen derover",

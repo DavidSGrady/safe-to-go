@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "Planen Sie einen Tagesausflug?",
     "titleTomorrow": "Planen Sie morgen einen Tagesausflug?",
+    "todayUnavailableNote": "Heute reicht die Zeit für keinen Tagesausflug — hier sind stattdessen die Überfahrten für morgen:",
     "noneTitle": "Heute kein Tagesausflug",
     "noneTitleTomorrow": "Morgen kein Tagesausflug",
     "there": "Hinweg",

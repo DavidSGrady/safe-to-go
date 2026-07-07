@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "Plan je een dagtrip?",
     "titleTomorrow": "Plan je morgen een dagtrip?",
+    "todayUnavailableNote": "Vandaag is er geen tijd voor een dagtrip — hier zijn de oversteken voor morgen:",
     "noneTitle": "Vandaag geen dagtrip",
     "noneTitleTomorrow": "Morgen geen dagtrip",
     "there": "Heenreis",

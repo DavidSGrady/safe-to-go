@@ -62,6 +62,7 @@
   "daytrip": {
     "title": "Planning a daytrip?",
     "titleTomorrow": "Planning a daytrip tomorrow?",
+    "todayUnavailableNote": "Not enough time for a daytrip today — here are tomorrow's crossings instead:",
     "noneTitle": "No daytrip today",
     "noneTitleTomorrow": "No daytrip tomorrow",
     "there": "Getting there",
