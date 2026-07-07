@@ -26,6 +26,7 @@ const form = reactive({
   windAdjustmentEnabled: true,
   puddleWarningEnabled: false,
   puddleWarningRangeCm: 15,
+  playbackSpeedPct: 100,
 })
 
 const saved = ref(false)
@@ -59,6 +60,7 @@ watch(
       form.windAdjustmentEnabled = r.windAdjustmentEnabled
       form.puddleWarningEnabled = r.puddleWarningEnabled
       form.puddleWarningRangeCm = r.puddleWarningRangeCm
+      form.playbackSpeedPct = r.playbackSpeedPct
     }
   },
   { immediate: true },
@@ -132,6 +134,7 @@ function diff(entry: RuleChangeLogEntry): string {
     'wind_adjustment_enabled',
     'puddle_warning_enabled',
     'puddle_warning_range_cm',
+    'playback_speed_pct',
   ]
   return keys
     .filter((k) => entry.oldValues[k] !== entry.newValues[k])
@@ -240,6 +243,16 @@ onMounted(async () => {
           <label for="puddleRange">{{ t('admin.rules.puddleRange') }}: <strong>{{ form.puddleWarningRangeCm }}</strong></label>
           <input id="puddleRange" v-model.number="form.puddleWarningRangeCm" type="range" min="0" max="40" step="1" />
           <p class="muted">{{ t('admin.rules.puddleRangeHelp') }}</p>
+        </div>
+
+        <div class="field">
+          <label for="playbackSpeed">{{ t('admin.rules.playbackSpeed') }}</label>
+          <select id="playbackSpeed" v-model.number="form.playbackSpeedPct" class="select">
+            <option :value="100">{{ t('admin.rules.playbackNormal') }}</option>
+            <option :value="50">{{ t('admin.rules.playbackHalf') }}</option>
+            <option :value="33">{{ t('admin.rules.playbackThird') }}</option>
+          </select>
+          <p class="muted">{{ t('admin.rules.playbackSpeedHelp') }}</p>
         </div>
 
         <p v-if="invalid" class="error">{{ t('admin.rules.invalid') }}</p>
@@ -383,6 +396,17 @@ onMounted(async () => {
 
 .field .muted {
   margin-top: 4px;
+}
+
+.select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  accent-color: var(--accent);
 }
 
 .toggle {

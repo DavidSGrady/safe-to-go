@@ -66,4 +66,5 @@ export const demoRules: SafetyRules = {
   windAdjustmentEnabled: true,
   puddleWarningEnabled: true,
   puddleWarningRangeCm: 15,
+  playbackSpeedPct: 100,
 }

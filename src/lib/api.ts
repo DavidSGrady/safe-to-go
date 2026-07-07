@@ -29,6 +29,7 @@ interface RulesRow {
   wind_adjustment_enabled: boolean
   puddle_warning_enabled: boolean
   puddle_warning_range_cm: number
+  playback_speed_pct: number
   updated_at: string
 }
 
@@ -98,7 +99,7 @@ export async function fetchRules(): Promise<SafetyRules> {
   if (isDemoMode) return demoRules
   const { data, error } = await getSupabase()
     .from('safety_rules')
-    .select('flood_margin_cm, fall_margin_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, puddle_warning_enabled, puddle_warning_range_cm, updated_at')
+    .select('flood_margin_cm, fall_margin_cm, caution_max_cm, crossing_minutes, buffer_minutes, min_window_minutes, wind_adjustment_enabled, puddle_warning_enabled, puddle_warning_range_cm, playback_speed_pct, updated_at')
     .eq('id', 1)
     .single()
   if (error) throw error
@@ -113,6 +114,7 @@ export async function fetchRules(): Promise<SafetyRules> {
     windAdjustmentEnabled: row.wind_adjustment_enabled,
     puddleWarningEnabled: row.puddle_warning_enabled,
     puddleWarningRangeCm: row.puddle_warning_range_cm,
+    playbackSpeedPct: row.playback_speed_pct,
     updatedAt: row.updated_at,
   }
 }
@@ -130,6 +132,7 @@ export async function saveRules(rules: SafetyRules): Promise<void> {
       wind_adjustment_enabled: rules.windAdjustmentEnabled,
       puddle_warning_enabled: rules.puddleWarningEnabled,
       puddle_warning_range_cm: rules.puddleWarningRangeCm,
+      playback_speed_pct: rules.playbackSpeedPct,
     })
     .eq('id', 1)
   if (error) throw error

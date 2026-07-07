@@ -13,9 +13,14 @@ const props = defineProps<{
 const { t, locale } = useI18n()
 
 const MAX_OFFSET_MIN = 24 * 60
+// Forecast minutes advanced per animation tick at full speed; the admin
+// playback-speed knob scales this down (100 = full, 50 = half, 33 = a third).
+const BASE_STEP_PER_TICK = 9
 const offsetMin = ref(0)
 const playing = ref(false)
 let timer: ReturnType<typeof setInterval> | null = null
+
+const stepPerTick = computed(() => BASE_STEP_PER_TICK * (props.rules.playbackSpeedPct / 100))
 
 function stop(): void {
   if (timer) {
@@ -33,7 +38,7 @@ function togglePlay(): void {
   if (offsetMin.value >= MAX_OFFSET_MIN) offsetMin.value = 0
   playing.value = true
   timer = setInterval(() => {
-    offsetMin.value = Math.min(MAX_OFFSET_MIN, offsetMin.value + 9)
+    offsetMin.value = Math.min(MAX_OFFSET_MIN, offsetMin.value + stepPerTick.value)
     if (offsetMin.value >= MAX_OFFSET_MIN) stop()
   }, 80)
 }

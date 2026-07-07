@@ -65,6 +65,12 @@ export interface SafetyRules {
    * this band below cautionMaxCm.
    */
   puddleWarningRangeCm: number
+  /**
+   * How fast the "situation at the road" animation scrubs through the forecast
+   * when Play is pressed, as a percentage of the base speed: 100 = full speed,
+   * 50 = half, 33 = a third. Purely presentational — does not affect safety.
+   */
+  playbackSpeedPct: number
   updatedAt?: string
 }
 

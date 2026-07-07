@@ -260,11 +260,13 @@ const freshnessTxt = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  max-width: 100%;
+  text-align: center;
+  text-wrap: pretty;
 }
 
 .box-l1 {
   font-size: 15px;
-  white-space: nowrap;
 }
 
 .box-l2 {
