@@ -151,7 +151,13 @@
     "disclaimer": "Este servicio es una ayuda para los visitantes, no un servicio de seguridad oficial. El tiempo y la marea pueden cambiar las condiciones — usted es responsable de evaluar la seguridad antes de cruzar. Llame al 112 en caso de emergencia.",
     "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de {station}.",
     "data": "Datos sin procesar (locales)",
+    "display": "Modo pantalla (para tiendas y cafés)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Imprimir esta vista",
+    "autoUpdates": "Esta pantalla se actualiza automáticamente — déjela abierta.",
+    "printedNote": "Impreso {time}. La marea y el tiempo cambian constantemente — una impresión queda obsoleta enseguida. Compruebe siempre la página en vivo o las condiciones en el lugar antes de cruzar."
   },
   "data": {
     "title": "Datos sin procesar",

@@ -161,7 +161,13 @@
     "disclaimer": "This service is a guide for visitors. Weather and tide can change conditions — you are responsible for judging safety before crossing. Call 112 in an emergency.",
     "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at {station}.",
     "data": "Raw data (for locals)",
+    "display": "Display mode (for shops & cafés)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Print this view",
+    "autoUpdates": "This screen updates automatically — leave it open.",
+    "printedNote": "Printed {time}. Tide and weather change constantly — a printout quickly goes stale. Always check the live page or conditions on site before crossing."
   },
   "data": {
     "title": "Raw data",

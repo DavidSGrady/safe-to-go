@@ -151,7 +151,13 @@
     "disclaimer": "Ce service est une aide pour les visiteurs, pas un service de sécurité officiel. La météo et la marée peuvent changer les conditions — vous êtes responsable d'évaluer la sécurité avant de traverser. Appelez le 112 en cas d'urgence.",
     "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de {station}.",
     "data": "Données brutes (pour les locaux)",
+    "display": "Mode affichage (pour commerces & cafés)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Imprimer cette vue",
+    "autoUpdates": "Cet écran se met à jour automatiquement — laissez-le ouvert.",
+    "printedNote": "Imprimé {time}. La marée et la météo changent constamment — une impression devient vite obsolète. Vérifiez toujours la page en direct ou les conditions sur place avant de traverser."
   },
   "data": {
     "title": "Données brutes",

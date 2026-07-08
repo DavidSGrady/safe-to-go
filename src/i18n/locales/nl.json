@@ -151,7 +151,13 @@
     "disclaimer": "Deze dienst is een hulpmiddel voor bezoekers, geen officiële veiligheidsdienst. Weer en getij kunnen de omstandigheden veranderen — u bent zelf verantwoordelijk voor het beoordelen van de veiligheid voor het oversteken. Bel 112 in een noodgeval.",
     "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij {station}.",
     "data": "Ruwe data (voor locals)",
+    "display": "Schermweergave (voor winkels & cafés)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Deze weergave afdrukken",
+    "autoUpdates": "Dit scherm wordt automatisch bijgewerkt — laat het openstaan.",
+    "printedNote": "Afgedrukt {time}. Getij en weer veranderen voortdurend — een afdruk veroudert snel. Controleer vóór het oversteken altijd de live pagina of de omstandigheden ter plaatse."
   },
   "data": {
     "title": "Ruwe data",

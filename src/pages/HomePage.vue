@@ -96,6 +96,9 @@ onBeforeUnmount(() => observer?.disconnect())
         <RouterLink to="/data">{{ t('footer.data') }}</RouterLink>
       </p>
       <p class="muted">
+        <RouterLink to="/display">{{ t('footer.display') }}</RouterLink>
+      </p>
+      <p class="muted">
         <RouterLink to="/admin">{{ t('footer.admin') }}</RouterLink>
       </p>
     </footer>

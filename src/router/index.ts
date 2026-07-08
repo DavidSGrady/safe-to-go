@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'data',
       component: () => import('@/pages/DataPage.vue'),
     },
+    {
+      path: '/display',
+      name: 'display',
+      component: () => import('@/pages/DisplayPage.vue'),
+    },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
 })

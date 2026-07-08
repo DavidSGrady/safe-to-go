@@ -151,7 +151,13 @@
     "disclaimer": "Dieser Dienst ist eine Orientierungshilfe für Besucher. Wetter und Gezeiten können die Bedingungen ändern — Sie sind selbst dafür verantwortlich, die Sicherheit vor der Überquerung zu beurteilen. Rufen Sie im Notfall 112 an.",
     "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei {station}.",
     "data": "Rohdaten (für Einheimische)",
+    "display": "Bildschirmmodus (für Geschäfte & Cafés)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Diese Ansicht drucken",
+    "autoUpdates": "Dieser Bildschirm aktualisiert sich automatisch — einfach geöffnet lassen.",
+    "printedNote": "Gedruckt {time}. Gezeiten und Wetter ändern sich ständig — ein Ausdruck veraltet schnell. Prüfen Sie vor der Überquerung immer die Live-Seite oder die Bedingungen vor Ort."
   },
   "data": {
     "title": "Rohdaten",

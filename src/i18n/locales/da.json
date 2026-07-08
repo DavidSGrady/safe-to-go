@@ -161,7 +161,13 @@
     "disclaimer": "Tjenesten er en hjælp til besøgende. Vejr og tidevand kan ændre forholdene — du er selv ansvarlig for at vurdere sikkerheden før krydsning. Ring 112 i nødstilfælde.",
     "source": "Live-data: DMI & Kystdirektoratet, målestation ved {station}.",
     "data": "Rådata (for lokale)",
+    "display": "Skærmvisning (til butikker & caféer)",
     "admin": "Admin"
+  },
+  "display": {
+    "print": "Udskriv denne visning",
+    "autoUpdates": "Skærmen opdaterer automatisk — lad den stå åben.",
+    "printedNote": "Udskrevet {time}. Tidevand og vejr ændrer sig hele tiden — en udskrift bliver hurtigt forældet. Tjek altid den aktuelle side eller forholdene på stedet før krydsning."
   },
   "data": {
     "title": "Rådata",
