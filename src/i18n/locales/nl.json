@@ -164,7 +164,9 @@
     "driftKey": "gemeten − voorspelling",
     "roadMarker": "Weghoogte",
     "forecastTag": "voorspelling",
-    "noData": "Nog geen gegevens voor deze dag."
+    "noData": "Nog geen gegevens voor deze dag.",
+    "jumpToNow": "Spring naar nu",
+    "nowTag": "nu"
   },
   "demo": {
     "banner": "Demomodus — synthetische getijdengegevens, geen echte metingen."

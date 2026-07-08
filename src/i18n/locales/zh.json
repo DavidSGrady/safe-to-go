@@ -164,7 +164,9 @@
     "driftKey": "实测 − 预测",
     "roadMarker": "路面高度",
     "forecastTag": "预测",
-    "noData": "这一天暂无数据。"
+    "noData": "这一天暂无数据。",
+    "jumpToNow": "跳到现在",
+    "nowTag": "现在"
   },
   "demo": {
     "banner": "演示模式 — 显示的是模拟潮汐数据，并非真实测量。"

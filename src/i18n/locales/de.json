@@ -164,7 +164,9 @@
     "driftKey": "gemessen − Prognose",
     "roadMarker": "Straßenhöhe",
     "forecastTag": "Prognose",
-    "noData": "Noch keine Daten für diesen Tag."
+    "noData": "Noch keine Daten für diesen Tag.",
+    "jumpToNow": "Zu jetzt springen",
+    "nowTag": "jetzt"
   },
   "demo": {
     "banner": "Demo-Modus — synthetische Gezeitendaten, keine echten Messungen."

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
@@ -34,8 +34,31 @@ function sampleObserved(t: number): number | null {
 }
 
 // Day picker: yesterday (−1) through five days ahead.
+// Selected day and scroll position survive a refresh (per tab), so the page
+// reopens where it was left — the async load means the browser's own scroll
+// restoration never kicks in.
 const DAY_OFFSETS = [-1, 0, 1, 2, 3, 4, 5]
-const selectedOffset = ref(0)
+const DAY_KEY = 'dataPage.day'
+const SCROLL_KEY = 'dataPage.scroll'
+
+const savedDay = Number(sessionStorage.getItem(DAY_KEY))
+const selectedOffset = ref(DAY_OFFSETS.includes(savedDay) ? savedDay : 0)
+watch(selectedOffset, (v) => sessionStorage.setItem(DAY_KEY, String(v)))
+
+// Capture the saved position before any scroll listener runs — the browser
+// fires a scroll event at 0 during boot, which would clobber it.
+const initialScroll = sessionStorage.getItem(SCROLL_KEY)
+
+function saveScroll() {
+  sessionStorage.setItem(SCROLL_KEY, String(Math.round(window.scrollY)))
+}
+onMounted(() => {
+  history.scrollRestoration = 'manual'
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', saveScroll)
+  history.scrollRestoration = 'auto'
+})
 
 function dayLabelFor(offset: number): string {
   const anchor = now.value + offset * 24 * 60 * 60_000
@@ -108,6 +131,40 @@ const roadPct = computed(() => pct(roadLevel.value))
 function signed(v: number): string {
   return `${v > 0 ? '+' : ''}${v}`
 }
+
+// The row whose time slot contains "now" (only meaningful on today's view).
+const nowRowT = computed(() => {
+  if (selectedOffset.value !== 0) return null
+  const step = granularity.value * 60_000
+  const row = rows.value.find((r) => now.value >= r.t && now.value < r.t + step)
+  return row?.t ?? null
+})
+
+function jumpToNow(smooth = true) {
+  selectedOffset.value = 0
+  nextTick(() => {
+    document
+      .getElementById('now-row')
+      ?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' })
+  })
+}
+
+// Position the view once the first non-empty day renders: restore the saved
+// scroll if there is one, otherwise center on "now". Only then start
+// recording scroll, so boot-time scroll events can't overwrite the position.
+let positioned = false
+watch(
+  rows,
+  async (rs) => {
+    if (positioned || rs.length === 0) return
+    positioned = true
+    await nextTick()
+    if (initialScroll !== null) window.scrollTo(0, Number(initialScroll))
+    else jumpToNow(false)
+    window.addEventListener('scroll', saveScroll, { passive: true })
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -127,6 +184,7 @@ function signed(v: number): string {
         <select id="day" v-model.number="selectedOffset" class="select">
           <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
         </select>
+        <button type="button" class="now-btn" @click="jumpToNow()">{{ t('data.jumpToNow') }}</button>
       </div>
 
       <p class="legend">
@@ -139,7 +197,15 @@ function signed(v: number): string {
       <p v-if="rows.length === 0" class="card none">{{ t('data.noData') }}</p>
 
       <ol v-else class="rows" :aria-label="t('data.title')">
-        <li v-for="r in rows" :key="r.t" class="row">
+        <li
+          v-for="r in rows"
+          :key="r.t"
+          class="row"
+          :class="{ 'is-now': r.t === nowRowT }"
+          :id="r.t === nowRowT ? 'now-row' : undefined"
+          :aria-current="r.t === nowRowT ? 'time' : undefined"
+          :title="r.t === nowRowT ? t('data.nowTag') : undefined"
+        >
           <span class="time mono">{{ r.time }}</span>
           <div class="bar-track">
             <div
@@ -206,6 +272,18 @@ function signed(v: number): string {
   font: inherit;
   accent-color: var(--accent);
 }
+.now-btn {
+  flex: none;
+  padding: 8px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 .legend {
   font-size: 0.72rem;
@@ -259,6 +337,14 @@ function signed(v: number): string {
 }
 .row:nth-child(even) {
   background: var(--page);
+}
+.row.is-now {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.row.is-now .time {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .time {

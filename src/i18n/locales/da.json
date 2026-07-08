@@ -174,7 +174,9 @@
     "driftKey": "målt − prognose",
     "roadMarker": "Vejhøjde",
     "forecastTag": "prognose",
-    "noData": "Ingen data for denne dag endnu."
+    "noData": "Ingen data for denne dag endnu.",
+    "jumpToNow": "Hop til nu",
+    "nowTag": "nu"
   },
   "demo": {
     "banner": "Demotilstand — syntetiske tidevandsdata, ikke rigtige målinger."

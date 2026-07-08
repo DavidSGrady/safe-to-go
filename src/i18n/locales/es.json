@@ -164,7 +164,9 @@
     "driftKey": "medido − pronóstico",
     "roadMarker": "Nivel de la carretera",
     "forecastTag": "pronóstico",
-    "noData": "Aún no hay datos para este día."
+    "noData": "Aún no hay datos para este día.",
+    "jumpToNow": "Ir a ahora",
+    "nowTag": "ahora"
   },
   "demo": {
     "banner": "Modo demo — datos de marea sintéticos, no mediciones reales."

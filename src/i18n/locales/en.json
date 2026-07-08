@@ -174,7 +174,9 @@
     "driftKey": "measured − forecast",
     "roadMarker": "Road level",
     "forecastTag": "forecast",
-    "noData": "No data for this day yet."
+    "noData": "No data for this day yet.",
+    "jumpToNow": "Jump to now",
+    "nowTag": "now"
   },
   "demo": {
     "banner": "Demo mode — synthetic tide data, not real measurements."
