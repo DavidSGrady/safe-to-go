@@ -206,6 +206,7 @@ export const useStatusStore = defineStore('status', () => {
 
   return {
     readings,
+    readingsByStation,
     predictions,
     forecast,
     rules,

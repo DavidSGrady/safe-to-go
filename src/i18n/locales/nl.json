@@ -158,6 +158,7 @@
     "back": "Terug naar de site",
     "intro": "Gemeten waterstand en voorspelling bij {station}, in cm ten opzichte van DVR90.",
     "selectDay": "Dag",
+    "stationLabel": "Meetstation",
     "legend": "De weg overstroomt bij {road} cm.",
     "belowRoad": "onder de weg",
     "aboveRoad": "boven de weg",

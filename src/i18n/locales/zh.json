@@ -158,6 +158,7 @@
     "back": "返回主页",
     "intro": "{station}的实测水位与预测，单位为相对于 DVR90 的厘米。",
     "selectDay": "日期",
+    "stationLabel": "测量站",
     "legend": "道路在 {road} 厘米时被淹没。",
     "belowRoad": "低于路面",
     "aboveRoad": "高于路面",

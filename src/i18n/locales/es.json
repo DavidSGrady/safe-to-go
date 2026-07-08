@@ -158,6 +158,7 @@
     "back": "Volver al sitio",
     "intro": "Nivel del agua medido y pronóstico en {station}, en cm respecto al DVR90.",
     "selectDay": "Día",
+    "stationLabel": "Estación",
     "legend": "La carretera se inunda a {road} cm.",
     "belowRoad": "bajo la carretera",
     "aboveRoad": "sobre la carretera",

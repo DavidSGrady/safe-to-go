@@ -158,6 +158,7 @@
     "back": "Zurück zur Seite",
     "intro": "Gemessener Wasserstand und Prognose bei {station}, in cm bezogen auf DVR90.",
     "selectDay": "Tag",
+    "stationLabel": "Messstation",
     "legend": "Die Straße wird bei {road} cm überflutet.",
     "belowRoad": "unter der Straße",
     "aboveRoad": "über der Straße",

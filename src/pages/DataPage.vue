@@ -4,16 +4,30 @@ import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
 import { fmtTime, localTimeMs, startOfNextLocalDay } from '@/lib/format'
+import { STATIONS, stationName } from '@/lib/stations'
 
 const { t, locale } = useI18n()
 const store = useStatusStore()
-const { status, readings, rules, loading, now, primaryStationName } = storeToRefs(store)
+const { status, statusByStation, readingsByStation, rules, loading, now } = storeToRefs(store)
 
 onMounted(() => store.start())
 
+// Which station's data is shown — page-local so it doesn't change the
+// station driving the verdict on the rest of the site. Per tab, like the
+// day/scroll below.
+const STATION_KEY = 'dataPage.station'
+const savedStation = sessionStorage.getItem(STATION_KEY)
+const stationId = ref(
+  STATIONS.some((s) => s.id === savedStation) ? (savedStation as string) : store.primaryStationId,
+)
+watch(stationId, (v) => sessionStorage.setItem(STATION_KEY, v))
+
+const viewStatus = computed(() => statusByStation.value[stationId.value] ?? null)
+const viewStationName = computed(() => stationName(stationId.value))
+
 // Observations as a sortable curve we can sample at arbitrary ticks.
 const observedPoints = computed(() =>
-  readings.value
+  (readingsByStation.value[stationId.value] ?? [])
     .map((r) => ({ t: Date.parse(r.observedAt), level: r.levelCm }))
     .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.level))
     .sort((a, b) => a.t - b.t),
@@ -87,7 +101,7 @@ interface Row {
 }
 
 const rows = computed<Row[]>(() => {
-  if (!status.value) return []
+  if (!viewStatus.value) return []
   const anchor = now.value + selectedOffset.value * 24 * 60 * 60_000
   const dayStart = localTimeMs(anchor, 0)
   const dayEnd = startOfNextLocalDay(anchor)
@@ -95,7 +109,7 @@ const rows = computed<Row[]>(() => {
   const out: Row[] = []
   for (let t = dayStart; t < dayEnd; t += step) {
     const observed = sampleObserved(t)
-    const forecast = status.value.levelAt(t)
+    const forecast = viewStatus.value.levelAt(t)
     if (observed === null && forecast === null) continue
     out.push({
       t,
@@ -174,12 +188,26 @@ watch(
       <RouterLink to="/" class="muted">{{ t('data.back') }}</RouterLink>
     </header>
 
-    <p class="secondary intro">{{ t('data.intro', { station: primaryStationName }) }}</p>
+    <p class="secondary intro">{{ t('data.intro', { station: viewStationName }) }}</p>
 
     <div v-if="loading && !status" class="card skeleton" aria-busy="true"></div>
 
     <template v-else>
       <div class="controls">
+        <span class="day-label">{{ t('data.stationLabel') }}</span>
+        <div class="seg" role="group" :aria-label="t('data.stationLabel')">
+          <button
+            v-for="s in STATIONS"
+            :key="s.id"
+            type="button"
+            class="seg-btn"
+            :class="{ active: s.id === stationId }"
+            :aria-pressed="s.id === stationId"
+            @click="stationId = s.id"
+          >
+            {{ s.name }}
+          </button>
+        </div>
         <label for="day" class="day-label">{{ t('data.selectDay') }}</label>
         <select id="day" v-model.number="selectedOffset" class="select">
           <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
@@ -249,11 +277,52 @@ watch(
   margin: 0 0 14px;
 }
 
+/* Sticky so day/station/now controls stay reachable while scrolling the
+   long table (the page is mobile-first; the column is phone-width anyway).
+   Negative margins bleed the background to the page edges. */
 .controls {
-  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px 10px;
+  margin: 0 -16px 12px;
+  padding: 10px 16px;
+  background: var(--page);
+  border-bottom: 1px solid var(--border);
+}
+.seg {
+  grid-column: 2 / -1;
+  display: flex;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.seg-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 4px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.seg-btn + .seg-btn {
+  border-left: 1px solid var(--border);
+}
+.seg-btn.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
 }
 .day-label {
   font-size: 0.85rem;

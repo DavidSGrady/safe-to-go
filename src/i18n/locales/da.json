@@ -168,6 +168,7 @@
     "back": "Tilbage til siden",
     "intro": "Målt vandstand og prognose ved {station}, i cm i forhold til DVR90.",
     "selectDay": "Dag",
+    "stationLabel": "Målestation",
     "legend": "Vejen oversvømmes ved {road} cm.",
     "belowRoad": "under vejen",
     "aboveRoad": "over vejen",

@@ -168,6 +168,7 @@
     "back": "Back to the site",
     "intro": "Measured water level and forecast at {station}, in cm relative to DVR90.",
     "selectDay": "Day",
+    "stationLabel": "Station",
     "legend": "Road floods at {road} cm.",
     "belowRoad": "below road",
     "aboveRoad": "above road",

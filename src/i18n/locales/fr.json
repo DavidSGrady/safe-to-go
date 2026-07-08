@@ -158,6 +158,7 @@
     "back": "Retour au site",
     "intro": "Niveau d'eau mesuré et prévision à {station}, en cm par rapport au DVR90.",
     "selectDay": "Jour",
+    "stationLabel": "Station",
     "legend": "La route est submergée à {road} cm.",
     "belowRoad": "sous la route",
     "aboveRoad": "au-dessus de la route",
