@@ -173,7 +173,19 @@
     "forecastTag": "prévision",
     "noData": "Pas encore de données pour ce jour.",
     "jumpToNow": "Aller à maintenant",
-    "nowTag": "maintenant"
+    "nowTag": "maintenant",
+    "sources": {
+      "title": "Sources des données",
+      "observed": "Mesuré : marégraphe DMI {station} ({id}) · dernière mesure {time}",
+      "observedNone": "Mesuré : marégraphe DMI {station} ({id}) · aucune mesure récente",
+      "station": "Prévision : prévision de station DMI (même série que dmi.dk)",
+      "dkss": "Secours : modèle marin DKSS de DMI (point de grille au large)",
+      "astro": "Table des marées astronomiques (au-delà de l'horizon de prévision)",
+      "updated": "mise à jour {time}",
+      "until": "jusqu'à {time}",
+      "inUse": "en service",
+      "missing": "non chargée"
+    }
   },
   "demo": {
     "banner": "Mode démo — données de marée synthétiques, pas de vraies mesures."

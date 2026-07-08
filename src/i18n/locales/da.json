@@ -183,7 +183,19 @@
     "forecastTag": "prognose",
     "noData": "Ingen data for denne dag endnu.",
     "jumpToNow": "Hop til nu",
-    "nowTag": "nu"
+    "nowTag": "nu",
+    "sources": {
+      "title": "Datakilder",
+      "observed": "Målt: DMI-måler {station} ({id}) · seneste måling {time}",
+      "observedNone": "Målt: DMI-måler {station} ({id}) · ingen friske målinger",
+      "station": "Prognose: DMI's stationsprognose (samme serie som dmi.dk)",
+      "dkss": "Reserve: DMI's DKSS-havmodel (gridpunkt på havet)",
+      "astro": "Astronomisk tidevandstabel (bruges efter prognosehorisonten)",
+      "updated": "opdateret {time}",
+      "until": "til {time}",
+      "inUse": "i brug",
+      "missing": "ikke indlæst"
+    }
   },
   "demo": {
     "banner": "Demotilstand — syntetiske tidevandsdata, ikke rigtige målinger."

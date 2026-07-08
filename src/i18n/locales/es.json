@@ -173,7 +173,19 @@
     "forecastTag": "pronóstico",
     "noData": "Aún no hay datos para este día.",
     "jumpToNow": "Ir a ahora",
-    "nowTag": "ahora"
+    "nowTag": "ahora",
+    "sources": {
+      "title": "Fuentes de datos",
+      "observed": "Medido: mareógrafo DMI {station} ({id}) · última medición {time}",
+      "observedNone": "Medido: mareógrafo DMI {station} ({id}) · sin mediciones recientes",
+      "station": "Pronóstico: pronóstico de estación de DMI (la misma serie que dmi.dk)",
+      "dkss": "Reserva: modelo marino DKSS de DMI (punto de malla mar adentro)",
+      "astro": "Tabla de mareas astronómicas (más allá del horizonte de pronóstico)",
+      "updated": "actualizado {time}",
+      "until": "hasta {time}",
+      "inUse": "en uso",
+      "missing": "sin cargar"
+    }
   },
   "demo": {
     "banner": "Modo demo — datos de marea sintéticos, no mediciones reales."

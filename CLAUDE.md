@@ -84,9 +84,17 @@ here are written to be backward-compatible so either order is safe, but keep thi
 
 ## Data ingestion (edge function)
 `supabase/functions/fetch-dmi-data/index.ts` runs on cron (~10 min). It ingests observations,
-tide predictions and the DKSS storm-surge forecast for **each station in its `STATIONS` array**
-(Mandø + Ribe Kammersluse), fault-isolated per station (one failing doesn't block the others).
-`water_level_forecast` carries `station_id` (unique `station_id, source, forecast_at`).
+tide predictions and **two forecasts** for **each station in its `STATIONS` array**
+(Mandø + Ribe Kammersluse), fault-isolated per station (one failing doesn't block the others):
+- `source = 'dmi_station'` — DMI's per-station prognosis from www.dmi.dk's internal
+  `NinJo2DmiDk/ninjo2dmidk?cmd=odj&stations=<tideId>&datatype=fcst` endpoint (keyless,
+  undocumented, 10-min resolution, ~5 days). **The exact series dmi.dk shows** — gauge-calibrated,
+  so `tide.ts` uses it as-is (no datum shift). Our numbers must match dmi.dk 1:1; regressions here
+  are user-visible (see the /data page footer for provenance/debugging).
+- `source = 'dkss_ws'` — raw DKSS grid model via the open forecastedr API. **Fallback only**: the
+  grid cells near the stations dry out at low tide (clamp ≈ −20 cm), so it must never be primary.
+`water_level_forecast` carries `station_id` (unique `station_id, source, forecast_at`) and
+`generated_at` (model-run time for `dmi_station`, fetch time for DKSS).
 Deploy with `npx supabase functions deploy fetch-dmi-data` (this CLI has no `functions invoke`;
 trigger by waiting for cron or curling the function URL with the anon key). After a new station is
 added, apply the migration + deploy the frontend *before* the edge function starts writing the new

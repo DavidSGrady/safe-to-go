@@ -173,7 +173,19 @@
     "forecastTag": "voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",
     "jumpToNow": "Spring naar nu",
-    "nowTag": "nu"
+    "nowTag": "nu",
+    "sources": {
+      "title": "Databronnen",
+      "observed": "Gemeten: DMI-peilstation {station} ({id}) · laatste meting {time}",
+      "observedNone": "Gemeten: DMI-peilstation {station} ({id}) · geen recente metingen",
+      "station": "Voorspelling: DMI-stationsprognose (dezelfde reeks als dmi.dk)",
+      "dkss": "Terugval: DMI DKSS-zeemodel (roosterpunt op zee)",
+      "astro": "Astronomische getijdentabel (voorbij de voorspellingshorizon)",
+      "updated": "bijgewerkt {time}",
+      "until": "tot {time}",
+      "inUse": "in gebruik",
+      "missing": "niet geladen"
+    }
   },
   "demo": {
     "banner": "Demomodus — synthetische getijdengegevens, geen echte metingen."

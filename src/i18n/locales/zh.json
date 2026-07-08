@@ -173,7 +173,19 @@
     "forecastTag": "预测",
     "noData": "这一天暂无数据。",
     "jumpToNow": "跳到现在",
-    "nowTag": "现在"
+    "nowTag": "现在",
+    "sources": {
+      "title": "数据来源",
+      "observed": "实测：DMI 水位计 {station}（{id}）· 最新读数 {time}",
+      "observedNone": "实测：DMI 水位计 {station}（{id}）· 暂无最新读数",
+      "station": "预报：DMI 站点预报（与 dmi.dk 显示的数据一致）",
+      "dkss": "备用：DMI DKSS 海洋模型（近海网格点）",
+      "astro": "天文潮汐表（超出预报时段后使用）",
+      "updated": "更新于 {time}",
+      "until": "至 {time}",
+      "inUse": "使用中",
+      "missing": "未加载"
+    }
   },
   "demo": {
     "banner": "演示模式 — 显示的是模拟潮汐数据，并非真实测量。"

@@ -8,7 +8,8 @@ import { STATIONS, stationName } from '@/lib/stations'
 
 const { t, locale } = useI18n()
 const store = useStatusStore()
-const { status, statusByStation, readingsByStation, rules, loading, now } = storeToRefs(store)
+const { status, statusByStation, readingsByStation, predictionsByStation, forecastByStation, rules, loading, now } =
+  storeToRefs(store)
 
 onMounted(() => store.start())
 
@@ -163,6 +164,79 @@ function jumpToNow(smooth = true) {
   })
 }
 
+// --- Provenance footer: where each series comes from, when DMI generated
+// it and how far it reaches — so a mismatch with dmi.dk can be debugged at
+// a glance (stale run, fallback in use, source missing). ---
+function fmtStamp(ms: number): string {
+  return new Intl.DateTimeFormat(locale.value, {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Copenhagen',
+  }).format(ms)
+}
+
+const observedLine = computed(() => {
+  const last = viewStatus.value?.lastObservedAt ?? null
+  const params = { station: viewStationName.value, id: stationId.value }
+  return last === null
+    ? t('data.sources.observedNone', params)
+    : t('data.sources.observed', { ...params, time: fmtStamp(last) })
+})
+
+interface SourceLine {
+  key: string
+  text: string
+  inUse: boolean
+}
+
+const forecastLines = computed<SourceLine[]>(() => {
+  const fc = forecastByStation.value[stationId.value] ?? []
+  const active = viewStatus.value?.forecastSource ?? 'none'
+
+  // Latest run time + coverage end per source group.
+  const agg: Record<'station' | 'dkss', { updated: number; until: number } | null> = {
+    station: null,
+    dkss: null,
+  }
+  for (const p of fc) {
+    const key = p.source === 'dmi_station' ? 'station' : 'dkss'
+    const until = Date.parse(p.forecastAt)
+    if (!Number.isFinite(until)) continue
+    const gen = Date.parse(p.generatedAt ?? '')
+    const cur = agg[key] ?? { updated: -Infinity, until: -Infinity }
+    cur.until = Math.max(cur.until, until)
+    if (Number.isFinite(gen)) cur.updated = Math.max(cur.updated, gen)
+    agg[key] = cur
+  }
+  let astroUntil = -Infinity
+  for (const p of predictionsByStation.value[stationId.value] ?? []) {
+    const ts = Date.parse(p.predictedAt)
+    if (Number.isFinite(ts)) astroUntil = Math.max(astroUntil, ts)
+  }
+
+  const line = (
+    key: 'station' | 'dkss' | 'astro',
+    info: { updated: number; until: number } | null,
+    inUse: boolean,
+  ): SourceLine => {
+    const parts = [t(`data.sources.${key}`)]
+    if (info === null) parts.push(t('data.sources.missing'))
+    else {
+      if (info.updated > -Infinity) parts.push(t('data.sources.updated', { time: fmtStamp(info.updated) }))
+      if (info.until > -Infinity) parts.push(t('data.sources.until', { time: fmtStamp(info.until) }))
+    }
+    return { key, text: parts.join(' · '), inUse }
+  }
+
+  return [
+    line('station', agg.station, active === 'station'),
+    line('dkss', agg.dkss, active === 'dkss'),
+    line('astro', astroUntil > -Infinity ? { updated: -Infinity, until: astroUntil } : null, active === 'astronomical'),
+  ]
+})
+
 // Position the view once the first non-empty day renders: restore the saved
 // scroll if there is one, otherwise center on "now". Only then start
 // recording scroll, so boot-time scroll events can't overwrite the position.
@@ -254,6 +328,17 @@ watch(
           <span v-else class="tag spacer"></span>
         </li>
       </ol>
+
+      <footer class="datasrc">
+        <h2 class="datasrc-title">{{ t('data.sources.title') }}</h2>
+        <ul class="datasrc-list">
+          <li>{{ observedLine }}</li>
+          <li v-for="l in forecastLines" :key="l.key" :class="{ 'is-active': l.inUse }">
+            {{ l.text }}
+            <span v-if="l.inUse" class="in-use">{{ t('data.sources.inUse') }}</span>
+          </li>
+        </ul>
+      </footer>
     </template>
   </div>
 </template>
@@ -475,6 +560,38 @@ watch(
 
 .none {
   color: var(--text-muted);
+}
+
+.datasrc {
+  margin-top: 14px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.datasrc-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.datasrc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.datasrc-list li.is-active {
+  color: var(--text-secondary);
+}
+.in-use {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  font-weight: 600;
 }
 .skeleton {
   height: 300px;

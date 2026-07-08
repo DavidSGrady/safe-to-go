@@ -173,7 +173,19 @@
     "forecastTag": "Prognose",
     "noData": "Noch keine Daten für diesen Tag.",
     "jumpToNow": "Zu jetzt springen",
-    "nowTag": "jetzt"
+    "nowTag": "jetzt",
+    "sources": {
+      "title": "Datenquellen",
+      "observed": "Gemessen: DMI-Pegel {station} ({id}) · letzte Messung {time}",
+      "observedNone": "Gemessen: DMI-Pegel {station} ({id}) · keine aktuellen Messungen",
+      "station": "Prognose: DMI-Stationsprognose (gleiche Reihe wie dmi.dk)",
+      "dkss": "Ersatz: DMI-DKSS-Meeresmodell (Gitterpunkt auf See)",
+      "astro": "Astronomische Gezeitentabelle (jenseits des Prognosehorizonts)",
+      "updated": "aktualisiert {time}",
+      "until": "bis {time}",
+      "inUse": "in Benutzung",
+      "missing": "nicht geladen"
+    }
   },
   "demo": {
     "banner": "Demo-Modus — synthetische Gezeitendaten, keine echten Messungen."

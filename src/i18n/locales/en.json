@@ -183,7 +183,19 @@
     "forecastTag": "forecast",
     "noData": "No data for this day yet.",
     "jumpToNow": "Jump to now",
-    "nowTag": "now"
+    "nowTag": "now",
+    "sources": {
+      "title": "Data sources",
+      "observed": "Measured: DMI gauge {station} ({id}) · latest reading {time}",
+      "observedNone": "Measured: DMI gauge {station} ({id}) · no recent readings",
+      "station": "Forecast: DMI station prognosis (same series as dmi.dk)",
+      "dkss": "Fallback: DMI DKSS sea model (offshore grid point)",
+      "astro": "Astronomical tide table (used beyond the forecast horizon)",
+      "updated": "updated {time}",
+      "until": "until {time}",
+      "inUse": "in use",
+      "missing": "not loaded"
+    }
   },
   "demo": {
     "banner": "Demo mode — synthetic tide data, not real measurements."

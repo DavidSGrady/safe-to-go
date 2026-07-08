@@ -111,12 +111,14 @@ function confidenceFor(startAheadMin: number): ConfidenceTier {
 /**
  * Compute the full safety status from raw data.
  *
- * The forecast comes from two DMI sources, chosen by the admin's wind toggle:
- *   - windAdjustmentEnabled (default): DMI's DKSS storm-surge model, which
- *     already includes wind and air pressure. We do NOT add a surge of our
- *     own; the only adjustment is a small constant datum offset so DKSS lines
- *     up with the gauge's zero. Beyond the DKSS horizon (~5 days) it falls
- *     back to the astronomical tide table.
+ * The forecast source is chosen by the admin's wind toggle:
+ *   - windAdjustmentEnabled (default): DMI's per-station prognosis
+ *     ('dmi_station' — the exact gauge-calibrated series dmi.dk shows; wind
+ *     and air pressure included, used with NO adjustment so our numbers match
+ *     dmi.dk 1:1). Where it's missing, the raw DKSS grid model fills in,
+ *     shifted by a small constant datum offset so it lines up with the
+ *     gauge's zero. Beyond both horizons (~5 days) the astronomical tide
+ *     table takes over.
  *   - off: the plain astronomical tide table only.
  * Either way, the current status uses the live measured level.
  *
@@ -153,16 +155,26 @@ export function computeStatus(
   // and as a fallback beyond the DKSS horizon.
   const astro = buildPredictionCurve(predictions)
 
-  // DKSS weather-inclusive forecast, as a dense interpolable curve.
-  const dkssPts = forecast
-    .map((f) => ({ t: Date.parse(f.forecastAt), level: f.levelCm }))
-    .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.level))
-    .sort((a, b) => a.t - b.t)
+  // Weather-inclusive forecast, split by source into dense interpolable
+  // curves: the gauge-calibrated station prognosis (primary), and the raw
+  // DKSS grid model (fallback — everything that isn't 'dmi_station', which
+  // also covers demo data and pre-migration rows).
+  const toPoints = (pts: ForecastPoint[]): TidePoint[] =>
+    pts
+      .map((f) => ({ t: Date.parse(f.forecastAt), level: f.levelCm }))
+      .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.level))
+      .sort((a, b) => a.t - b.t)
+  const stationPts = toPoints(forecast.filter((f) => f.source === 'dmi_station'))
+  const dkssPts = toPoints(forecast.filter((f) => f.source !== 'dmi_station'))
+  const stationFc =
+    stationPts.length >= 2 ? (t: number) => interpolateLinear(stationPts, t) : null
   const dkss = dkssPts.length >= 2 ? (t: number) => interpolateLinear(dkssPts, t) : null
 
   // Datum alignment: shift DKSS so it matches the gauge's zero at "now".
   // DKSS already carries the weather, so this offset is small and constant
-  // (datum + model bias), not a surge we are inventing.
+  // (datum + model bias), not a surge we are inventing. The station prognosis
+  // is already calibrated to the gauge by DMI, so it gets NO shift — shifting
+  // it would break the 1:1 match with dmi.dk.
   let dkssDatumCm = 0
   if (latest && dkss) {
     const d = dkss(latest.t) ?? dkssPts[0].level
@@ -177,23 +189,29 @@ export function computeStatus(
     if (a !== null) surgeOffsetCm = clamp(latest.level - a, -MAX_SURGE_CM, MAX_SURGE_CM)
   }
 
+  const useStation = rules.windAdjustmentEnabled && stationFc !== null
   const useDkss = rules.windAdjustmentEnabled && dkss !== null
-  const forecastSource: StatusResult['forecastSource'] = useDkss
-    ? 'dkss'
-    : astro
-      ? 'astronomical'
-      : 'none'
+  const forecastSource: StatusResult['forecastSource'] = useStation
+    ? 'station'
+    : useDkss
+      ? 'dkss'
+      : astro
+        ? 'astronomical'
+        : 'none'
 
   const adjusted: ((t: number) => number | null) | null =
     forecastSource === 'none'
       ? null
       : (t: number): number | null => {
+          if (useStation) {
+            const s = stationFc!(t)
+            if (s !== null) return s
+          }
           if (useDkss) {
             const d = dkss!(t)
             if (d !== null) return d + dkssDatumCm
-            // Past the DKSS horizon → fall back to the astronomical table.
-            return astro ? astro(t) : null
           }
+          // Past the forecast horizon → fall back to the astronomical table.
           return astro ? astro(t) : null
         }
   const levelAt = adjusted ?? ((): number | null => null)

@@ -17,15 +17,21 @@ export interface Prediction {
 }
 
 /**
- * A point from DMI's DKSS storm-surge forecast (weather-inclusive water
- * level). This is the real "prognosis" — wind and air pressure are already
- * included by DMI's model, so we do not add any surge of our own.
+ * A weather-inclusive water-level forecast point. Two sources exist:
+ * 'dmi_station' — DMI's per-station prognosis (the exact series dmi.dk
+ * shows; gauge-calibrated, used as-is), and a DKSS collection id (e.g.
+ * 'dkss_ws') — the raw storm-surge grid model, kept as fallback and aligned
+ * to the gauge datum at read time.
  */
 export interface ForecastPoint {
   /** ISO timestamp the forecast applies to */
   forecastAt: string
-  /** Forecast water level in cm (aligned to the gauge datum at read time) */
+  /** Forecast water level in cm */
   levelCm: number
+  /** 'dmi_station' or a DKSS collection id; absent in demo data */
+  source?: string
+  /** When DMI generated the run ('dmi_station') or when it was fetched (DKSS); null on old rows */
+  generatedAt?: string | null
 }
 
 /** Admin-configurable safety thresholds. */
@@ -159,8 +165,10 @@ export interface StatusResult {
    * table. Diagnostic only; the forecast itself comes from DKSS.
    */
   surgeOffsetCm: number
-  /** Which source the forecast/windows are built from */
-  forecastSource: 'dkss' | 'astronomical' | 'none'
+  /** Which source the forecast/windows are primarily built from:
+   * 'station' = DMI's gauge-calibrated station prognosis (matches dmi.dk),
+   * 'dkss' = raw DKSS grid model (fallback), 'astronomical' = tide table. */
+  forecastSource: 'station' | 'dkss' | 'astronomical' | 'none'
   /** Whether the DKSS (weather-inclusive) forecast is selected */
   windAdjustmentEnabled: boolean
   /** Timestamp of the newest observation (ms epoch) */

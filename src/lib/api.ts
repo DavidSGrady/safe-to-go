@@ -79,24 +79,30 @@ export async function fetchPredictions(stationId: string): Promise<Prediction[]>
 interface ForecastRow {
   forecast_at: string
   value_cm: number
+  source: string
+  generated_at: string | null
 }
 
 export async function fetchForecast(stationId: string): Promise<ForecastPoint[]> {
   if (isDemoMode) return demoForecast(Date.now())
   const from = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
   const to = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString()
+  // Both sources come back together (station prognosis is 10-minute rows,
+  // DKSS hourly — ~900 rows over the 6-day window); tide.ts picks per source.
   const { data, error } = await getSupabase()
     .from('water_level_forecast')
-    .select('forecast_at, value_cm')
+    .select('forecast_at, value_cm, source, generated_at')
     .eq('station_id', stationId)
     .gte('forecast_at', from)
     .lte('forecast_at', to)
     .order('forecast_at', { ascending: true })
-    .limit(1000)
+    .limit(2000)
   if (error) throw error
   return (data as ForecastRow[]).map((r) => ({
     forecastAt: r.forecast_at,
     levelCm: Number(r.value_cm),
+    source: r.source,
+    generatedAt: r.generated_at,
   }))
 }
 
