@@ -147,6 +147,35 @@ function signed(v: number): string {
   return `${v > 0 ? '+' : ''}${v}`
 }
 
+// Δ explainer: user testing showed "Δ" alone reads as jargon. Tapping a
+// drift chip opens a popover that says in words what the number means for
+// that row (forecast expected more/less water than was measured).
+const driftOpenT = ref<number | null>(null)
+function toggleDrift(rowT: number) {
+  driftOpenT.value = driftOpenT.value === rowT ? null : rowT
+}
+function driftText(r: Row): string {
+  if (r.drift === null) return ''
+  const params = { time: r.time, cm: Math.abs(r.drift) }
+  if (r.drift > 0) return t('data.drift.higher', params)
+  if (r.drift < 0) return t('data.drift.lower', params)
+  return t('data.drift.exact', params)
+}
+function onDocClick(e: MouseEvent) {
+  if (!(e.target as HTMLElement).closest?.('.drift-wrap')) driftOpenT.value = null
+}
+function onDocKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') driftOpenT.value = null
+}
+onMounted(() => {
+  document.addEventListener('click', onDocClick)
+  document.addEventListener('keydown', onDocKeydown)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocClick)
+  document.removeEventListener('keydown', onDocKeydown)
+})
+
 // The row whose time slot contains "now" (only meaningful on today's view).
 const nowRowT = computed(() => {
   if (selectedOffset.value !== 0) return null
@@ -323,7 +352,22 @@ watch(
           <span class="val mono" :class="{ muted: r.observed === null }">
             {{ signed(r.observed ?? r.forecast ?? 0) }}
           </span>
-          <span v-if="r.drift !== null" class="drift mono" :title="t('data.driftKey')">Δ{{ signed(r.drift) }}</span>
+          <div v-if="r.drift !== null" class="drift-wrap">
+            <button
+              type="button"
+              class="drift mono"
+              :aria-expanded="driftOpenT === r.t"
+              :aria-label="t('data.drift.title')"
+              @click="toggleDrift(r.t)"
+            >
+              Δ{{ signed(r.drift) }}
+            </button>
+            <div v-if="driftOpenT === r.t" class="drift-pop" role="note">
+              <strong>{{ t('data.drift.title') }}</strong>
+              <p>{{ driftText(r) }}</p>
+              <p class="drift-pop-generic">{{ t('data.drift.generic') }}</p>
+            </div>
+          </div>
           <span v-else-if="r.observed === null" class="tag">{{ t('data.forecastTag') }}</span>
           <span v-else class="tag spacer"></span>
         </li>
@@ -477,8 +521,15 @@ watch(
   padding: 0;
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  /* No overflow:hidden — it would clip the Δ explainer popover. The row
+     backgrounds get their own corner rounding instead. */
   background: var(--surface);
+}
+.row:first-child {
+  border-radius: 11px 11px 0 0;
+}
+.row:last-child {
+  border-radius: 0 0 11px 11px;
 }
 
 .row {
@@ -547,10 +598,50 @@ watch(
   font-weight: 500;
 }
 
-.drift {
+.drift-wrap {
+  position: relative;
   text-align: right;
+}
+.drift {
+  padding: 1px 2px;
+  border: none;
+  border-bottom: 1px dotted var(--text-muted);
+  background: none;
+  font: inherit;
   font-size: 11px;
   color: var(--text-secondary);
+  cursor: pointer;
+}
+.drift-pop {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: min(270px, 76vw);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  z-index: 30;
+  text-align: left;
+  white-space: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.drift-pop strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+.drift-pop p {
+  margin: 0;
+}
+.drift-pop-generic {
+  margin-top: 6px !important;
+  color: var(--text-muted);
+  font-size: 11px;
 }
 .tag {
   text-align: right;

@@ -178,7 +178,14 @@
     "legend": "Vejen oversvømmes ved {road} cm.",
     "belowRoad": "under vejen",
     "aboveRoad": "over vejen",
-    "driftKey": "målt − prognose",
+    "driftKey": "hvor meget prognosen ramte ved siden af (tryk på et Δ)",
+    "drift": {
+      "title": "Målt vs. prognose",
+      "higher": "Kl. {time} stod vandet {cm} cm højere end prognosen — prognosen forventede mindre vand, end der faktisk blev målt.",
+      "lower": "Kl. {time} stod vandet {cm} cm lavere end prognosen — prognosen forventede mere vand, end der faktisk blev målt.",
+      "exact": "Kl. {time} ramte prognosen den målte vandstand præcist.",
+      "generic": "Δ = målt vandstand minus prognosen for samme tidspunkt — et hurtigt mål for, hvor godt prognosen rammer virkeligheden."
+    },
     "roadMarker": "Vejhøjde",
     "forecastTag": "prognose",
     "noData": "Ingen data for denne dag endnu.",

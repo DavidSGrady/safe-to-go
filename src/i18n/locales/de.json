@@ -168,7 +168,14 @@
     "legend": "Die Straße wird bei {road} cm überflutet.",
     "belowRoad": "unter der Straße",
     "aboveRoad": "über der Straße",
-    "driftKey": "gemessen − Prognose",
+    "driftKey": "wie weit die Prognose danebenlag (auf ein Δ tippen)",
+    "drift": {
+      "title": "Gemessen vs. Prognose",
+      "higher": "Um {time} stand das Wasser {cm} cm höher als prognostiziert — die Prognose erwartete weniger Wasser, als tatsächlich gemessen wurde.",
+      "lower": "Um {time} stand das Wasser {cm} cm niedriger als prognostiziert — die Prognose erwartete mehr Wasser, als tatsächlich gemessen wurde.",
+      "exact": "Um {time} traf die Prognose den Messwert genau.",
+      "generic": "Δ = gemessener Wasserstand minus Prognose für denselben Zeitpunkt — zeigt, wie gut die Prognose die Realität trifft."
+    },
     "roadMarker": "Straßenhöhe",
     "forecastTag": "Prognose",
     "noData": "Noch keine Daten für diesen Tag.",

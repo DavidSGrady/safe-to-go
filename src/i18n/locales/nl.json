@@ -168,7 +168,14 @@
     "legend": "De weg overstroomt bij {road} cm.",
     "belowRoad": "onder de weg",
     "aboveRoad": "boven de weg",
-    "driftKey": "gemeten − voorspelling",
+    "driftKey": "hoeveel de voorspelling ernaast zat (tik op een Δ)",
+    "drift": {
+      "title": "Gemeten vs. voorspelling",
+      "higher": "Om {time} stond het water {cm} cm hoger dan voorspeld — de voorspelling verwachtte minder water dan er werkelijk is gemeten.",
+      "lower": "Om {time} stond het water {cm} cm lager dan voorspeld — de voorspelling verwachtte meer water dan er werkelijk is gemeten.",
+      "exact": "Om {time} kwam de voorspelling precies overeen met de meting.",
+      "generic": "Δ = gemeten waterstand min de voorspelling voor hetzelfde tijdstip — laat zien hoe goed de voorspelling de werkelijkheid volgt."
+    },
     "roadMarker": "Weghoogte",
     "forecastTag": "voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",

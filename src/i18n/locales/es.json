@@ -168,7 +168,14 @@
     "legend": "La carretera se inunda a {road} cm.",
     "belowRoad": "bajo la carretera",
     "aboveRoad": "sobre la carretera",
-    "driftKey": "medido − pronóstico",
+    "driftKey": "cuánto se desvió el pronóstico (toca un Δ)",
+    "drift": {
+      "title": "Medido vs. pronóstico",
+      "higher": "A las {time} el agua estaba {cm} cm más alta de lo pronosticado — el pronóstico esperaba menos agua de la realmente medida.",
+      "lower": "A las {time} el agua estaba {cm} cm más baja de lo pronosticado — el pronóstico esperaba más agua de la realmente medida.",
+      "exact": "A las {time} el pronóstico coincidió exactamente con la medición.",
+      "generic": "Δ = nivel medido menos el pronóstico para el mismo momento — una comprobación rápida de la fiabilidad del pronóstico."
+    },
     "roadMarker": "Nivel de la carretera",
     "forecastTag": "pronóstico",
     "noData": "Aún no hay datos para este día.",

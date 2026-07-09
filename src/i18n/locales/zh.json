@@ -168,7 +168,14 @@
     "legend": "道路在 {road} 厘米时被淹没。",
     "belowRoad": "低于路面",
     "aboveRoad": "高于路面",
-    "driftKey": "实测 − 预测",
+    "driftKey": "预报偏差（点按 Δ 查看说明）",
+    "drift": {
+      "title": "实测与预报对比",
+      "higher": "{time} 的实测水位比预报高 {cm} 厘米——预报低估了实际水量。",
+      "lower": "{time} 的实测水位比预报低 {cm} 厘米——预报高估了实际水量。",
+      "exact": "{time} 的预报与实测完全一致。",
+      "generic": "Δ = 实测水位减去同一时刻的预报值——反映预报的准确程度。"
+    },
     "roadMarker": "路面高度",
     "forecastTag": "预测",
     "noData": "这一天暂无数据。",

@@ -168,7 +168,14 @@
     "legend": "La route est submergée à {road} cm.",
     "belowRoad": "sous la route",
     "aboveRoad": "au-dessus de la route",
-    "driftKey": "mesuré − prévision",
+    "driftKey": "écart de la prévision (touchez un Δ)",
+    "drift": {
+      "title": "Mesuré vs prévision",
+      "higher": "À {time}, l'eau était {cm} cm plus haute que prévu — la prévision attendait moins d'eau que ce qui a réellement été mesuré.",
+      "lower": "À {time}, l'eau était {cm} cm plus basse que prévu — la prévision attendait plus d'eau que ce qui a réellement été mesuré.",
+      "exact": "À {time}, la prévision correspondait exactement à la mesure.",
+      "generic": "Δ = niveau mesuré moins la prévision au même moment — un indicateur rapide de la fiabilité de la prévision."
+    },
     "roadMarker": "Niveau de la route",
     "forecastTag": "prévision",
     "noData": "Pas encore de données pour ce jour.",
