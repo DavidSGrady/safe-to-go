@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { renderSVG } from 'uqr'
 import { useStatusStore } from '@/stores/status'
 import { isDemoMode } from '@/lib/supabase'
 import { fmtDateTime, fmtTime } from '@/lib/format'
@@ -52,6 +53,16 @@ onBeforeUnmount(() => {
 const clock = computed(() => fmtTime(now.value, locale.value))
 const printedAtTxt = computed(() => fmtDateTime(now.value, locale.value))
 
+// QR code to the public site, so people at the counter can take it home on
+// their phone without typing a URL. Generated locally (uqr) — no external
+// service, works on whatever domain the page is served from, prints too.
+// Colors are fixed black-on-white (never theme vars) so it always scans.
+const qrSvg = renderSVG(`${window.location.origin}/`, {
+  border: 2,
+  blackColor: '#000',
+  whiteColor: '#fff',
+})
+
 function printPage(): void {
   window.print()
 }
@@ -95,10 +106,16 @@ function printPage(): void {
 
     <p class="print-note">{{ t('display.printedNote', { time: printedAtTxt }) }}</p>
 
-    <footer>
-      <p class="muted auto-note">{{ t('display.autoUpdates') }}</p>
-      <p class="muted">{{ t('footer.disclaimer') }}</p>
-      <p class="muted">{{ t('footer.source', { station: primaryStationName }) }}</p>
+    <footer class="footer-cols">
+      <div class="footer-text">
+        <p class="muted auto-note">{{ t('display.autoUpdates') }}</p>
+        <p class="muted">{{ t('footer.disclaimer') }}</p>
+        <p class="muted">{{ t('footer.source', { station: primaryStationName }) }}</p>
+      </div>
+      <div class="qr-block">
+        <div class="qr" v-html="qrSvg" aria-hidden="true"></div>
+        <p class="qr-caption">{{ t('display.scanQr') }}</p>
+      </div>
     </footer>
   </div>
 </template>
@@ -219,6 +236,48 @@ footer {
 
 footer .muted {
   margin-bottom: 6px;
+}
+
+.footer-cols {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.qr-block {
+  flex: none;
+  text-align: center;
+}
+
+/* Always white behind the QR — a dark theme must not eat the quiet zone. */
+.qr {
+  width: 128px;
+  padding: 6px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.qr :deep(svg) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.qr-caption {
+  margin: 6px 0 0;
+  max-width: 150px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .auto-note {

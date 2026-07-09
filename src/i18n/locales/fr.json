@@ -156,6 +156,7 @@
   },
   "display": {
     "print": "Imprimer cette vue",
+    "scanQr": "Scannez pour suivre sur votre propre téléphone",
     "autoUpdates": "Cet écran se met à jour automatiquement — laissez-le ouvert.",
     "printedNote": "Imprimé {time}. La marée et la météo changent constamment — une impression devient vite obsolète. Vérifiez toujours la page en direct ou les conditions sur place avant de traverser."
   },

@@ -156,6 +156,7 @@
   },
   "display": {
     "print": "Deze weergave afdrukken",
+    "scanQr": "Scan en volg mee op je eigen telefoon",
     "autoUpdates": "Dit scherm wordt automatisch bijgewerkt — laat het openstaan.",
     "printedNote": "Afgedrukt {time}. Getij en weer veranderen voortdurend — een afdruk veroudert snel. Controleer vóór het oversteken altijd de live pagina of de omstandigheden ter plaatse."
   },

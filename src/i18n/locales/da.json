@@ -166,6 +166,7 @@
   },
   "display": {
     "print": "Udskriv denne visning",
+    "scanQr": "Scan og følg med på din egen telefon",
     "autoUpdates": "Skærmen opdaterer automatisk — lad den stå åben.",
     "printedNote": "Udskrevet {time}. Tidevand og vejr ændrer sig hele tiden — en udskrift bliver hurtigt forældet. Tjek altid den aktuelle side eller forholdene på stedet før krydsning."
   },

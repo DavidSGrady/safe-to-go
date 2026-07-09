@@ -156,6 +156,7 @@
   },
   "display": {
     "print": "Diese Ansicht drucken",
+    "scanQr": "Scannen und auf dem eigenen Handy mitverfolgen",
     "autoUpdates": "Dieser Bildschirm aktualisiert sich automatisch — einfach geöffnet lassen.",
     "printedNote": "Gedruckt {time}. Gezeiten und Wetter ändern sich ständig — ein Ausdruck veraltet schnell. Prüfen Sie vor der Überquerung immer die Live-Seite oder die Bedingungen vor Ort."
   },

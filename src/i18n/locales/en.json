@@ -166,6 +166,7 @@
   },
   "display": {
     "print": "Print this view",
+    "scanQr": "Scan to follow along on your own phone",
     "autoUpdates": "This screen updates automatically — leave it open.",
     "printedNote": "Printed {time}. Tide and weather change constantly — a printout quickly goes stale. Always check the live page or conditions on site before crossing."
   },

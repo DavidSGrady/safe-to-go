@@ -156,6 +156,7 @@
   },
   "display": {
     "print": "Imprimir esta vista",
+    "scanQr": "Escanea para seguirlo en tu propio teléfono",
     "autoUpdates": "Esta pantalla se actualiza automáticamente — déjela abierta.",
     "printedNote": "Impreso {time}. La marea y el tiempo cambian constantemente — una impresión queda obsoleta enseguida. Compruebe siempre la página en vivo o las condiciones en el lugar antes de cruzar."
   },
