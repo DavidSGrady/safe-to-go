@@ -1,5 +1,8 @@
 /** Time/date formatting helpers. All output is in Danish local time —
- * the tide happens at Mandø, so the times shown must be Mandø's. */
+ * the tide happens at Mandø, so the times shown must be Mandø's.
+ * Times are always 24-hour, whatever the locale would default to: AM/PM
+ * strings vary in width (breaking the dense layouts) and are ambiguous for
+ * an audience used to Danish/DMI times. 'h23' gives 00–23 (never 24:00). */
 
 const TZ = 'Europe/Copenhagen'
 
@@ -7,6 +10,7 @@ export function fmtTime(ms: number, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
+    hourCycle: 'h23',
     timeZone: TZ,
   }).format(ms)
 }
@@ -16,6 +20,7 @@ export function fmtDateTime(ms: number, locale: string): string {
     weekday: 'short',
     hour: '2-digit',
     minute: '2-digit',
+    hourCycle: 'h23',
     timeZone: TZ,
   }).format(ms)
 }
