@@ -101,23 +101,48 @@ interface Row {
   drift: number | null
 }
 
+// Time range covered by the weather-inclusive forecast rows loaded for this
+// station (station prognosis + DKSS). Outside it, levelAt() silently falls
+// back to the astronomical tide — comparing a measurement against that is
+// mostly just the wind surge, so Δ is hidden there (misleading, not useful).
+const weatherCoverage = computed<{ from: number; to: number } | null>(() => {
+  let from = Infinity
+  let to = -Infinity
+  for (const p of forecastByStation.value[stationId.value] ?? []) {
+    const ts = Date.parse(p.forecastAt)
+    if (!Number.isFinite(ts)) continue
+    if (ts < from) from = ts
+    if (ts > to) to = ts
+  }
+  return from < to ? { from, to } : null
+})
+
 const rows = computed<Row[]>(() => {
   if (!viewStatus.value) return []
   const anchor = now.value + selectedOffset.value * 24 * 60 * 60_000
   const dayStart = localTimeMs(anchor, 0)
   const dayEnd = startOfNextLocalDay(anchor)
   const step = granularity.value * 60_000
+  // With the wind toggle off, the astronomical curve IS the chosen forecast —
+  // Δ against it is intended, not a fallback, so it stays visible.
+  const usingWeather =
+    viewStatus.value.forecastSource === 'station' || viewStatus.value.forecastSource === 'dkss'
+  const cover = weatherCoverage.value
   const out: Row[] = []
   for (let t = dayStart; t < dayEnd; t += step) {
     const observed = sampleObserved(t)
     const forecast = viewStatus.value.levelAt(t)
     if (observed === null && forecast === null) continue
+    const weatherCovered = !usingWeather || (cover !== null && t >= cover.from && t <= cover.to)
     out.push({
       t,
       time: fmtTime(t, locale.value),
       observed: observed === null ? null : Math.round(observed),
       forecast: forecast === null ? null : Math.round(forecast),
-      drift: observed !== null && forecast !== null ? Math.round(observed - forecast) : null,
+      drift:
+        observed !== null && forecast !== null && weatherCovered
+          ? Math.round(observed - forecast)
+          : null,
     })
   }
   return out
