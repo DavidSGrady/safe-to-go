@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { renderSVG } from 'uqr'
@@ -25,6 +25,18 @@ let reloadTimer: number | undefined
 // Not supported everywhere; failure is fine (kiosk devices usually have a
 // no-sleep setting too). Reacquire when the tab becomes visible again — the
 // browser releases the lock whenever the page is hidden.
+// Kiosk-fit: a landscape tablet/monitor behind glass can't scroll, so the
+// whole page must fit the viewport — verdict and windows side by side, the
+// windows list capped, and the QR footer always on screen (CSS .kiosk-fit).
+const KIOSK_MQ = '(min-width: 900px) and (orientation: landscape)'
+const kioskFit = ref(false)
+let kioskMq: MediaQueryList | undefined
+function onKioskMq(): void {
+  kioskFit.value = kioskMq?.matches ?? false
+}
+/** How many windows fit next to the verdict without scrolling. */
+const KIOSK_WINDOW_LIMIT = 3
+
 let wakeLock: WakeLockSentinel | null = null
 async function acquireWakeLock(): Promise<void> {
   try {
@@ -42,10 +54,14 @@ onMounted(() => {
   reloadTimer = window.setInterval(() => window.location.reload(), RELOAD_MS)
   void acquireWakeLock()
   document.addEventListener('visibilitychange', onVisibility)
+  kioskMq = window.matchMedia(KIOSK_MQ)
+  onKioskMq()
+  kioskMq.addEventListener('change', onKioskMq)
 })
 onBeforeUnmount(() => {
   window.clearInterval(reloadTimer)
   document.removeEventListener('visibilitychange', onVisibility)
+  kioskMq?.removeEventListener('change', onKioskMq)
   void wakeLock?.release().catch(() => {})
   wakeLock = null
 })
@@ -69,7 +85,7 @@ function printPage(): void {
 </script>
 
 <template>
-  <div class="display-page">
+  <div class="display-page" :class="{ 'kiosk-fit': kioskFit }">
     <header class="top">
       <div class="brand-block">
         <span class="brand">{{ t('app.title') }}</span>
@@ -91,11 +107,12 @@ function printPage(): void {
         <div class="col">
           <StatusHero :status="status" :rules="rules" :now="now" />
         </div>
-        <div class="col">
+        <div class="col col-windows">
           <WindowsList
             :windows="status.windows"
             :now="now"
             :extended="extended"
+            :limit="kioskFit ? KIOSK_WINDOW_LIMIT : undefined"
             @toggle-extended="store.toggleExtended"
           />
         </div>
@@ -134,6 +151,68 @@ function printPage(): void {
   .display-page {
     zoom: 1.3;
   }
+}
+
+/* Kiosk-fit (landscape tablets/monitors, class set from the media query in
+   the script): lock the page to the viewport height — no scrolling behind
+   glass. Header and footer keep their natural height; the two columns take
+   the rest and clip, with the windows list capped via the `limit` prop so
+   nothing renders half-cut. */
+.display-page.kiosk-fit {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 12px;
+}
+
+@media (min-width: 1400px) {
+  /* zoom scales the box but not dvh — divide so the zoomed page still fits. */
+  .display-page.kiosk-fit {
+    height: calc(100dvh / 1.3);
+  }
+}
+
+.kiosk-fit .cols {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.kiosk-fit .col {
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* The 7-day toggle needs scrolling to be useful — meaningless behind glass.
+   The intro line and footnote go too: on a fixed-height screen that space is
+   better spent on one more crossing window. */
+.kiosk-fit .col :deep(.btn-link),
+.kiosk-fit .col :deep(.note.extended),
+.kiosk-fit .col-windows :deep(.intro),
+.kiosk-fit .col-windows :deep(.note) {
+  display: none;
+}
+
+/* Slightly denser window cards so three fit even with a banner showing. */
+.kiosk-fit .col-windows :deep(.window) {
+  padding: 9px 12px;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.kiosk-fit .col-windows :deep(.groups) {
+  gap: 8px;
+}
+
+.kiosk-fit footer {
+  margin-top: 12px;
+}
+
+.kiosk-fit .qr {
+  width: 96px;
+  padding: 5px;
 }
 
 .top {

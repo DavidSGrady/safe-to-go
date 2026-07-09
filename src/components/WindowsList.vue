@@ -8,6 +8,8 @@ const props = defineProps<{
   windows: SafeWindow[]
   now: number
   extended: boolean
+  /** Cap how many windows render — for kiosk screens that cannot scroll. */
+  limit?: number
 }>()
 
 const emit = defineEmits<{ 'toggle-extended': [] }>()
@@ -40,7 +42,7 @@ const confidenceLabels = {
 } as const
 
 const items = computed(() =>
-  props.windows.map(
+  (props.limit !== undefined ? props.windows.slice(0, props.limit) : props.windows).map(
     (w: SafeWindow) => {
       const total = w.end - w.start
       const greenMs = Math.max(0, Math.min(w.deadline, w.end) - w.start)
