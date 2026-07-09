@@ -177,6 +177,11 @@
       "generic": "Δ = gemeten waterstand min de voorspelling voor hetzelfde tijdstip — laat zien hoe goed de voorspelling de werkelijkheid volgt."
     },
     "roadMarker": "Weghoogte",
+    "road": {
+      "tag": "weg · {road} cm",
+      "title": "Weghoogte",
+      "body": "De lijn markeert de weghoogte ({road} cm). Staat het water boven de lijn, dan staat de weg onder water — groene balk = onder de weg, rode = erboven."
+    },
     "forecastTag": "voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",
     "jumpToNow": "Spring naar nu",

@@ -177,6 +177,11 @@
       "generic": "Δ = niveau mesuré moins la prévision au même moment — un indicateur rapide de la fiabilité de la prévision."
     },
     "roadMarker": "Niveau de la route",
+    "road": {
+      "tag": "route · {road} cm",
+      "title": "Niveau de la route",
+      "body": "La ligne marque le niveau de la route ({road} cm). Quand l'eau dépasse la ligne, la route est inondée — barre verte = sous la route, rouge = au-dessus."
+    },
     "forecastTag": "prévision",
     "noData": "Pas encore de données pour ce jour.",
     "jumpToNow": "Aller à maintenant",

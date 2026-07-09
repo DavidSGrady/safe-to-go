@@ -153,7 +153,34 @@ function signed(v: number): string {
 const driftOpenT = ref<number | null>(null)
 function toggleDrift(rowT: number) {
   driftOpenT.value = driftOpenT.value === rowT ? null : rowT
+  roadOpen.value = false
 }
+
+// Road-line explainer: same user testing — "what is the line on all the
+// rows?". A sticky axis strip labels the line once, right above it, and the
+// label opens a popover (same interaction as the Δ chips).
+const roadOpen = ref(false)
+function toggleRoad() {
+  roadOpen.value = !roadOpen.value
+  driftOpenT.value = null
+}
+
+// The axis strip sticks directly below the sticky controls bar, whose height
+// varies with wrapping — track it so the strip's `top` always matches.
+const controlsEl = ref<HTMLElement | null>(null)
+const controlsH = ref(0)
+let controlsRo: ResizeObserver | null = null
+watch(controlsEl, (el) => {
+  controlsRo?.disconnect()
+  if (el) {
+    controlsRo = new ResizeObserver(() => {
+      controlsH.value = el.offsetHeight
+    })
+    controlsRo.observe(el)
+    controlsH.value = el.offsetHeight
+  }
+})
+onBeforeUnmount(() => controlsRo?.disconnect())
 function driftText(r: Row): string {
   if (r.drift === null) return ''
   const params = { time: r.time, cm: Math.abs(r.drift) }
@@ -162,10 +189,15 @@ function driftText(r: Row): string {
   return t('data.drift.exact', params)
 }
 function onDocClick(e: MouseEvent) {
-  if (!(e.target as HTMLElement).closest?.('.drift-wrap')) driftOpenT.value = null
+  const el = e.target as HTMLElement
+  if (!el.closest?.('.drift-wrap')) driftOpenT.value = null
+  if (!el.closest?.('.axis')) roadOpen.value = false
 }
 function onDocKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') driftOpenT.value = null
+  if (e.key === 'Escape') {
+    driftOpenT.value = null
+    roadOpen.value = false
+  }
 }
 onMounted(() => {
   document.addEventListener('click', onDocClick)
@@ -296,7 +328,7 @@ watch(
     <div v-if="loading && !status" class="card skeleton" aria-busy="true"></div>
 
     <template v-else>
-      <div class="controls">
+      <div ref="controlsEl" class="controls">
         <span class="day-label">{{ t('data.stationLabel') }}</span>
         <div class="seg" role="group" :aria-label="t('data.stationLabel')">
           <button
@@ -327,7 +359,30 @@ watch(
 
       <p v-if="rows.length === 0" class="card none">{{ t('data.noData') }}</p>
 
-      <ol v-else class="rows" :aria-label="t('data.title')">
+      <div v-if="rows.length > 0" class="axis" :style="{ top: controlsH + 'px' }">
+        <span></span>
+        <div class="axis-track">
+          <div class="axis-tag-wrap" :style="{ left: roadPct + '%' }">
+            <button
+              type="button"
+              class="axis-tag"
+              :aria-expanded="roadOpen"
+              :aria-label="t('data.road.title')"
+              @click="toggleRoad()"
+            >
+              {{ t('data.road.tag', { road: roadLevel }) }}
+            </button>
+          </div>
+        </div>
+        <span></span>
+        <span></span>
+        <div v-if="roadOpen" class="drift-pop road-pop" role="note">
+          <strong>{{ t('data.road.title') }}</strong>
+          <p>{{ t('data.road.body', { road: roadLevel }) }}</p>
+        </div>
+      </div>
+
+      <ol v-if="rows.length > 0" class="rows" :aria-label="t('data.title')">
         <li
           v-for="r in rows"
           :key="r.t"
@@ -513,6 +568,60 @@ watch(
 .drift-key {
   font-weight: 700;
   color: var(--text-secondary);
+}
+
+/* Sticky axis strip: labels the road line once, directly above it, and
+   stays visible while scrolling the long table. Mirrors .row's grid and
+   compensates for .rows' 1px border so the tick lands exactly on the line. */
+.axis {
+  position: sticky;
+  z-index: 9;
+  display: grid;
+  grid-template-columns: 3.4em 1fr 3em 3.2em;
+  gap: 8px;
+  align-items: end;
+  padding: 2px 13px 0;
+  background: var(--page);
+  /* Same font-size as .row — the em-based columns must resolve identically
+     or the tick misses the road line below. */
+  font-size: 12.5px;
+}
+.axis-track {
+  position: relative;
+  height: 26px;
+}
+.axis-tag-wrap {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+}
+.axis-tag-wrap::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: -4px;
+  width: 2px;
+  height: 9px;
+  background: var(--text-primary);
+}
+.axis-tag {
+  position: absolute;
+  bottom: 4px;
+  transform: translateX(-50%);
+  padding: 1px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.road-pop {
+  right: 0;
+  top: calc(100% + 4px);
 }
 
 .rows {

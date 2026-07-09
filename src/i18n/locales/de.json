@@ -177,6 +177,11 @@
       "generic": "Δ = gemessener Wasserstand minus Prognose für denselben Zeitpunkt — zeigt, wie gut die Prognose die Realität trifft."
     },
     "roadMarker": "Straßenhöhe",
+    "road": {
+      "tag": "Straße · {road} cm",
+      "title": "Straßenniveau",
+      "body": "Die Linie markiert das Straßenniveau ({road} cm). Steht das Wasser über der Linie, ist die Straße überflutet — grüner Balken = unter der Straße, roter = darüber."
+    },
     "forecastTag": "Prognose",
     "noData": "Noch keine Daten für diesen Tag.",
     "jumpToNow": "Zu jetzt springen",

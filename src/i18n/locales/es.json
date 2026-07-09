@@ -177,6 +177,11 @@
       "generic": "Δ = nivel medido menos el pronóstico para el mismo momento — una comprobación rápida de la fiabilidad del pronóstico."
     },
     "roadMarker": "Nivel de la carretera",
+    "road": {
+      "tag": "carretera · {road} cm",
+      "title": "Nivel de la carretera",
+      "body": "La línea marca el nivel de la carretera ({road} cm). Cuando el agua supera la línea, la carretera está inundada — barra verde = por debajo de la carretera, roja = por encima."
+    },
     "forecastTag": "pronóstico",
     "noData": "Aún no hay datos para este día.",
     "jumpToNow": "Ir a ahora",

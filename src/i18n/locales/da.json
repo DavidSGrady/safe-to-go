@@ -187,6 +187,11 @@
       "generic": "Δ = målt vandstand minus prognosen for samme tidspunkt — et hurtigt mål for, hvor godt prognosen rammer virkeligheden."
     },
     "roadMarker": "Vejhøjde",
+    "road": {
+      "tag": "vej · {road} cm",
+      "title": "Vejens niveau",
+      "body": "Stregen markerer vejens niveau ({road} cm). Når vandstanden er over stregen, står vejen under vand — grøn søjle = under vejen, rød = over."
+    },
     "forecastTag": "prognose",
     "noData": "Ingen data for denne dag endnu.",
     "jumpToNow": "Hop til nu",
