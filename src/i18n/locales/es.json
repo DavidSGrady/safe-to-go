@@ -167,8 +167,17 @@
     "selectDay": "Día",
     "stationLabel": "Estación",
     "legend": "La carretera se inunda a {road} cm.",
-    "belowRoad": "bajo la carretera",
-    "aboveRoad": "sobre la carretera",
+    "legendSafe": "seguro para salir",
+    "legendCaution": "transitable — no salgas",
+    "legendFlooded": "carretera inundada",
+    "lastSafeStart": "Última salida segura",
+    "caution": {
+      "title": "No salgas ahora",
+      "late": "Aquí el agua está por debajo de la carretera, pero subiendo — alcanza {road} cm a las {time}, y un cruce seguro tarda {minutes} min. Demasiado tarde para salir.",
+      "lateNoTime": "Aquí el agua está por debajo de la carretera, pero ya no queda tiempo suficiente ({minutes} min) para un cruce seguro antes de que vuelva a subir.",
+      "early": "No hay ventana segura en este momento. La próxima abre a las {time}.",
+      "brief": "Aquí el agua baja del nivel de la carretera, pero no lo suficiente ni durante el tiempo necesario para una ventana segura."
+    },
     "driftKey": "cuánto se desvió el pronóstico (toca un Δ)",
     "drift": {
       "title": "Medido vs. pronóstico",
@@ -181,7 +190,7 @@
     "road": {
       "tag": "carretera · {road} cm",
       "title": "Nivel de la carretera",
-      "body": "La línea marca el nivel de la carretera ({road} cm). Cuando el agua supera la línea, la carretera está inundada — barra verde = por debajo de la carretera, roja = por encima."
+      "body": "La línea marca el nivel de la carretera ({road} cm) — por encima, la carretera está inundada. Verde = ventana segura con tiempo suficiente para cruzar; ámbar = no salgas, la subida está demasiado cerca o el descenso es demasiado breve; rojo = por encima de la carretera."
     },
     "forecastTag": "pronóstico",
     "noData": "Aún no hay datos para este día.",

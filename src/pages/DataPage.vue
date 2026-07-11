@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
 import { fmtTime, localTimeMs, startOfNextLocalDay } from '@/lib/format'
+import { findWindows } from '@/lib/tide'
+import type { SafeWindow } from '@/lib/types'
 import { STATIONS, stationName } from '@/lib/stations'
 
 const { t, locale } = useI18n()
@@ -93,12 +95,43 @@ const dayOptions = computed(() => DAY_OFFSETS.map((o) => ({ value: o, label: day
 const roadLevel = computed(() => rules.value?.cautionMaxCm ?? 60)
 const granularity = computed(() => rules.value?.tableGranularityMinutes ?? 10)
 
+// --- Row safety state ---
+// The bars reuse the same window engine as the frontpage verdict (fall
+// margin, min window length, deadline = flood time − crossing − buffer), so
+// /data can never show green at a moment the frontpage would call "do not
+// start": a brief dip below the road level stays amber (never a valid
+// window), and rising water turns amber at the deadline, well before it
+// reaches the road. The curve is observed-first — the same series the bars
+// display — falling back to the chosen forecast.
+const DAY_MS = 24 * 60 * 60_000
+const dayWindows = computed<SafeWindow[]>(() => {
+  const st = viewStatus.value
+  const r = rules.value
+  if (!st || !r) return []
+  const anchor = now.value + selectedOffset.value * DAY_MS
+  const dayStart = localTimeMs(anchor, 0)
+  const dayEnd = startOfNextLocalDay(anchor)
+  const levelFn = (t: number) => sampleObserved(t) ?? st.levelAt(t)
+  // Scan well past dayEnd so a window spanning midnight gets its real flood
+  // time (and thus deadline); findWindows itself looks back before dayStart
+  // for a window already open at midnight.
+  return findWindows(levelFn, r, dayStart, dayEnd + 8 * 60 * 60_000)
+})
+
+type RowSafety = 'safe' | 'caution' | 'flooded'
+function safetyFor(t: number, level: number): RowSafety {
+  if (level > roadLevel.value) return 'flooded'
+  const w = dayWindows.value.find((w) => w.start <= t && t < w.end)
+  return w && t <= w.deadline ? 'safe' : 'caution'
+}
+
 interface Row {
   t: number
   time: string
   observed: number | null
   forecast: number | null
   drift: number | null
+  safety: RowSafety
 }
 
 // Time range covered by the weather-inclusive forecast rows loaded for this
@@ -134,6 +167,7 @@ const rows = computed<Row[]>(() => {
     const forecast = viewStatus.value.levelAt(t)
     if (observed === null && forecast === null) continue
     const weatherCovered = !usingWeather || (cover !== null && t >= cover.from && t <= cover.to)
+    const shown = Math.round((observed ?? forecast) as number)
     out.push({
       t,
       time: fmtTime(t, locale.value),
@@ -143,6 +177,9 @@ const rows = computed<Row[]>(() => {
         observed !== null && forecast !== null && weatherCovered
           ? Math.round(observed - forecast)
           : null,
+      // Judged on the rounded value the row displays, so number and color
+      // can never disagree.
+      safety: safetyFor(t, shown),
     })
   }
   return out
@@ -179,6 +216,49 @@ const driftOpenT = ref<number | null>(null)
 function toggleDrift(rowT: number) {
   driftOpenT.value = driftOpenT.value === rowT ? null : rowT
   roadOpen.value = false
+  cautionOpenT.value = null
+}
+
+// "Last safe start" boundary: a marker rendered between the last green row
+// and the first amber row of each window, carrying the exact deadline time
+// (the rows themselves are only slot-aligned).
+const deadlineByRowT = computed<Map<number, string>>(() => {
+  const map = new Map<number, string>()
+  const rs = rows.value
+  if (rs.length === 0) return map
+  const step = granularity.value * 60_000
+  for (const w of dayWindows.value) {
+    if (w.deadline <= w.start) continue
+    const row = rs.find((r) => w.deadline >= r.t && w.deadline < r.t + step)
+    if (row) map.set(row.t, fmtTime(w.deadline, locale.value))
+  }
+  return map
+})
+
+// Amber-row explainer: tapping an amber bar says *why* starting a crossing
+// is unsafe at that time (same popover pattern as the Δ chips).
+const cautionOpenT = ref<number | null>(null)
+function toggleCaution(rowT: number) {
+  cautionOpenT.value = cautionOpenT.value === rowT ? null : rowT
+  driftOpenT.value = null
+  roadOpen.value = false
+}
+function cautionText(r: Row): string {
+  const minutes = (rules.value?.crossingMinutes ?? 0) + (rules.value?.bufferMinutes ?? 0)
+  const w = dayWindows.value.find((w) => w.start <= r.t && r.t < w.end)
+  if (w) {
+    // Inside a window but past its deadline — passable, no time to cross.
+    return w.floodsAt !== null
+      ? t('data.caution.late', {
+          road: roadLevel.value,
+          time: fmtTime(w.floodsAt, locale.value),
+          minutes,
+        })
+      : t('data.caution.lateNoTime', { minutes })
+  }
+  const next = dayWindows.value.find((w) => w.start > r.t)
+  if (next) return t('data.caution.early', { time: fmtTime(next.start, locale.value) })
+  return t('data.caution.brief')
 }
 
 // Road-line explainer: same user testing — "what is the line on all the
@@ -188,6 +268,7 @@ const roadOpen = ref(false)
 function toggleRoad() {
   roadOpen.value = !roadOpen.value
   driftOpenT.value = null
+  cautionOpenT.value = null
 }
 
 // The axis strip sticks directly below the sticky controls bar, whose height
@@ -217,11 +298,13 @@ function onDocClick(e: MouseEvent) {
   const el = e.target as HTMLElement
   if (!el.closest?.('.drift-wrap')) driftOpenT.value = null
   if (!el.closest?.('.axis')) roadOpen.value = false
+  if (!el.closest?.('.caution-hit') && !el.closest?.('.caution-pop')) cautionOpenT.value = null
 }
 function onDocKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
     driftOpenT.value = null
     roadOpen.value = false
+    cautionOpenT.value = null
   }
 }
 onMounted(() => {
@@ -378,8 +461,9 @@ watch(
 
       <p class="legend">
         {{ t('data.legend', { road: roadLevel }) }}
-        <span class="legend-key"><span class="dot under"></span>{{ t('data.belowRoad') }}</span>
-        <span class="legend-key"><span class="dot over"></span>{{ t('data.aboveRoad') }}</span>
+        <span class="legend-key"><span class="dot safe"></span>{{ t('data.legendSafe') }}</span>
+        <span class="legend-key"><span class="dot caution"></span>{{ t('data.legendCaution') }}</span>
+        <span class="legend-key"><span class="dot flooded"></span>{{ t('data.legendFlooded') }}</span>
         <span class="legend-key"><span class="drift-key">Δ</span>{{ t('data.driftKey') }}</span>
       </p>
 
@@ -409,49 +493,63 @@ watch(
       </div>
 
       <ol v-if="rows.length > 0" class="rows" :aria-label="t('data.title')">
-        <li
-          v-for="r in rows"
-          :key="r.t"
-          class="row"
-          :class="{ 'is-now': r.t === nowRowT }"
-          :id="r.t === nowRowT ? 'now-row' : undefined"
-          :aria-current="r.t === nowRowT ? 'time' : undefined"
-          :title="r.t === nowRowT ? t('data.nowTag') : undefined"
-        >
-          <span class="time mono">{{ r.time }}</span>
-          <div class="bar-track">
-            <div
-              class="bar-fill"
-              :class="[
-                (r.observed ?? r.forecast ?? 0) > roadLevel ? 'over' : 'under',
-                r.observed === null ? 'is-forecast' : '',
-              ]"
-              :style="{ width: pct(r.observed ?? r.forecast ?? 0) + '%' }"
-            ></div>
-            <div class="road-marker" :style="{ left: roadPct + '%' }" :title="t('data.roadMarker')"></div>
-          </div>
-          <span class="val mono" :class="{ muted: r.observed === null }">
-            {{ signed(r.observed ?? r.forecast ?? 0) }}
-          </span>
-          <div v-if="r.drift !== null" class="drift-wrap">
-            <button
-              type="button"
-              class="drift mono"
-              :aria-expanded="driftOpenT === r.t"
-              :aria-label="t('data.drift.title')"
-              @click="toggleDrift(r.t)"
-            >
-              Δ{{ signed(r.drift) }}
-            </button>
-            <div v-if="driftOpenT === r.t" class="drift-pop" role="note">
-              <strong>{{ t('data.drift.title') }}</strong>
-              <p>{{ driftText(r) }}</p>
-              <p class="drift-pop-generic">{{ t('data.drift.generic') }}</p>
+        <template v-for="r in rows" :key="r.t">
+          <li
+            class="row"
+            :class="{ 'is-now': r.t === nowRowT }"
+            :id="r.t === nowRowT ? 'now-row' : undefined"
+            :aria-current="r.t === nowRowT ? 'time' : undefined"
+            :title="r.t === nowRowT ? t('data.nowTag') : undefined"
+          >
+            <span class="time mono">{{ r.time }}</span>
+            <div class="bar-cell">
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  :class="['is-' + r.safety, r.observed === null ? 'is-forecast' : '']"
+                  :style="{ width: pct(r.observed ?? r.forecast ?? 0) + '%' }"
+                ></div>
+                <div class="road-marker" :style="{ left: roadPct + '%' }" :title="t('data.roadMarker')"></div>
+              </div>
+              <button
+                v-if="r.safety === 'caution'"
+                type="button"
+                class="caution-hit"
+                :aria-expanded="cautionOpenT === r.t"
+                :aria-label="t('data.caution.title')"
+                @click="toggleCaution(r.t)"
+              ></button>
+              <div v-if="cautionOpenT === r.t" class="drift-pop caution-pop" role="note">
+                <strong>{{ t('data.caution.title') }}</strong>
+                <p>{{ cautionText(r) }}</p>
+              </div>
             </div>
-          </div>
-          <span v-else-if="r.observed === null" class="tag">{{ t('data.forecastTag') }}</span>
-          <span v-else class="tag spacer"></span>
-        </li>
+            <span class="val mono" :class="{ muted: r.observed === null }">
+              {{ signed(r.observed ?? r.forecast ?? 0) }}
+            </span>
+            <div v-if="r.drift !== null" class="drift-wrap">
+              <button
+                type="button"
+                class="drift mono"
+                :aria-expanded="driftOpenT === r.t"
+                :aria-label="t('data.drift.title')"
+                @click="toggleDrift(r.t)"
+              >
+                Δ{{ signed(r.drift) }}
+              </button>
+              <div v-if="driftOpenT === r.t" class="drift-pop" role="note">
+                <strong>{{ t('data.drift.title') }}</strong>
+                <p>{{ driftText(r) }}</p>
+                <p class="drift-pop-generic">{{ t('data.drift.generic') }}</p>
+              </div>
+            </div>
+            <span v-else-if="r.observed === null" class="tag">{{ t('data.forecastTag') }}</span>
+            <span v-else class="tag spacer"></span>
+          </li>
+          <li v-if="deadlineByRowT.has(r.t)" class="deadline-row" role="note">
+            {{ t('data.lastSafeStart') }} · {{ deadlineByRowT.get(r.t) }}
+          </li>
+        </template>
       </ol>
 
       <footer class="datasrc">
@@ -585,10 +683,13 @@ watch(
   border-radius: 3px;
   display: inline-block;
 }
-.dot.under {
+.dot.safe {
   background: var(--verdict-safe-accent);
 }
-.dot.over {
+.dot.caution {
+  background: var(--verdict-caution-accent);
+}
+.dot.flooded {
   background: var(--verdict-unsafe-accent);
 }
 .drift-key {
@@ -660,10 +761,10 @@ watch(
      backgrounds get their own corner rounding instead. */
   background: var(--surface);
 }
-.row:first-child {
+.rows > li:first-child {
   border-radius: 11px 11px 0 0;
 }
-.row:last-child {
+.rows > li:last-child {
   border-radius: 0 0 11px 11px;
 }
 
@@ -692,6 +793,10 @@ watch(
   font-size: 12px;
 }
 
+.bar-cell {
+  position: relative;
+  min-width: 0;
+}
 .bar-track {
   position: relative;
   height: 14px;
@@ -706,14 +811,60 @@ watch(
   bottom: 0;
   border-radius: 4px 0 0 4px;
 }
-.bar-fill.under {
+.bar-fill.is-safe {
   background: var(--verdict-safe-accent);
 }
-.bar-fill.over {
+.bar-fill.is-caution {
+  background: var(--verdict-caution-accent);
+}
+.bar-fill.is-flooded {
   background: var(--verdict-unsafe-accent);
 }
 .bar-fill.is-forecast {
   opacity: 0.45;
+}
+
+/* Invisible tap target over an amber bar — stretched a few px beyond the
+   14px track so it's comfortably hittable on a phone without changing the
+   dense row layout. */
+.caution-hit {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+/* Anchored to the bar cell, but pinned to the row's left edge (back across
+   the time column) so the popover never clips off the side of a narrow
+   phone screen. */
+.caution-pop {
+  right: auto;
+  left: calc(-3.4em - 8px);
+}
+
+/* "Last safe start" boundary between the green and amber rows of a window. */
+.deadline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--verdict-safe-accent);
+  background: color-mix(in srgb, var(--verdict-safe-accent) 10%, transparent);
+  white-space: nowrap;
+}
+.deadline-row::before,
+.deadline-row::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--verdict-safe-accent);
+  opacity: 0.5;
 }
 .road-marker {
   position: absolute;

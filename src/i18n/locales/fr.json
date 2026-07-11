@@ -167,8 +167,17 @@
     "selectDay": "Jour",
     "stationLabel": "Station",
     "legend": "La route est submergée à {road} cm.",
-    "belowRoad": "sous la route",
-    "aboveRoad": "au-dessus de la route",
+    "legendSafe": "départ sûr",
+    "legendCaution": "praticable — ne partez pas",
+    "legendFlooded": "route inondée",
+    "lastSafeStart": "Dernier départ sûr",
+    "caution": {
+      "title": "Ne partez pas maintenant",
+      "late": "L'eau est ici sous le niveau de la route, mais elle monte — elle atteint {road} cm à {time}, et une traversée sûre prend {minutes} min. Trop tard pour partir.",
+      "lateNoTime": "L'eau est ici sous le niveau de la route, mais il ne reste plus assez de temps ({minutes} min) pour une traversée sûre avant qu'elle ne remonte.",
+      "early": "Pas de créneau sûr à ce moment. Le prochain ouvre à {time}.",
+      "brief": "L'eau descend ici sous le niveau de la route, mais pas assez bas ni assez longtemps pour offrir un créneau sûr."
+    },
     "driftKey": "écart de la prévision (touchez un Δ)",
     "drift": {
       "title": "Mesuré vs prévision",
@@ -181,7 +190,7 @@
     "road": {
       "tag": "route · {road} cm",
       "title": "Niveau de la route",
-      "body": "La ligne marque le niveau de la route ({road} cm). Quand l'eau dépasse la ligne, la route est inondée — barre verte = sous la route, rouge = au-dessus."
+      "body": "La ligne marque le niveau de la route ({road} cm) — au-dessus, la route est inondée. Vert = créneau sûr avec assez de temps pour traverser ; orange = ne partez pas, la marée montante est trop proche ou le creux trop bref ; rouge = au-dessus de la route."
     },
     "forecastTag": "prévision",
     "noData": "Pas encore de données pour ce jour.",

@@ -177,8 +177,17 @@
     "selectDay": "Day",
     "stationLabel": "Station",
     "legend": "Road floods at {road} cm.",
-    "belowRoad": "below road",
-    "aboveRoad": "above road",
+    "legendSafe": "safe to set off",
+    "legendCaution": "passable — do not set off",
+    "legendFlooded": "road flooded",
+    "lastSafeStart": "Last safe start",
+    "caution": {
+      "title": "Do not start crossing",
+      "late": "The water is below the road here, but rising — it reaches {road} cm at {time}, and a safe crossing takes {minutes} min. Too late to set off.",
+      "lateNoTime": "The water is below the road here, but there is no longer enough time ({minutes} min) for a safe crossing before it rises again.",
+      "early": "No safe crossing window at this time. The next one opens at {time}.",
+      "brief": "The water dips below the road here, but not far enough or for long enough to give a safe crossing window."
+    },
     "driftKey": "how far off the forecast was (tap a Δ)",
     "drift": {
       "title": "Measured vs. forecast",
@@ -191,7 +200,7 @@
     "road": {
       "tag": "road · {road} cm",
       "title": "Road level",
-      "body": "The line marks the road level ({road} cm). When the water is above the line, the road is flooded — green bar = below the road, red = above."
+      "body": "The line marks the road level ({road} cm) — above it the road is flooded. Green = a safe window with enough time to cross; amber = do not set off, the rising water is too close or the dip is too brief; red = above the road."
     },
     "forecastTag": "forecast",
     "noData": "No data for this day yet.",

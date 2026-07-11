@@ -167,8 +167,17 @@
     "selectDay": "Dag",
     "stationLabel": "Meetstation",
     "legend": "De weg overstroomt bij {road} cm.",
-    "belowRoad": "onder de weg",
-    "aboveRoad": "boven de weg",
+    "legendSafe": "veilig om te vertrekken",
+    "legendCaution": "begaanbaar — vertrek niet",
+    "legendFlooded": "weg overstroomd",
+    "lastSafeStart": "Laatste veilige vertrektijd",
+    "caution": {
+      "title": "Vertrek nu niet",
+      "late": "Het water staat hier onder wegniveau, maar stijgt — om {time} bereikt het {road} cm, en een veilige oversteek duurt {minutes} min. Te laat om te vertrekken.",
+      "lateNoTime": "Het water staat hier onder wegniveau, maar er is niet genoeg tijd meer ({minutes} min) voor een veilige oversteek voordat het weer stijgt.",
+      "early": "Geen veilig venster op dit moment. Het volgende opent om {time}.",
+      "brief": "Het water zakt hier onder wegniveau, maar niet ver of lang genoeg voor een veilig oversteekvenster."
+    },
     "driftKey": "hoeveel de voorspelling ernaast zat (tik op een Δ)",
     "drift": {
       "title": "Gemeten vs. voorspelling",
@@ -181,7 +190,7 @@
     "road": {
       "tag": "weg · {road} cm",
       "title": "Weghoogte",
-      "body": "De lijn markeert de weghoogte ({road} cm). Staat het water boven de lijn, dan staat de weg onder water — groene balk = onder de weg, rode = erboven."
+      "body": "De lijn markeert de weghoogte ({road} cm) — daarboven staat de weg onder water. Groen = veilig venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de weg."
     },
     "forecastTag": "voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",

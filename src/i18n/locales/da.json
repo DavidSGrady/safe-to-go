@@ -177,8 +177,17 @@
     "selectDay": "Dag",
     "stationLabel": "Målestation",
     "legend": "Vejen oversvømmes ved {road} cm.",
-    "belowRoad": "under vejen",
-    "aboveRoad": "over vejen",
+    "legendSafe": "sikkert at køre ud",
+    "legendCaution": "farbar — kør ikke ud",
+    "legendFlooded": "vejen oversvømmet",
+    "lastSafeStart": "Sidste sikre afgang",
+    "caution": {
+      "title": "Kør ikke ud nu",
+      "late": "Vandet er under vejniveau her, men stigende — det når {road} cm kl. {time}, og en sikker overfart tager {minutes} min. Det er for sent at køre ud.",
+      "lateNoTime": "Vandet er under vejniveau her, men der er ikke længere tid nok ({minutes} min) til en sikker overfart, før det stiger igen.",
+      "early": "Intet sikkert tidsrum på dette tidspunkt. Det næste åbner kl. {time}.",
+      "brief": "Vandet kommer under vejniveau her, men ikke langt nok ned eller længe nok til et sikkert tidsrum."
+    },
     "driftKey": "hvor meget prognosen ramte ved siden af (tryk på et Δ)",
     "drift": {
       "title": "Målt vs. prognose",
@@ -191,7 +200,7 @@
     "road": {
       "tag": "vej · {road} cm",
       "title": "Vejens niveau",
-      "body": "Stregen markerer vejens niveau ({road} cm). Når vandstanden er over stregen, står vejen under vand — grøn søjle = under vejen, rød = over."
+      "body": "Stregen markerer vejens niveau ({road} cm) — over stregen står vejen under vand. Grøn = sikkert tidsrum med tid nok til overfarten; gul = kør ikke ud, det stigende vand er for tæt på, eller dykket er for kort; rød = over vejen."
     },
     "forecastTag": "prognose",
     "noData": "Ingen data for denne dag endnu.",

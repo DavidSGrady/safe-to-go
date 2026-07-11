@@ -167,8 +167,17 @@
     "selectDay": "Tag",
     "stationLabel": "Messstation",
     "legend": "Die Straße wird bei {road} cm überflutet.",
-    "belowRoad": "unter der Straße",
-    "aboveRoad": "über der Straße",
+    "legendSafe": "sicher loszufahren",
+    "legendCaution": "befahrbar — nicht losfahren",
+    "legendFlooded": "Straße überflutet",
+    "lastSafeStart": "Letzte sichere Abfahrt",
+    "caution": {
+      "title": "Jetzt nicht losfahren",
+      "late": "Das Wasser steht hier unter Straßenniveau, steigt aber — um {time} erreicht es {road} cm, und eine sichere Überfahrt dauert {minutes} Min. Zu spät zum Losfahren.",
+      "lateNoTime": "Das Wasser steht hier unter Straßenniveau, aber die Zeit ({minutes} Min.) reicht nicht mehr für eine sichere Überfahrt, bevor es wieder steigt.",
+      "early": "Kein sicheres Zeitfenster zu diesem Zeitpunkt. Das nächste öffnet um {time}.",
+      "brief": "Das Wasser fällt hier unter Straßenniveau, aber nicht tief oder lange genug für ein sicheres Zeitfenster."
+    },
     "driftKey": "wie weit die Prognose danebenlag (auf ein Δ tippen)",
     "drift": {
       "title": "Gemessen vs. Prognose",
@@ -181,7 +190,7 @@
     "road": {
       "tag": "Straße · {road} cm",
       "title": "Straßenniveau",
-      "body": "Die Linie markiert das Straßenniveau ({road} cm). Steht das Wasser über der Linie, ist die Straße überflutet — grüner Balken = unter der Straße, roter = darüber."
+      "body": "Die Linie markiert das Straßenniveau ({road} cm) — darüber ist die Straße überflutet. Grün = sicheres Zeitfenster mit genug Zeit für die Überfahrt; Gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; Rot = über der Straße."
     },
     "forecastTag": "Prognose",
     "noData": "Noch keine Daten für diesen Tag.",
