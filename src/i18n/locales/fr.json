@@ -4,8 +4,7 @@
     "subtitle": "Traversée vers Mandø"
   },
   "stations": {
-    "label": "Station de mesure",
-    "basedOn": "Évaluation basée sur {name}"
+    "label": "Station de mesure"
   },
   "common": {
     "measured": "valeur mesurée",
@@ -20,21 +19,17 @@
     "tomorrow": "Demain"
   },
   "verdict": {
-    "safeTitle": "Traversez maintenant",
-    "safeSubRising": "L'eau est sous {limit} cm, mais a commencé à monter. Vous pouvez encore traverser en sécurité — partez avant l'heure de départ limite.",
-    "safeSubFalling": "L'eau est sous {limit} cm et baisse. Il reste largement le temps de traverser la digue.",
-    "safeLine1": "Dernier départ {time}",
+    "safeTitle": "Sous la limite de praticabilité",
+    "safeLine1": "Dernier départ indicatif {time}",
     "safeLine2": "dans {duration}",
     "cautionTitle": "Ne commencez pas la traversée",
-    "approachingTitle": "Bientôt praticable",
+    "approachingTitle": "Bientôt sous la limite",
     "approachingLine1": "Attendez jusqu'à {time}",
     "approachingSoon": "L'eau est juste au niveau de la route et baisse — patientez un instant.",
-    "cautionSub": "La digue est encore praticable, mais l'eau atteint de nouveau {limit} cm à {time} — il ne reste plus assez de temps ({duration}) pour une traversée sûre. Si vous êtes déjà en route, continuez calmement.",
-    "cautionLine1WithNext": "Prochain départ sûr",
+    "cautionLine1WithNext": "Prochain créneau indicatif",
     "cautionLine2WithNext": "{day} à {time}",
     "cautionLine1NoNext": "Attendez la prochaine marée basse",
     "unsafeTitle": "Ne traversez pas",
-    "unsafeSub": "La digue est inondée ou va l'être — la route passe sous l'eau vers {flood} cm. Attendez la prochaine marée basse.",
     "unsafeLine1WithNext": "Prochain créneau : {day} {time}",
     "unsafeLine2WithNext": "dernier départ {time}",
     "unsafeLine1NoNext": "Aucun créneau dans la prévision",
@@ -43,19 +38,19 @@
     "levelNow": "Le niveau d'eau est de {cm} cm actuellement",
     "puddleWarning": "Roulez prudemment. Certaines parties de la route peuvent être encore inondées — attendez que les flaques se retirent si vous en rencontrez.",
     "floodsAt": "L'eau atteint la route à {time}",
-    "stormBanner": "Météo & vent : {cm} cm au-dessus de la marée astronomique, pris en compte dans la prévision.",
-    "shortSafe": "départ avant {time}",
+    "shortSafe": "avant {time} · indicatif",
     "shortCaution": "trop tard pour partir",
     "shortUnsafe": "prochain {time}",
     "shortNone": "aucun créneau",
     "staleBanner": "Dernière mesure réelle du niveau d'eau : {duration} — affichage du niveau d'eau prévu par DMI pour ce moment à la place. Soyez particulièrement prudent.",
     "freshFresh": "Mesuré {duration}",
-    "freshStale": "Dernière mesure {duration} — affiche la prévision"
+    "freshStale": "Dernière mesure {duration} — affiche la prévision",
+    "advisory": "Indications basées sur les données DMI — évaluez toujours vous-même les conditions sur place."
   },
   "retur": {
     "titleOk": "Rentrez-vous aujourd'hui ?",
-    "bodyOk": "Quittez Mandø au plus tard à {time} — la même limite s'applique dans les deux sens.",
-    "titleNone": "Plus de départ sûr aujourd'hui",
+    "bodyOk": "Quittez Mandø au plus tard à {time} (indicatif) — la même limite s'applique dans les deux sens.",
+    "titleNone": "Plus de créneau aujourd'hui",
     "bodyWithNext": "Prochain créneau : {day} {time} → dernier départ {deadline}.",
     "bodyNoNext": "Aucun créneau dans la prévision."
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "La situation sur la route en ce moment",
     "roadLabel": "La digue · ~{cm} cm",
-    "limitLabel": "{cm} cm · limite sûre",
-    "caption": "Coupe transversale de la route. La chaussée est submergée vers {road} cm. À marée descendante, la traversée est sûre sous {falling} cm ; à marée montante, nous sommes plus stricts et utilisons {rising} cm.",
+    "caption": "Coupe transversale de la route. La chaussée est submergée vers {road} cm. À marée descendante, la route est considérée praticable sous {falling} cm ; à marée montante, le seuil plus strict de {rising} cm s'applique. Indicatif — évaluez vous-même les conditions sur place.",
     "play": "Lecture",
     "pause": "Pause",
     "reset": "Réinitialiser",
@@ -90,11 +84,11 @@
   },
   "windows": {
     "title": "Quand puis-je traverser ?",
-    "intro": "Voici les heures de départ sûres — partez pendant la période verte.",
+    "intro": "Créneaux indicatifs calculés à partir des données DMI — ne partez que pendant une période verte et évaluez vous-même les conditions.",
     "nowOpen": "Ouvert maintenant",
-    "none": "Aucun créneau sûr dans la période de prévision. En général, une tempête pousse l'eau vers la côte — revenez plus tard.",
+    "none": "Aucun créneau praticable dans la période de prévision. En général, une tempête pousse l'eau vers la côte — revenez plus tard.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Partez au plus tard à {time} pour ce créneau",
+    "lastDeparture": "Dernier départ indicatif {time} pour ce créneau",
     "lowTide": "marée basse {time}",
     "floodsAt": "Route submergée à {time}",
     "confidenceHigh": "Haute confiance",
@@ -102,7 +96,7 @@
     "confidenceLow": "Faible · à revérifier",
     "confidenceVeryLow": "Très faible · indicatif",
     "amberNote": "Orange : la route n'est pas encore inondée, mais il ne reste plus assez de temps pour une traversée sûre — ne partez pas.",
-    "tooShort": "Seulement {duration} — trop court pour une traversée sûre",
+    "tooShort": "Seulement {duration} — trop court pour traverser",
     "showMore": "Voir plus loin · jusqu'à 7 jours",
     "showLess": "Afficher seulement les 48 prochaines heures",
     "extendedNote": "Affiche jusqu'à 7 jours à l'avance. Au-delà, le niveau d'eau ne peut pas être prévu de façon assez fiable — le vent et la météo déplacent les créneaux. Revérifiez plus près de votre date de voyage."
@@ -112,7 +106,7 @@
     "observed": "Mesuré",
     "forecast": "Prévu",
     "now": "Maintenant",
-    "safeLimit": "Limite sûre",
+    "safeLimit": "Limite de praticabilité",
     "unsafeLimit": "Point d'inondation",
     "unit": "cm",
     "tableView": "Afficher en tableau",
@@ -126,30 +120,30 @@
     "calcRowLimit": "L'eau atteint de nouveau {limit} cm",
     "calcRowCrossing": "Traversée, pire cas",
     "calcRowBuffer": "Marge de sécurité",
-    "calcRowDeadline": "Dernier départ sûr",
+    "calcRowDeadline": "Dernier départ indicatif",
     "basisTitle": "Mesures et prévisions",
     "basisBody": "L'évaluation actuelle repose sur le niveau d'eau mesuré à la station de {station}. Les créneaux futurs reposent sur la prévision DMI, météo et vent inclus — c'est pourquoi la confiance diminue plus on regarde loin.",
     "factsTitle": "Bon à savoir",
-    "fact1": "Mandø n'est accessible que par la digue du Låningsvej à marée basse — généralement 2 créneaux sûrs par jour.",
+    "fact1": "Mandø n'est accessible que par la digue du Låningsvej à marée basse — généralement 2 créneaux praticables par jour.",
     "fact2": "Comptez environ {minutes} min pour la traversée en voiture.",
     "fact3": "Ne partez jamais quand l'eau monte près de la limite.",
+    "fact4": "Un fort vent d'ouest peut pousser l'eau 20–40 cm plus haut que l'annuaire des marées — fiez-vous au niveau mesuré, pas seulement à l'heure.",
+    "officialTitle": "Recommandation officielle",
+    "officialBody": "La municipalité d'Esbjerg indique que la traversée est sûre lorsque le niveau d'eau à Ribe Kammersluse est inférieur à +50 cm. En cas de doute, prenez le bus-tracteur ou appelez Mandø Brugs og Camping au +45 75 44 51 02.",
     "showChart": "Afficher la courbe du niveau d'eau",
     "hideChart": "Masquer la courbe du niveau d'eau"
   },
-  "explainer": {
-    "title": "Jamais vu de marée ?",
-    "whatTitle": "La mer bouge deux fois par jour",
-    "whatBody": "Deux fois par jour, la mer monte (marée haute) puis redescend (marée basse), attirée par la lune. À Mandø, la différence est d'environ 2 mètres — assez pour recouvrir entièrement la route à marée haute.",
-    "roadTitle": "La route est parfois sous l'eau",
-    "roadBody": "On accède à Mandø par le Låningsvej, une digue de gravier posée sur le fond marin. À marée basse, c'est une route normale ; à marée haute, elle disparaît sous la mer. C'est normal et cela arrive deux fois par jour.",
-    "windTitle": "Le vent change tout",
-    "windBody": "Un fort vent d'ouest peut pousser l'eau bien plus haut que ne l'indique l'annuaire des marées et garder la route inondée toute la journée. C'est pourquoi cette page utilise des mesures en direct, pas seulement l'annuaire des marées.",
-    "ruleTitle": "La règle d'or",
-    "ruleBody": "Ne commencez jamais la traversée quand l'eau monte. En cas de doute, attendez le prochain créneau ou prenez le bus-tracteur du Vadehavscentret."
+  "notice": {
+    "title": "Avant de partir",
+    "body1": "Cette page est une aide non officielle. Elle affiche les niveaux d'eau DMI en direct et des créneaux indicatifs — elle ne remplace pas votre propre évaluation des conditions sur place.",
+    "body2": "Ne commencez jamais la traversée quand l'eau monte près du niveau de la route. Un vent fort peut faire monter l'eau plus vite et plus haut que prévu.",
+    "body3": "Recommandation officielle : la traversée est sûre lorsque le niveau d'eau à Ribe Kammersluse est inférieur à +50 cm (municipalité d'Esbjerg). En cas de doute, prenez le bus-tracteur.",
+    "dismiss": "Compris"
   },
   "footer": {
-    "disclaimer": "Ce service est une aide pour les visiteurs, pas un service de sécurité officiel. La météo et la marée peuvent changer les conditions — vous êtes responsable d'évaluer la sécurité avant de traverser. Appelez le 112 en cas d'urgence.",
-    "source": "Données en direct : Institut météorologique danois (DMI) & Autorité côtière danoise, station de mesure de {station}.",
+    "disclaimer": "Service non officiel fournissant des informations indicatives — sans garantie. Les mesures peuvent être erronées ou retardées, et la météo et le vent peuvent changer rapidement les conditions. Vous êtes responsable d'évaluer la sécurité avant de partir. Appelez le 112 en cas d'urgence.",
+    "source": "Basé sur des données de DMI et de l'Autorité côtière danoise, retraitées par nos soins. Station de mesure : {station}.",
+    "official": "Sources officielles :",
     "data": "Données brutes (pour les locaux)",
     "display": "Mode affichage (pour commerces & cafés)",
     "admin": "Admin"
@@ -167,16 +161,16 @@
     "selectDay": "Jour",
     "stationLabel": "Station",
     "legend": "La route est submergée à {road} cm.",
-    "legendSafe": "départ sûr",
-    "legendCaution": "praticable — ne partez pas",
+    "legendSafe": "créneau indicatif",
+    "legendCaution": "sous le niveau de la route — trop tard pour partir",
     "legendFlooded": "route inondée",
-    "lastSafeStart": "Dernier départ sûr",
+    "lastSafeStart": "Dernier départ indicatif",
     "caution": {
       "title": "Ne partez pas maintenant",
-      "late": "L'eau est ici sous le niveau de la route, mais elle monte — elle atteint {road} cm à {time}, et une traversée sûre prend {minutes} min. Trop tard pour partir.",
-      "lateNoTime": "L'eau est ici sous le niveau de la route, mais il ne reste plus assez de temps ({minutes} min) pour une traversée sûre avant qu'elle ne remonte.",
-      "early": "Pas de créneau sûr à ce moment. Le prochain ouvre à {time}.",
-      "brief": "L'eau descend ici sous le niveau de la route, mais pas assez bas ni assez longtemps pour offrir un créneau sûr."
+      "late": "L'eau est ici sous le niveau de la route, mais elle monte — elle atteint {road} cm à {time}, et la traversée est comptée à {minutes} min. Trop tard pour partir.",
+      "lateNoTime": "L'eau est ici sous le niveau de la route, mais il ne reste plus assez de temps ({minutes} min) pour la traversée avant qu'elle ne remonte.",
+      "early": "Pas de créneau praticable à ce moment. Le prochain ouvre à {time}.",
+      "brief": "L'eau descend ici sous le niveau de la route, mais pas assez bas ni assez longtemps pour offrir un créneau praticable."
     },
     "driftKey": "écart de la prévision (touchez un Δ)",
     "drift": {
@@ -190,7 +184,7 @@
     "road": {
       "tag": "route · {road} cm",
       "title": "Niveau de la route",
-      "body": "La ligne marque le niveau de la route ({road} cm) — au-dessus, la route est inondée. Vert = créneau sûr avec assez de temps pour traverser ; orange = ne partez pas, la marée montante est trop proche ou le creux trop bref ; rouge = au-dessus de la route."
+      "body": "La ligne marque le niveau de la route ({road} cm) — au-dessus, la route est inondée. Vert = créneau indicatif avec assez de temps pour traverser ; orange = ne partez pas, la marée montante est trop proche ou le creux trop bref ; rouge = au-dessus de la route."
     },
     "forecastTag": "prévision",
     "noData": "Pas encore de données pour ce jour.",

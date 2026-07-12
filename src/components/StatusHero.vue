@@ -155,6 +155,10 @@ const freshnessTxt = computed(() => {
 
     <p v-if="floodsAtTxt" class="floods">{{ t('verdict.floodsAt', { time: floodsAtTxt }) }}</p>
 
+    <p v-if="status.state === 'safe' || status.state === 'approaching'" class="advisory">
+      {{ t('verdict.advisory') }}
+    </p>
+
     <p v-if="puddleWarning" class="banner banner-puddle">{{ t('verdict.puddleWarning') }}</p>
 
     <p v-if="!status.dataFresh && status.lastObservedAt" class="banner banner-stale">
@@ -279,6 +283,15 @@ const freshnessTxt = computed(() => {
   font-weight: 600;
   opacity: 0.9;
   margin: 0;
+}
+
+.advisory {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  opacity: 0.8;
+  margin: 0;
+  max-width: 44ch;
+  text-wrap: pretty;
 }
 
 .banner {

@@ -69,7 +69,20 @@ const detail = computed(() => {
         <li>{{ t('dive.fact1') }}</li>
         <li>{{ t('dive.fact2', { minutes: rules.crossingMinutes }) }}</li>
         <li>{{ t('dive.fact3') }}</li>
+        <li>{{ t('dive.fact4') }}</li>
       </ul>
+    </div>
+
+    <div class="block">
+      <div class="block-title">{{ t('dive.officialTitle') }}</div>
+      <p class="body">{{ t('dive.officialBody') }}</p>
+      <p class="links">
+        <a href="https://oplev.esbjerg.dk/oplev-naturen/ved-vandet/mandoe" target="_blank" rel="noopener">Esbjerg Kommune</a>
+        ·
+        <a href="https://mandoebussen.dk" target="_blank" rel="noopener">Mandøbussen</a>
+        ·
+        <a href="https://www.dmi.dk/vandstand/" target="_blank" rel="noopener">DMI vandstand</a>
+      </p>
     </div>
   </section>
 </template>
@@ -147,6 +160,11 @@ const detail = computed(() => {
   font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.5;
+}
+
+.links {
+  font-size: 12.5px;
+  margin: 8px 0 0;
 }
 
 .facts li::before {

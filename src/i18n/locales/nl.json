@@ -4,8 +4,7 @@
     "subtitle": "Oversteek naar Mandø"
   },
   "stations": {
-    "label": "Meetstation",
-    "basedOn": "Beoordeling op basis van {name}"
+    "label": "Meetstation"
   },
   "common": {
     "measured": "gemeten waarde",
@@ -20,21 +19,17 @@
     "tomorrow": "Morgen"
   },
   "verdict": {
-    "safeTitle": "Nu oversteken",
-    "safeSubRising": "Het water staat onder {limit} cm, maar begint te stijgen. U kunt nog veilig oversteken — vertrek voor de laatste vertrektijd.",
-    "safeSubFalling": "Het water staat onder {limit} cm en daalt. Er is voldoende tijd om de dam over te steken.",
-    "safeLine1": "Laatste vertrek {time}",
+    "safeTitle": "Onder de begaanbaarheidsgrens",
+    "safeLine1": "Indicatief laatste vertrek {time}",
     "safeLine2": "over {duration}",
     "cautionTitle": "Begin niet met oversteken",
-    "approachingTitle": "Bijna begaanbaar",
+    "approachingTitle": "Bijna onder de grens",
     "approachingLine1": "Wacht tot {time}",
     "approachingSoon": "Het water staat precies op weghoogte en daalt — even wachten.",
-    "cautionSub": "De weg is nog begaanbaar, maar het water bereikt om {time} weer {limit} cm — er is niet langer genoeg tijd ({duration}) voor een veilige oversteek. Bent u al onderweg, rijd dan rustig door.",
-    "cautionLine1WithNext": "Volgende veilige start",
+    "cautionLine1WithNext": "Volgend indicatief moment",
     "cautionLine2WithNext": "{day} om {time}",
     "cautionLine1NoNext": "Wacht op de volgende laagwaterstand",
     "unsafeTitle": "Niet oversteken",
-    "unsafeSub": "De dam staat onder water of overstroomt binnenkort — de weg verdwijnt onder water bij ongeveer {flood} cm. Wacht op de volgende laagwaterstand.",
     "unsafeLine1WithNext": "Volgende moment: {day} {time}",
     "unsafeLine2WithNext": "laatste vertrek {time}",
     "unsafeLine1NoNext": "Geen momenten in de voorspelling",
@@ -43,19 +38,19 @@
     "levelNow": "De waterstand is nu {cm} cm",
     "puddleWarning": "Rijd voorzichtig. Delen van de weg kunnen nog onder water staan — wacht tot plassen wegtrekken als u ze tegenkomt.",
     "floodsAt": "Het water bereikt de weg om {time}",
-    "stormBanner": "Weer & wind: {cm} cm boven het astronomische getij, meegenomen in de voorspelling.",
-    "shortSafe": "vertrek voor {time}",
+    "shortSafe": "voor {time} · indicatief",
     "shortCaution": "te laat om te starten",
     "shortUnsafe": "volgende {time}",
     "shortNone": "geen momenten",
     "staleBanner": "De laatste feitelijke waterstandsmeting was {duration} — in plaats daarvan wordt de door DMI voorspelde waterstand voor dit tijdstip getoond. Wees extra voorzichtig.",
     "freshFresh": "Gemeten {duration}",
-    "freshStale": "Meting {duration} — toont voorspelling"
+    "freshStale": "Meting {duration} — toont voorspelling",
+    "advisory": "Indicatie op basis van DMI-gegevens — beoordeel de omstandigheden ter plaatse altijd zelf."
   },
   "retur": {
     "titleOk": "Gaat u vandaag terug?",
-    "bodyOk": "Vertrek uiterlijk om {time} van Mandø — dezelfde deadline geldt in beide richtingen.",
-    "titleNone": "Geen veilige vertrekmomenten meer vandaag",
+    "bodyOk": "Vertrek uiterlijk om {time} van Mandø (indicatief) — dezelfde deadline geldt in beide richtingen.",
+    "titleNone": "Geen oversteekmomenten meer vandaag",
     "bodyWithNext": "Volgend moment: {day} {time} → laatste vertrek {deadline}.",
     "bodyNoNext": "Geen momenten in de voorspelling."
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "De situatie bij de weg",
     "roadLabel": "De dam · ~{cm} cm",
-    "limitLabel": "{cm} cm · veilige grens",
-    "caption": "Dwarsdoorsnede van de weg. Het wegdek loopt onder bij ongeveer {road} cm. Bij dalend water is oversteken veilig onder {falling} cm; bij stijgend water zijn we strenger en hanteren we {rising} cm.",
+    "caption": "Dwarsdoorsnede van de weg. Het wegdek loopt onder bij ongeveer {road} cm. Bij dalend water geldt de weg als begaanbaar onder {falling} cm; bij stijgend water geldt strenger {rising} cm. Indicatief — beoordeel de omstandigheden ter plaatse zelf.",
     "play": "Afspelen",
     "pause": "Pauze",
     "reset": "Resetten",
@@ -90,11 +84,11 @@
   },
   "windows": {
     "title": "Wanneer kan ik oversteken?",
-    "intro": "Dit zijn veilige vertrektijden — vertrek binnen de groene periode.",
+    "intro": "Indicatieve momenten berekend uit DMI-gegevens — vertrek alleen binnen een groene periode en beoordeel de omstandigheden zelf.",
     "nowOpen": "Nu open",
-    "none": "Geen veilige oversteekmomenten in de voorspelperiode. Meestal stuwt een storm dan het water op — kijk later opnieuw.",
+    "none": "Geen begaanbare momenten in de voorspelperiode. Meestal stuwt een storm dan het water op — kijk later opnieuw.",
     "duration": "{hours} u {minutes} min",
-    "lastDeparture": "Vertrek uiterlijk {time} om dit venster te halen",
+    "lastDeparture": "Indicatief laatste vertrek {time} voor dit moment",
     "lowTide": "laagwater {time}",
     "floodsAt": "Weg loopt onder om {time}",
     "confidenceHigh": "Hoge betrouwbaarheid",
@@ -102,7 +96,7 @@
     "confidenceLow": "Laag · controleer opnieuw",
     "confidenceVeryLow": "Zeer laag · indicatief",
     "amberNote": "Geel: de weg staat nog niet onder water, maar er is niet langer genoeg tijd voor een veilige oversteek — vertrek niet meer.",
-    "tooShort": "Slechts {duration} — te kort voor een veilige oversteek",
+    "tooShort": "Slechts {duration} — te kort om over te steken",
     "showMore": "Verder vooruitkijken · tot 7 dagen",
     "showLess": "Toon alleen de komende 48 uur",
     "extendedNote": "Toont tot 7 dagen vooruit. Daarna kan de waterstand niet betrouwbaar genoeg worden voorspeld — weer en wind verschuiven de momenten. Controleer opnieuw dichter bij uw reisdag."
@@ -112,7 +106,7 @@
     "observed": "Gemeten",
     "forecast": "Verwacht",
     "now": "Nu",
-    "safeLimit": "Veilige grens",
+    "safeLimit": "Begaanbaarheidsgrens",
     "unsafeLimit": "Overstromingspunt",
     "unit": "cm",
     "tableView": "Toon als tabel",
@@ -126,30 +120,30 @@
     "calcRowLimit": "Water bereikt weer {limit} cm",
     "calcRowCrossing": "Oversteek, slechtste geval",
     "calcRowBuffer": "Veiligheidsmarge",
-    "calcRowDeadline": "Laatste veilige vertrek",
+    "calcRowDeadline": "Indicatief laatste vertrek",
     "basisTitle": "Metingen en voorspellingen",
     "basisBody": "De inschatting van dit moment is gebaseerd op de gemeten waterstand van het station {station}. Toekomstige momenten zijn gebaseerd op de DMI-voorspelling inclusief weer en wind — daarom neemt de betrouwbaarheid af naarmate u verder vooruitkijkt.",
     "factsTitle": "Goed om te weten",
-    "fact1": "Mandø is alleen bereikbaar via de Låningsvej-dam bij laagwater — meestal 2 veilige momenten per dag.",
+    "fact1": "Mandø is alleen bereikbaar via de Låningsvej-dam bij laagwater — meestal 2 begaanbare momenten per dag.",
     "fact2": "Reken op ongeveer {minutes} min voor de oversteek met de auto.",
     "fact3": "Vertrek nooit wanneer het water dicht bij de grens stijgt.",
+    "fact4": "Sterke westenwind kan het water 20–40 cm hoger opstuwen dan de getijdentabel — kijk naar de gemeten waterstand, niet alleen naar de klok.",
+    "officialTitle": "Officiële richtlijn",
+    "officialBody": "De gemeente Esbjerg geeft aan dat oversteken veilig is bij een waterstand onder +50 cm, gemeten bij Ribe Kammersluse. Twijfelt u, neem dan de tractorbus of bel Mandø Brugs og Camping op +45 75 44 51 02.",
     "showChart": "Toon waterstandsgrafiek",
     "hideChart": "Verberg waterstandsgrafiek"
   },
-  "explainer": {
-    "title": "Nooit eerder getijden gezien?",
-    "whatTitle": "De zee beweegt twee keer per dag",
-    "whatBody": "Twee keer per dag stijgt de zee (vloed) en zakt weer (eb), aangetrokken door de maan. Bij Mandø is het verschil ongeveer 2 meter — genoeg om de weg bij vloed volledig te bedekken.",
-    "roadTitle": "De weg staat soms onder water",
-    "roadBody": "Mandø bereik je via de Låningsvej, een gravel dam over de zeebodem. Bij eb is het een gewone weg; bij vloed verdwijnt hij onder zee. Dat is normaal en gebeurt twee keer per dag.",
-    "windTitle": "De wind verandert alles",
-    "windBody": "Sterke westenwind kan het water veel hoger opstuwen dan de getijdentabel aangeeft en de weg de hele dag onder water houden. Daarom gebruikt deze pagina live metingen, niet alleen de getijdentabel.",
-    "ruleTitle": "De gouden regel",
-    "ruleBody": "Begin nooit met oversteken als het water stijgt. Twijfelt u, wacht dan op het volgende moment of ga mee met de tractorbus vanaf het Vadehavscentret."
+  "notice": {
+    "title": "Voordat u vertrekt",
+    "body1": "Deze pagina is een onofficieel hulpmiddel. Ze toont live waterstanden van DMI en indicatieve oversteekmomenten — ze vervangt niet uw eigen beoordeling van de omstandigheden ter plaatse.",
+    "body2": "Begin nooit met oversteken terwijl het water stijgt en dicht bij wegniveau staat. Sterke wind kan het water sneller en hoger opstuwen dan voorspeld.",
+    "body3": "Officiële richtlijn: oversteken is veilig bij een waterstand onder +50 cm bij Ribe Kammersluse (gemeente Esbjerg). Twijfelt u, neem dan de tractorbus.",
+    "dismiss": "Begrepen"
   },
   "footer": {
-    "disclaimer": "Deze dienst is een hulpmiddel voor bezoekers, geen officiële veiligheidsdienst. Weer en getij kunnen de omstandigheden veranderen — u bent zelf verantwoordelijk voor het beoordelen van de veiligheid voor het oversteken. Bel 112 in een noodgeval.",
-    "source": "Live gegevens: Deens Meteorologisch Instituut (DMI) & Deense Kustautoriteit, meetstation bij {station}.",
+    "disclaimer": "Onofficiële dienst met indicatieve informatie — geen garantie. Metingen kunnen fouten bevatten of vertraagd zijn, en weer en wind kunnen de omstandigheden snel veranderen. U bent zelf verantwoordelijk voor het beoordelen van de veiligheid voordat u vertrekt. Bel 112 in een noodgeval.",
+    "source": "Gebaseerd op gegevens van DMI en de Deense Kustautoriteit, vervolgens bewerkt. Meetstation: {station}.",
+    "official": "Officiële bronnen:",
     "data": "Ruwe data (voor locals)",
     "display": "Schermweergave (voor winkels & cafés)",
     "admin": "Admin"
@@ -167,16 +161,16 @@
     "selectDay": "Dag",
     "stationLabel": "Meetstation",
     "legend": "De weg overstroomt bij {road} cm.",
-    "legendSafe": "veilig om te vertrekken",
-    "legendCaution": "begaanbaar — vertrek niet",
+    "legendSafe": "indicatief oversteekmoment",
+    "legendCaution": "onder wegniveau — te laat om te vertrekken",
     "legendFlooded": "weg overstroomd",
-    "lastSafeStart": "Laatste veilige vertrektijd",
+    "lastSafeStart": "Indicatief laatste vertrek",
     "caution": {
       "title": "Vertrek nu niet",
-      "late": "Het water staat hier onder wegniveau, maar stijgt — om {time} bereikt het {road} cm, en een veilige oversteek duurt {minutes} min. Te laat om te vertrekken.",
-      "lateNoTime": "Het water staat hier onder wegniveau, maar er is niet genoeg tijd meer ({minutes} min) voor een veilige oversteek voordat het weer stijgt.",
-      "early": "Geen veilig venster op dit moment. Het volgende opent om {time}.",
-      "brief": "Het water zakt hier onder wegniveau, maar niet ver of lang genoeg voor een veilig oversteekvenster."
+      "late": "Het water staat hier onder wegniveau, maar stijgt — om {time} bereikt het {road} cm, en voor de oversteek wordt {minutes} min gerekend. Te laat om te vertrekken.",
+      "lateNoTime": "Het water staat hier onder wegniveau, maar er is niet genoeg tijd meer ({minutes} min) voor de oversteek voordat het weer stijgt.",
+      "early": "Geen begaanbaar venster op dit moment. Het volgende opent om {time}.",
+      "brief": "Het water zakt hier onder wegniveau, maar niet ver of lang genoeg voor een begaanbaar venster."
     },
     "driftKey": "hoeveel de voorspelling ernaast zat (tik op een Δ)",
     "drift": {
@@ -190,7 +184,7 @@
     "road": {
       "tag": "weg · {road} cm",
       "title": "Weghoogte",
-      "body": "De lijn markeert de weghoogte ({road} cm) — daarboven staat de weg onder water. Groen = veilig venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de weg."
+      "body": "De lijn markeert de weghoogte ({road} cm) — daarboven staat de weg onder water. Groen = indicatief venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de weg."
     },
     "forecastTag": "voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",

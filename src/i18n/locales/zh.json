@@ -4,8 +4,7 @@
     "subtitle": "前往曼德岛（Mandø）"
   },
   "stations": {
-    "label": "测量站",
-    "basedOn": "评估基于 {name}"
+    "label": "测量站"
   },
   "common": {
     "measured": "实测值",
@@ -20,21 +19,17 @@
     "tomorrow": "明天"
   },
   "verdict": {
-    "safeTitle": "现在可以通行",
-    "safeSubRising": "水位低于 {limit} 厘米，但已开始上升。您仍可安全通行——请在最后出发时间前出发。",
-    "safeSubFalling": "水位低于 {limit} 厘米且正在下降。通过堤道的时间还很充裕。",
-    "safeLine1": "最后出发时间 {time}",
+    "safeTitle": "水位低于通行线",
+    "safeLine1": "参考最后出发时间 {time}",
     "safeLine2": "{duration}后",
     "cautionTitle": "请勿开始通行",
-    "approachingTitle": "即将可通行",
+    "approachingTitle": "水位即将降到通行线以下",
     "approachingLine1": "请等到 {time}",
     "approachingSoon": "水位正好在路面高度且正在下降——请稍候。",
-    "cautionSub": "道路目前仍可通行，但水位将在 {time} 再次达到 {limit} 厘米——已没有足够时间（{duration}）安全通过。如果您已经在路上，请保持冷静继续前行。",
-    "cautionLine1WithNext": "下一个安全出发时段",
+    "cautionLine1WithNext": "下一个参考时段",
     "cautionLine2WithNext": "{day} {time}",
     "cautionLine1NoNext": "请等待下一次退潮",
     "unsafeTitle": "禁止通行",
-    "unsafeSub": "堤道已被淹没或即将被淹没——水位约达到 {flood} 厘米时道路会被淹没。请等待下一次退潮。",
     "unsafeLine1WithNext": "下一个通行时段：{day} {time}",
     "unsafeLine2WithNext": "最后出发时间 {time}",
     "unsafeLine1NoNext": "预测中没有可通行时段",
@@ -43,19 +38,19 @@
     "levelNow": "当前水位为 {cm} 厘米",
     "puddleWarning": "请谨慎通行。部分路段可能仍有积水——如遇积水，请等待其退去。",
     "floodsAt": "水将于 {time} 到达路面",
-    "stormBanner": "天气与风力：比天文潮位高 {cm} 厘米，已计入预测。",
-    "shortSafe": "最晚 {time} 出发",
+    "shortSafe": "最晚 {time} · 供参考",
     "shortCaution": "出发已太晚",
     "shortUnsafe": "下次 {time}",
     "shortNone": "无通行时段",
     "staleBanner": "最近一次实际水位测量是在 {duration}，现改为显示 DMI 对该时刻的预测水位。请格外小心。",
     "freshFresh": "{duration}测量",
-    "freshStale": "测量 {duration}——显示预测值"
+    "freshStale": "测量 {duration}——显示预测值",
+    "advisory": "以上信息基于 DMI 数据，仅供参考——请务必自行判断现场情况。"
   },
   "retur": {
     "titleOk": "今天需要返回吗？",
-    "bodyOk": "请最晚于 {time} 离开曼德岛——两个方向适用相同的截止时间。",
-    "titleNone": "今天已没有安全出发时段",
+    "bodyOk": "请最晚于 {time} 离开曼德岛（参考时间）——两个方向适用相同的截止时间。",
+    "titleNone": "今天已没有可通行时段",
     "bodyWithNext": "下一个时段：{day} {time} → 最后出发时间 {deadline}。",
     "bodyNoNext": "预测中没有可通行时段。"
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "道路当前状况",
     "roadLabel": "堤道 · 约 {cm} 厘米",
-    "limitLabel": "{cm} 厘米 · 安全通行线",
-    "caption": "道路横截面示意图。路面约在 {road} 厘米时被淹没。退潮时，水位低于 {falling} 厘米可安全通行；涨潮时我们更为谨慎，采用 {rising} 厘米。",
+    "caption": "道路横截面示意图。路面约在 {road} 厘米时被淹没。退潮时，水位低于 {falling} 厘米视为可通行；涨潮时采用更严格的 {rising} 厘米。以上仅供参考——请自行判断现场情况。",
     "play": "播放",
     "pause": "暂停",
     "reset": "重置",
@@ -90,11 +84,11 @@
   },
   "windows": {
     "title": "什么时候可以通行？",
-    "intro": "以下为安全出发时间——请在绿色时段内出发。",
+    "intro": "以下时段根据 DMI 数据计算，仅供参考——请只在绿色时段内出发，并自行判断实际情况。",
     "nowOpen": "现在开放",
-    "none": "预测期内没有安全通行时段。这通常意味着风暴正在推高水位——请稍后再查看。",
+    "none": "预测期内没有可通行时段。这通常意味着风暴正在推高水位——请稍后再查看。",
     "duration": "{hours} 小时 {minutes} 分钟",
-    "lastDeparture": "最迟 {time} 出发以赶上此时段",
+    "lastDeparture": "此时段的参考最后出发时间为 {time}",
     "lowTide": "低潮 {time}",
     "floodsAt": "道路于 {time} 被淹没",
     "confidenceHigh": "高可信度",
@@ -102,7 +96,7 @@
     "confidenceLow": "低 · 请再次确认",
     "confidenceVeryLow": "极低 · 仅供参考",
     "amberNote": "琥珀色：道路尚未被淹没，但已没有足够时间安全通行——请勿出发。",
-    "tooShort": "仅有 {duration}——时间过短，无法安全通行",
+    "tooShort": "仅有 {duration}——时间太短，无法完成通行",
     "showMore": "查看更远的预测 · 最多7天",
     "showLess": "仅显示未来48小时",
     "extendedNote": "最多显示未来7天的预测。超出此范围后，水位预测的可靠性不足——天气和风力会改变通行时段。请在出行日临近时再次确认。"
@@ -112,7 +106,7 @@
     "observed": "实测",
     "forecast": "预测",
     "now": "现在",
-    "safeLimit": "安全通行线",
+    "safeLimit": "通行线",
     "unsafeLimit": "淹没点",
     "unit": "厘米",
     "tableView": "以表格显示",
@@ -126,30 +120,30 @@
     "calcRowLimit": "水位再次达到 {limit} 厘米",
     "calcRowCrossing": "通行时间（最不利情况）",
     "calcRowBuffer": "安全缓冲时间",
-    "calcRowDeadline": "最后安全出发时间",
+    "calcRowDeadline": "参考最后出发时间",
     "basisTitle": "测量与预测数据",
     "basisBody": "当前评估基于{station}测量站的实测水位。未来时段的预测则基于DMI的天气与风力预测数据——因此预测时间越远，可信度越低。",
     "factsTitle": "实用小贴士",
-    "fact1": "只有在退潮时才能通过 Låningsvej 堤道抵达曼德岛——通常每天有 2 个安全通行时段。",
+    "fact1": "只有在退潮时才能通过 Låningsvej 堤道抵达曼德岛——通常每天有 2 个通行时段。",
     "fact2": "开车通行大约需要 {minutes} 分钟。",
-    "fact3": "水位接近安全线且正在上升时，切勿出发。",
+    "fact3": "水位接近通行线且正在上升时，切勿出发。",
+    "fact4": "强劲的西风可使水位比潮汐表高出 20–40 厘米——请以实测水位为准，而不要只看时间。",
+    "officialTitle": "官方指引",
+    "officialBody": "埃斯比约市政府（Esbjerg Kommune）说明：当里伯水闸（Ribe Kammersluse）水位低于 +50 厘米时可安全通行。如有疑问，请乘坐拖拉机巴士，或致电 Mandø Brugs og Camping：+45 75 44 51 02。",
     "showChart": "显示水位曲线图",
     "hideChart": "隐藏水位曲线图"
   },
-  "explainer": {
-    "title": "第一次接触潮汐？",
-    "whatTitle": "大海每天涨落两次",
-    "whatBody": "在月球引力作用下，大海每天涨潮和退潮各两次。在曼德岛，潮差约为 2 米 — 涨潮时足以完全淹没道路。",
-    "roadTitle": "道路有时会被海水淹没",
-    "roadBody": "前往曼德岛需经过 Låningsvej，一条铺设在海床上的碎石堤道。退潮时它是一条普通道路；涨潮时它会消失在海面之下。这是正常现象，每天发生两次。",
-    "windTitle": "风会改变一切",
-    "windBody": "强劲的西风会把水位推得比潮汐表显示的高得多，甚至让道路整天被淹。因此本页面使用实时测量数据，而不仅仅是潮汐表。",
-    "ruleTitle": "黄金法则",
-    "ruleBody": "涨潮时切勿开始通行。如果不确定，请等待下一个通行时段，或从瓦登海中心（Vadehavscentret）乘坐拖拉机巴士。"
+  "notice": {
+    "title": "出发之前",
+    "body1": "本页面为非官方辅助工具，显示 DMI 实时水位和参考通行时段——不能替代您对现场情况的判断。",
+    "body2": "水位接近路面且正在上涨时，切勿开始通行。强风可能使水位比预测上涨得更快、更高。",
+    "body3": "官方指引：里伯水闸（Ribe Kammersluse）水位低于 +50 厘米时可安全通行（埃斯比约市政府）。如有疑问，请乘坐拖拉机巴士。",
+    "dismiss": "知道了"
   },
   "footer": {
-    "disclaimer": "本服务仅为访客提供参考，并非官方安全服务。天气和潮汐可能改变实际情况——您需自行判断通行是否安全并承担相应责任。紧急情况请拨打 112。",
-    "source": "实时数据：丹麦气象局（DMI）与丹麦海岸管理局，{station}测量站。",
+    "disclaimer": "本服务为非官方服务，信息仅供参考，不作任何保证。测量数据可能有误或延迟，天气和风力可能使情况迅速变化。出发前请自行判断是否安全。紧急情况请拨打 112。",
+    "source": "基于丹麦气象局（DMI）与丹麦海岸管理局的数据，经本站处理。测量站：{station}。",
+    "official": "官方信息来源：",
     "data": "原始数据（当地人）",
     "display": "屏幕模式（供商店和咖啡馆使用）",
     "admin": "管理"
@@ -167,16 +161,16 @@
     "selectDay": "日期",
     "stationLabel": "测量站",
     "legend": "道路在 {road} 厘米时被淹没。",
-    "legendSafe": "可安全出发",
-    "legendCaution": "可通行 — 请勿出发",
+    "legendSafe": "参考通行时段",
+    "legendCaution": "低于路面——出发已太晚",
     "legendFlooded": "道路被淹",
-    "lastSafeStart": "最后安全出发时间",
+    "lastSafeStart": "参考最后出发时间",
     "caution": {
       "title": "现在请勿出发",
-      "late": "此时水位低于路面，但正在上涨 — {time} 将达到 {road} 厘米，而安全通过需要 {minutes} 分钟。已来不及出发。",
-      "lateNoTime": "此时水位低于路面，但在水位再次上涨前，已没有足够的时间（{minutes} 分钟）安全通过。",
-      "early": "此时段没有安全通行窗口。下一个窗口 {time} 开启。",
-      "brief": "此处水位虽降到路面以下，但下降幅度和持续时间都不足以形成安全通行窗口。"
+      "late": "此时水位低于路面，但正在上涨 — {time} 将达到 {road} 厘米，而通行按 {minutes} 分钟计算。已来不及出发。",
+      "lateNoTime": "此时水位低于路面，但在水位再次上涨前，已没有足够的时间（{minutes} 分钟）完成通行。",
+      "early": "此时段没有可通行窗口。下一个窗口 {time} 开启。",
+      "brief": "此处水位虽降到路面以下，但下降幅度和持续时间都不足以形成可通行窗口。"
     },
     "driftKey": "预报偏差（点按 Δ 查看说明）",
     "drift": {
@@ -190,7 +184,7 @@
     "road": {
       "tag": "路面 · {road} 厘米",
       "title": "路面高度",
-      "body": "这条线表示路面高度（{road} 厘米）— 高于此线即道路被淹。绿色 = 安全窗口且有足够时间通过；黄色 = 请勿出发，涨水太近或低水时间太短；红色 = 高于路面。"
+      "body": "这条线表示路面高度（{road} 厘米）— 高于此线即道路被淹。绿色 = 参考通行窗口且有足够时间通过；黄色 = 请勿出发，涨水太近或低水时间太短；红色 = 高于路面。"
     },
     "forecastTag": "预测",
     "noData": "这一天暂无数据。",

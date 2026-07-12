@@ -4,8 +4,7 @@
     "subtitle": "Cruce hacia Mandø"
   },
   "stations": {
-    "label": "Estación de medición",
-    "basedOn": "Evaluación basada en {name}"
+    "label": "Estación de medición"
   },
   "common": {
     "measured": "valor medido",
@@ -20,21 +19,17 @@
     "tomorrow": "Mañana"
   },
   "verdict": {
-    "safeTitle": "Cruce ahora",
-    "safeSubRising": "El agua está por debajo de {limit} cm, pero ha empezado a subir. Aún puede cruzar con seguridad — salga antes de la última salida.",
-    "safeSubFalling": "El agua está por debajo de {limit} cm y bajando. Hay tiempo de sobra para cruzar el camino elevado.",
-    "safeLine1": "Última salida {time}",
+    "safeTitle": "Por debajo del límite transitable",
+    "safeLine1": "Última salida orientativa {time}",
     "safeLine2": "en {duration}",
     "cautionTitle": "No inicie el cruce",
-    "approachingTitle": "Casi transitable",
+    "approachingTitle": "Casi por debajo del límite",
     "approachingLine1": "Espera hasta las {time}",
     "approachingSoon": "El agua está justo al nivel de la carretera y bajando — espere un momento.",
-    "cautionSub": "El camino sigue siendo transitable, pero el agua vuelve a alcanzar {limit} cm a las {time} — ya no queda tiempo suficiente ({duration}) para un cruce seguro. Si ya está en camino, continúe con calma hasta el otro lado.",
-    "cautionLine1WithNext": "Próximo inicio seguro",
+    "cautionLine1WithNext": "Próxima ventana orientativa",
     "cautionLine2WithNext": "{day} a las {time}",
     "cautionLine1NoNext": "Espere a la próxima marea baja",
     "unsafeTitle": "No cruce",
-    "unsafeSub": "El camino está inundado o a punto de estarlo — la carretera queda bajo el agua a unos {flood} cm. Espere a la próxima marea baja.",
     "unsafeLine1WithNext": "Próxima ventana: {day} {time}",
     "unsafeLine2WithNext": "última salida {time}",
     "unsafeLine1NoNext": "No hay ventanas en el pronóstico",
@@ -43,19 +38,19 @@
     "levelNow": "El nivel del agua es de {cm} cm ahora mismo",
     "puddleWarning": "Conduzca con precaución. Algunas partes del camino pueden seguir inundadas — espere a que los charcos bajen si los encuentra.",
     "floodsAt": "El agua llega a la carretera a las {time}",
-    "stormBanner": "Tiempo y viento: {cm} cm por encima de la marea astronómica, incluidos en el pronóstico.",
-    "shortSafe": "salida antes de {time}",
+    "shortSafe": "antes de {time} · orientativo",
     "shortCaution": "demasiado tarde para salir",
     "shortUnsafe": "próxima {time}",
     "shortNone": "sin ventanas",
     "staleBanner": "La última medición real del nivel del agua fue {duration} — se muestra en su lugar el nivel de agua previsto por DMI para este momento. Sea especialmente prudente.",
     "freshFresh": "Medido {duration}",
-    "freshStale": "Medición {duration} — muestra el pronóstico"
+    "freshStale": "Medición {duration} — muestra el pronóstico",
+    "advisory": "Orientación basada en datos de DMI — evalúe siempre usted mismo las condiciones en el lugar."
   },
   "retur": {
     "titleOk": "¿Vuelve hoy?",
-    "bodyOk": "Salga de Mandø antes de las {time} como máximo — el mismo límite se aplica en ambas direcciones.",
-    "titleNone": "Hoy ya no quedan salidas seguras",
+    "bodyOk": "Salga de Mandø antes de las {time} como máximo (orientativo) — el mismo límite se aplica en ambas direcciones.",
+    "titleNone": "Hoy ya no quedan ventanas de cruce",
     "bodyWithNext": "Próxima ventana: {day} {time} → última salida {deadline}.",
     "bodyNoNext": "No hay ventanas en el pronóstico."
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "La situación en el camino ahora mismo",
     "roadLabel": "El camino elevado · ~{cm} cm",
-    "limitLabel": "{cm} cm · límite seguro",
-    "caption": "Corte transversal del camino. La calzada se inunda hacia los {road} cm. Con marea bajando es seguro cruzar por debajo de {falling} cm; con marea subiendo somos más estrictos y usamos {rising} cm.",
+    "caption": "Corte transversal del camino. La calzada se inunda hacia los {road} cm. Con marea bajando el camino se considera transitable por debajo de {falling} cm; con marea subiendo se aplica el umbral más estricto de {rising} cm. Orientativo — evalúe usted mismo las condiciones en el lugar.",
     "play": "Reproducir",
     "pause": "Pausa",
     "reset": "Reiniciar",
@@ -90,11 +84,11 @@
   },
   "windows": {
     "title": "¿Cuándo puedo cruzar?",
-    "intro": "Estas son horas de salida seguras — salga dentro del periodo verde.",
+    "intro": "Ventanas orientativas calculadas a partir de datos de DMI — salga solo dentro de un periodo verde y evalúe usted mismo las condiciones.",
     "nowOpen": "Abierta ahora",
-    "none": "No hay ventanas seguras en el periodo de pronóstico. Normalmente significa que una tormenta está empujando el agua — vuelva a consultar más tarde.",
+    "none": "No hay ventanas transitables en el periodo de pronóstico. Normalmente significa que una tormenta está empujando el agua — vuelva a consultar más tarde.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Salga a más tardar a las {time} para este intervalo",
+    "lastDeparture": "Última salida orientativa {time} para esta ventana",
     "lowTide": "marea baja {time}",
     "floodsAt": "Carretera inundada a las {time}",
     "confidenceHigh": "Alta confianza",
@@ -102,7 +96,7 @@
     "confidenceLow": "Baja · vuelva a comprobar",
     "confidenceVeryLow": "Muy baja · orientativo",
     "amberNote": "Ámbar: el camino aún no está inundado, pero ya no queda tiempo suficiente para un cruce seguro — no salga.",
-    "tooShort": "Solo {duration} — demasiado corto para un cruce seguro",
+    "tooShort": "Solo {duration} — demasiado corto para el cruce",
     "showMore": "Ver más adelante · hasta 7 días",
     "showLess": "Mostrar solo las próximas 48 horas",
     "extendedNote": "Muestra hasta 7 días por adelantado. Más allá de eso, el nivel del agua no se puede predecir con suficiente fiabilidad — el viento y el tiempo desplazan las ventanas. Vuelva a comprobar más cerca de su día de viaje."
@@ -112,7 +106,7 @@
     "observed": "Medido",
     "forecast": "Previsto",
     "now": "Ahora",
-    "safeLimit": "Límite seguro",
+    "safeLimit": "Límite transitable",
     "unsafeLimit": "Punto de inundación",
     "unit": "cm",
     "tableView": "Ver como tabla",
@@ -126,30 +120,30 @@
     "calcRowLimit": "El agua vuelve a alcanzar {limit} cm",
     "calcRowCrossing": "Cruce, peor caso",
     "calcRowBuffer": "Margen de seguridad",
-    "calcRowDeadline": "Última salida segura",
+    "calcRowDeadline": "Última salida orientativa",
     "basisTitle": "Mediciones y pronósticos",
     "basisBody": "La evaluación actual se basa en el nivel del agua medido en la estación de {station}. Las ventanas futuras se basan en el pronóstico de DMI, incluyendo el viento y el tiempo — por eso la confianza baja cuanto más lejos se mira.",
     "factsTitle": "Es bueno saberlo",
-    "fact1": "Solo se puede llegar a Mandø por el camino elevado de Låningsvej con marea baja — normalmente 2 ventanas seguras al día.",
+    "fact1": "Solo se puede llegar a Mandø por el camino elevado de Låningsvej con marea baja — normalmente 2 ventanas transitables al día.",
     "fact2": "Cuente con unos {minutes} min para el cruce en coche.",
     "fact3": "Nunca salga cuando el agua esté subiendo cerca del límite.",
+    "fact4": "Un viento fuerte del oeste puede subir el agua 20–40 cm más de lo que indica la tabla de mareas — guíese por el nivel medido, no solo por la hora.",
+    "officialTitle": "Recomendación oficial",
+    "officialBody": "El municipio de Esbjerg indica que el cruce es seguro cuando el nivel del agua en Ribe Kammersluse está por debajo de +50 cm. En caso de duda, tome el bus-tractor o llame a Mandø Brugs og Camping al +45 75 44 51 02.",
     "showChart": "Mostrar gráfico del nivel del agua",
     "hideChart": "Ocultar gráfico del nivel del agua"
   },
-  "explainer": {
-    "title": "¿Nunca ha visto las mareas?",
-    "whatTitle": "El mar se mueve dos veces al día",
-    "whatBody": "Dos veces al día el mar sube (pleamar) y baja (bajamar), atraído por la luna. En Mandø la diferencia es de unos 2 metros — suficiente para cubrir por completo la carretera con la marea alta.",
-    "roadTitle": "La carretera a veces está bajo el agua",
-    "roadBody": "A Mandø se llega por el Låningsvej, un camino de grava sobre el fondo marino. Con marea baja es una carretera normal; con marea alta desaparece bajo el mar. Es normal y ocurre dos veces al día.",
-    "windTitle": "El viento lo cambia todo",
-    "windBody": "Un viento fuerte del oeste puede empujar el agua mucho más arriba de lo que dice la tabla de mareas y mantener la carretera inundada todo el día. Por eso esta página usa mediciones en vivo, no solo la tabla de mareas.",
-    "ruleTitle": "La regla de oro",
-    "ruleBody": "Nunca empiece a cruzar cuando el agua esté subiendo. Si tiene dudas, espere a la próxima ventana o súbase al bus-tractor del Vadehavscentret."
+  "notice": {
+    "title": "Antes de salir",
+    "body1": "Esta página es una ayuda no oficial. Muestra niveles de agua de DMI en vivo y ventanas orientativas — no sustituye su propia evaluación de las condiciones en el lugar.",
+    "body2": "Nunca empiece a cruzar mientras el agua sube cerca del nivel de la carretera. Un viento fuerte puede subir el agua más rápido y más alto de lo previsto.",
+    "body3": "Recomendación oficial: el cruce es seguro cuando el nivel del agua en Ribe Kammersluse está por debajo de +50 cm (municipio de Esbjerg). En caso de duda, tome el bus-tractor.",
+    "dismiss": "Entendido"
   },
   "footer": {
-    "disclaimer": "Este servicio es una ayuda para los visitantes, no un servicio de seguridad oficial. El tiempo y la marea pueden cambiar las condiciones — usted es responsable de evaluar la seguridad antes de cruzar. Llame al 112 en caso de emergencia.",
-    "source": "Datos en vivo: Instituto Meteorológico Danés (DMI) y Autoridad Costera Danesa, estación de medición de {station}.",
+    "disclaimer": "Servicio no oficial con información orientativa — sin garantía. Las mediciones pueden ser erróneas o llegar con retraso, y el tiempo y el viento pueden cambiar las condiciones rápidamente. Usted es responsable de evaluar la seguridad antes de salir. Llame al 112 en caso de emergencia.",
+    "source": "Basado en datos de DMI y la Autoridad Costera Danesa, procesados posteriormente. Estación de medición: {station}.",
+    "official": "Fuentes oficiales:",
     "data": "Datos sin procesar (locales)",
     "display": "Modo pantalla (para tiendas y cafés)",
     "admin": "Admin"
@@ -167,16 +161,16 @@
     "selectDay": "Día",
     "stationLabel": "Estación",
     "legend": "La carretera se inunda a {road} cm.",
-    "legendSafe": "seguro para salir",
-    "legendCaution": "transitable — no salgas",
+    "legendSafe": "ventana orientativa",
+    "legendCaution": "por debajo de la carretera — demasiado tarde para salir",
     "legendFlooded": "carretera inundada",
-    "lastSafeStart": "Última salida segura",
+    "lastSafeStart": "Última salida orientativa",
     "caution": {
       "title": "No salgas ahora",
-      "late": "Aquí el agua está por debajo de la carretera, pero subiendo — alcanza {road} cm a las {time}, y un cruce seguro tarda {minutes} min. Demasiado tarde para salir.",
-      "lateNoTime": "Aquí el agua está por debajo de la carretera, pero ya no queda tiempo suficiente ({minutes} min) para un cruce seguro antes de que vuelva a subir.",
-      "early": "No hay ventana segura en este momento. La próxima abre a las {time}.",
-      "brief": "Aquí el agua baja del nivel de la carretera, pero no lo suficiente ni durante el tiempo necesario para una ventana segura."
+      "late": "Aquí el agua está por debajo de la carretera, pero subiendo — alcanza {road} cm a las {time}, y el cruce se calcula en {minutes} min. Demasiado tarde para salir.",
+      "lateNoTime": "Aquí el agua está por debajo de la carretera, pero ya no queda tiempo suficiente ({minutes} min) para el cruce antes de que vuelva a subir.",
+      "early": "No hay ventana transitable en este momento. La próxima abre a las {time}.",
+      "brief": "Aquí el agua baja del nivel de la carretera, pero no lo suficiente ni durante el tiempo necesario para una ventana transitable."
     },
     "driftKey": "cuánto se desvió el pronóstico (toca un Δ)",
     "drift": {
@@ -190,7 +184,7 @@
     "road": {
       "tag": "carretera · {road} cm",
       "title": "Nivel de la carretera",
-      "body": "La línea marca el nivel de la carretera ({road} cm) — por encima, la carretera está inundada. Verde = ventana segura con tiempo suficiente para cruzar; ámbar = no salgas, la subida está demasiado cerca o el descenso es demasiado breve; rojo = por encima de la carretera."
+      "body": "La línea marca el nivel de la carretera ({road} cm) — por encima, la carretera está inundada. Verde = ventana orientativa con tiempo suficiente para cruzar; ámbar = no salgas, la subida está demasiado cerca o el descenso es demasiado breve; rojo = por encima de la carretera."
     },
     "forecastTag": "pronóstico",
     "noData": "Aún no hay datos para este día.",

@@ -4,8 +4,7 @@
     "subtitle": "Überfahrt nach Mandø"
   },
   "stations": {
-    "label": "Messstation",
-    "basedOn": "Bewertung basierend auf {name}"
+    "label": "Messstation"
   },
   "common": {
     "measured": "Messwert",
@@ -20,21 +19,17 @@
     "tomorrow": "Morgen"
   },
   "verdict": {
-    "safeTitle": "Jetzt überqueren",
-    "safeSubRising": "Das Wasser liegt unter {limit} cm, steigt aber bereits. Sie können noch sicher überqueren — fahren Sie vor der letzten Abfahrtszeit los.",
-    "safeSubFalling": "Das Wasser liegt unter {limit} cm und fällt. Es bleibt reichlich Zeit, den Damm zu überqueren.",
-    "safeLine1": "Letzte Abfahrt {time}",
+    "safeTitle": "Unter der Befahrbarkeitsgrenze",
+    "safeLine1": "Letzte Abfahrt {time} (Richtwert)",
     "safeLine2": "in {duration}",
     "cautionTitle": "Überquerung nicht mehr beginnen",
-    "approachingTitle": "Bald befahrbar",
+    "approachingTitle": "Bald unter der Grenze",
     "approachingLine1": "Warten bis {time}",
     "approachingSoon": "Das Wasser ist genau auf Straßenhöhe und fällt — einen Moment warten.",
-    "cautionSub": "Der Damm ist noch passierbar, aber das Wasser erreicht um {time} wieder {limit} cm — es bleibt keine ausreichende Zeit ({duration}) mehr für eine sichere Überquerung. Sind Sie bereits unterwegs, fahren Sie ruhig weiter.",
-    "cautionLine1WithNext": "Nächster sicherer Start",
+    "cautionLine1WithNext": "Nächstes Zeitfenster (Richtwert)",
     "cautionLine2WithNext": "{day} um {time}",
     "cautionLine1NoNext": "Warten Sie auf die nächste Ebbe",
     "unsafeTitle": "Nicht überqueren",
-    "unsafeSub": "Der Damm ist überflutet oder wird es gleich sein — die Straße steht bei etwa {flood} cm unter Wasser. Warten Sie auf die nächste Ebbe.",
     "unsafeLine1WithNext": "Nächstes Zeitfenster: {day} {time}",
     "unsafeLine2WithNext": "letzte Abfahrt {time}",
     "unsafeLine1NoNext": "Keine Zeitfenster in der Prognose",
@@ -43,19 +38,19 @@
     "levelNow": "Der Wasserstand beträgt gerade {cm} cm",
     "puddleWarning": "Vorsichtig fahren. Teile der Straße können noch überflutet sein — warten Sie, bis sich Pfützen zurückziehen, falls Sie welche antreffen.",
     "floodsAt": "Das Wasser erreicht die Straße um {time}",
-    "stormBanner": "Wetter & Wind: {cm} cm über der astronomischen Tide, in der Prognose berücksichtigt.",
-    "shortSafe": "Abfahrt bis {time}",
+    "shortSafe": "bis {time} · Richtwert",
     "shortCaution": "zu spät zum Starten",
     "shortUnsafe": "nächste {time}",
     "shortNone": "keine Zeitfenster",
     "staleBanner": "Die letzte tatsächliche Wasserstandsmessung war {duration} — es wird stattdessen der von DMI prognostizierte Wasserstand für diesen Zeitpunkt angezeigt. Seien Sie besonders vorsichtig.",
     "freshFresh": "Gemessen {duration}",
-    "freshStale": "Messung {duration} — zeigt Prognose"
+    "freshStale": "Messung {duration} — zeigt Prognose",
+    "advisory": "Richtwerte auf Basis von DMI-Daten — beurteilen Sie die Bedingungen vor Ort immer selbst."
   },
   "retur": {
     "titleOk": "Fahren Sie heute zurück?",
-    "bodyOk": "Verlassen Sie Mandø spätestens um {time} — dieselbe Frist gilt in beide Richtungen.",
-    "titleNone": "Heute keine sicheren Abfahrten mehr",
+    "bodyOk": "Verlassen Sie Mandø spätestens um {time} (Richtwert) — dieselbe Frist gilt in beide Richtungen.",
+    "titleNone": "Heute keine Zeitfenster mehr",
     "bodyWithNext": "Nächstes Zeitfenster: {day} {time} → letzte Abfahrt {deadline}.",
     "bodyNoNext": "Keine Zeitfenster in der Prognose."
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "Die Lage am Damm gerade",
     "roadLabel": "Der Damm · ~{cm} cm",
-    "limitLabel": "{cm} cm · sichere Grenze",
-    "caption": "Querschnitt des Damms. Die Fahrbahn wird bei etwa {road} cm überflutet. Bei fallendem Wasser ist die Überquerung unter {falling} cm sicher; bei steigendem Wasser sind wir strenger und nutzen {rising} cm.",
+    "caption": "Querschnitt des Damms. Die Fahrbahn wird bei etwa {road} cm überflutet. Bei fallendem Wasser gilt der Damm unter {falling} cm als befahrbar; bei steigendem Wasser gilt strenger {rising} cm. Richtwerte — beurteilen Sie die Bedingungen vor Ort selbst.",
     "play": "Abspielen",
     "pause": "Pause",
     "reset": "Zurücksetzen",
@@ -90,11 +84,11 @@
   },
   "windows": {
     "title": "Wann kann ich rüber?",
-    "intro": "Dies sind sichere Abfahrtszeiten — fahren Sie innerhalb des grünen Zeitraums los.",
+    "intro": "Richtwerte auf Basis der DMI-Daten — fahren Sie nur innerhalb eines grünen Zeitraums los und beurteilen Sie die Bedingungen selbst.",
     "nowOpen": "Jetzt offen",
-    "none": "Keine sicheren Zeitfenster im Prognosezeitraum. Meist drückt dann ein Sturm das Wasser hoch — später erneut prüfen.",
+    "none": "Keine befahrbaren Zeitfenster im Prognosezeitraum. Meist drückt dann ein Sturm das Wasser hoch — später erneut prüfen.",
     "duration": "{hours} Std. {minutes} Min.",
-    "lastDeparture": "Spätestens {time} losfahren, um dieses Fenster zu schaffen",
+    "lastDeparture": "Letzte Abfahrt für dieses Fenster: {time} (Richtwert)",
     "lowTide": "Ebbe {time}",
     "floodsAt": "Straße überflutet um {time}",
     "confidenceHigh": "Hohe Sicherheit",
@@ -102,7 +96,7 @@
     "confidenceLow": "Niedrig · erneut prüfen",
     "confidenceVeryLow": "Sehr niedrig · Richtwert",
     "amberNote": "Gelb: Der Damm ist noch nicht überflutet, aber es bleibt keine ausreichende Zeit mehr für eine sichere Überquerung — nicht mehr losfahren.",
-    "tooShort": "Nur {duration} — zu kurz für eine sichere Überquerung",
+    "tooShort": "Nur {duration} — zu kurz für die Überquerung",
     "showMore": "Weiter voraus sehen · bis zu 7 Tage",
     "showLess": "Nur die nächsten 48 Stunden anzeigen",
     "extendedNote": "Zeigt bis zu 7 Tage im Voraus. Darüber hinaus lässt sich der Wasserstand nicht zuverlässig genug vorhersagen — Wetter und Wind verschieben die Zeitfenster. Prüfen Sie näher am Reisetag erneut."
@@ -112,7 +106,7 @@
     "observed": "Gemessen",
     "forecast": "Erwartet",
     "now": "Jetzt",
-    "safeLimit": "Sichere Grenze",
+    "safeLimit": "Befahrbarkeitsgrenze",
     "unsafeLimit": "Überflutungspunkt",
     "unit": "cm",
     "tableView": "Als Tabelle anzeigen",
@@ -126,30 +120,30 @@
     "calcRowLimit": "Wasser erreicht wieder {limit} cm",
     "calcRowCrossing": "Überquerung, ungünstigster Fall",
     "calcRowBuffer": "Sicherheitspuffer",
-    "calcRowDeadline": "Letzte sichere Abfahrt",
+    "calcRowDeadline": "Letzte Abfahrt (Richtwert)",
     "basisTitle": "Messungen und Prognosen",
     "basisBody": "Die aktuelle Einschätzung basiert auf dem gemessenen Wasserstand der Station {station}. Künftige Zeitfenster basieren auf der DMI-Prognose inklusive Wetter und Wind — deshalb sinkt die Sicherheit, je weiter man vorausschaut.",
     "factsTitle": "Gut zu wissen",
-    "fact1": "Mandø ist nur über den Låningsvej-Damm bei Ebbe erreichbar — meist 2 sichere Zeitfenster pro Tag.",
+    "fact1": "Mandø ist nur über den Låningsvej-Damm bei Ebbe erreichbar — meist 2 befahrbare Zeitfenster pro Tag.",
     "fact2": "Rechnen Sie mit etwa {minutes} Min. für die Überquerung mit dem Auto.",
     "fact3": "Fahren Sie nie los, wenn das Wasser nahe der Grenze steigt.",
+    "fact4": "Starker Westwind kann das Wasser 20–40 cm höher drücken als die Gezeitentabelle — richten Sie sich nach dem gemessenen Wasserstand, nicht nur nach der Uhr.",
+    "officialTitle": "Offizielle Hinweise",
+    "officialBody": "Die Gemeinde Esbjerg gibt an, dass die Überfahrt bei einem Wasserstand unter +50 cm (gemessen an der Ribe Kammersluse) sicher ist. Im Zweifel nehmen Sie den Traktorbus oder rufen Sie Mandø Brugs og Camping an: +45 75 44 51 02.",
     "showChart": "Wasserstandskurve anzeigen",
     "hideChart": "Wasserstandskurve ausblenden"
   },
-  "explainer": {
-    "title": "Noch nie Gezeiten erlebt?",
-    "whatTitle": "Das Meer bewegt sich zweimal am Tag",
-    "whatBody": "Zweimal täglich steigt das Meer (Flut) und fällt wieder (Ebbe), gezogen vom Mond. Bei Mandø beträgt der Unterschied etwa 2 Meter — genug, um die Straße bei Flut vollständig zu bedecken.",
-    "roadTitle": "Die Straße liegt manchmal unter Wasser",
-    "roadBody": "Nach Mandø gelangt man über den Låningsvej, einen Schotterdamm über den Meeresboden. Bei Ebbe ist er eine normale Straße; bei Flut verschwindet er im Meer. Das ist normal und passiert zweimal am Tag.",
-    "windTitle": "Der Wind ändert alles",
-    "windBody": "Starker Westwind kann das Wasser viel höher drücken, als die Gezeitentabelle angibt, und die Straße den ganzen Tag überflutet halten. Deshalb nutzt diese Seite Live-Messungen, nicht nur die Gezeitentabelle.",
-    "ruleTitle": "Die goldene Regel",
-    "ruleBody": "Beginnen Sie die Überquerung niemals bei steigendem Wasser. Im Zweifel warten Sie auf das nächste Zeitfenster oder fahren Sie mit dem Traktorbus vom Vadehavscentret."
+  "notice": {
+    "title": "Bevor Sie losfahren",
+    "body1": "Diese Seite ist eine inoffizielle Hilfe. Sie zeigt Live-Wasserstände von DMI und unverbindliche Zeitfenster — sie ersetzt nicht Ihre eigene Beurteilung der Bedingungen vor Ort.",
+    "body2": "Beginnen Sie die Überquerung niemals, während das Wasser nahe dem Straßenniveau steigt. Starker Wind kann das Wasser schneller und höher drücken als vorhergesagt.",
+    "body3": "Offizielle Hinweise: Die Überfahrt ist sicher bei einem Wasserstand unter +50 cm an der Ribe Kammersluse (Gemeinde Esbjerg). Im Zweifel nehmen Sie den Traktorbus.",
+    "dismiss": "Verstanden"
   },
   "footer": {
-    "disclaimer": "Dieser Dienst ist eine Orientierungshilfe für Besucher. Wetter und Gezeiten können die Bedingungen ändern — Sie sind selbst dafür verantwortlich, die Sicherheit vor der Überquerung zu beurteilen. Rufen Sie im Notfall 112 an.",
-    "source": "Live-Daten: Dänisches Meteorologisches Institut (DMI) & Küstendirektorat, Messstation bei {station}.",
+    "disclaimer": "Inoffizieller Dienst mit unverbindlichen Richtwerten — keine Gewähr. Messungen können fehlerhaft oder verzögert sein, Wetter und Wind können die Bedingungen schnell ändern. Sie sind selbst dafür verantwortlich, die Sicherheit vor der Fahrt zu beurteilen. Rufen Sie im Notfall 112 an.",
+    "source": "Basierend auf Daten von DMI und der dänischen Küstenbehörde, anschließend weiterverarbeitet. Messstation: {station}.",
+    "official": "Offizielle Quellen:",
     "data": "Rohdaten (für Einheimische)",
     "display": "Bildschirmmodus (für Geschäfte & Cafés)",
     "admin": "Admin"
@@ -167,16 +161,16 @@
     "selectDay": "Tag",
     "stationLabel": "Messstation",
     "legend": "Die Straße wird bei {road} cm überflutet.",
-    "legendSafe": "sicher loszufahren",
-    "legendCaution": "befahrbar — nicht losfahren",
+    "legendSafe": "Zeitfenster (Richtwert)",
+    "legendCaution": "unter Straßenniveau — zu spät zum Losfahren",
     "legendFlooded": "Straße überflutet",
-    "lastSafeStart": "Letzte sichere Abfahrt",
+    "lastSafeStart": "Letzte Abfahrt (Richtwert)",
     "caution": {
       "title": "Jetzt nicht losfahren",
-      "late": "Das Wasser steht hier unter Straßenniveau, steigt aber — um {time} erreicht es {road} cm, und eine sichere Überfahrt dauert {minutes} Min. Zu spät zum Losfahren.",
-      "lateNoTime": "Das Wasser steht hier unter Straßenniveau, aber die Zeit ({minutes} Min.) reicht nicht mehr für eine sichere Überfahrt, bevor es wieder steigt.",
-      "early": "Kein sicheres Zeitfenster zu diesem Zeitpunkt. Das nächste öffnet um {time}.",
-      "brief": "Das Wasser fällt hier unter Straßenniveau, aber nicht tief oder lange genug für ein sicheres Zeitfenster."
+      "late": "Das Wasser steht hier unter Straßenniveau, steigt aber — um {time} erreicht es {road} cm, und die Überfahrt wird mit {minutes} Min. angesetzt. Zu spät zum Losfahren.",
+      "lateNoTime": "Das Wasser steht hier unter Straßenniveau, aber die Zeit ({minutes} Min.) reicht nicht mehr für die Überfahrt, bevor es wieder steigt.",
+      "early": "Kein befahrbares Zeitfenster zu diesem Zeitpunkt. Das nächste öffnet um {time}.",
+      "brief": "Das Wasser fällt hier unter Straßenniveau, aber nicht tief oder lange genug für ein befahrbares Zeitfenster."
     },
     "driftKey": "wie weit die Prognose danebenlag (auf ein Δ tippen)",
     "drift": {
@@ -190,7 +184,7 @@
     "road": {
       "tag": "Straße · {road} cm",
       "title": "Straßenniveau",
-      "body": "Die Linie markiert das Straßenniveau ({road} cm) — darüber ist die Straße überflutet. Grün = sicheres Zeitfenster mit genug Zeit für die Überfahrt; Gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; Rot = über der Straße."
+      "body": "Die Linie markiert das Straßenniveau ({road} cm) — darüber ist die Straße überflutet. Grün = Zeitfenster (Richtwert) mit genug Zeit für die Überfahrt; Gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; Rot = über der Straße."
     },
     "forecastTag": "Prognose",
     "noData": "Noch keine Daten für diesen Tag.",

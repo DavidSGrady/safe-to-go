@@ -12,6 +12,7 @@ import DayTripPlanner from '@/components/DayTripPlanner.vue'
 import RoadCrossSection from '@/components/RoadCrossSection.vue'
 import WindowsList from '@/components/WindowsList.vue'
 import DiveDeeper from '@/components/DiveDeeper.vue'
+import FirstVisitNotice from '@/components/FirstVisitNotice.vue'
 import AdminPreviewBar from '@/components/AdminPreviewBar.vue'
 import StationSelector from '@/components/StationSelector.vue'
 import LangSwitcher from '@/components/LangSwitcher.vue'
@@ -64,6 +65,8 @@ onBeforeUnmount(() => observer?.disconnect())
 
     <StationSelector />
 
+    <FirstVisitNotice />
+
     <div v-if="loading" class="card skeleton" aria-busy="true"></div>
 
     <template v-else-if="status && rules">
@@ -92,6 +95,14 @@ onBeforeUnmount(() => observer?.disconnect())
     <footer>
       <p class="muted">{{ t('footer.disclaimer') }}</p>
       <p class="muted">{{ t('footer.source', { station: primaryStationName }) }}</p>
+      <p class="muted">
+        {{ t('footer.official') }}
+        <a href="https://oplev.esbjerg.dk/oplev-naturen/ved-vandet/mandoe" target="_blank" rel="noopener">Esbjerg Kommune</a>
+        ·
+        <a href="https://www.dmi.dk/vandstand/" target="_blank" rel="noopener">DMI vandstand</a>
+        ·
+        <a href="https://mandoebussen.dk" target="_blank" rel="noopener">Mandøbussen</a>
+      </p>
       <p class="muted">
         <RouterLink to="/data">{{ t('footer.data') }}</RouterLink>
       </p>

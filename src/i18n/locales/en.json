@@ -4,8 +4,7 @@
     "subtitle": "Crossing to Mandø"
   },
   "stations": {
-    "label": "Measuring station",
-    "basedOn": "Assessment based on {name}"
+    "label": "Measuring station"
   },
   "common": {
     "measured": "measured value",
@@ -20,21 +19,17 @@
     "tomorrow": "Tomorrow"
   },
   "verdict": {
-    "safeTitle": "Cross now",
-    "safeSubRising": "The water is below {limit} cm, but has started rising. You can still cross safely — leave before the last departure time.",
-    "safeSubFalling": "The water is below {limit} cm and falling. There is plenty of time to cross the causeway.",
-    "safeLine1": "Last departure {time}",
+    "safeTitle": "Below the passable limit",
+    "safeLine1": "Indicative last departure {time}",
     "safeLine2": "{duration} from now",
     "cautionTitle": "Do not start crossing",
-    "approachingTitle": "Almost passable",
+    "approachingTitle": "Nearly below the limit",
     "approachingLine1": "Wait until {time}",
     "approachingSoon": "The water is right at the road level and falling — give it a moment.",
-    "cautionSub": "The road is still passable, but the water reaches {limit} cm again at {time} — there is no longer enough time ({duration}) for a safe crossing. If you are already on the road, continue calmly across.",
-    "cautionLine1WithNext": "Next safe start",
+    "cautionLine1WithNext": "Next indicative window",
     "cautionLine2WithNext": "{day} at {time}",
     "cautionLine1NoNext": "Wait for the next low tide",
     "unsafeTitle": "Do not cross",
-    "unsafeSub": "The causeway is flooded or about to flood — the road goes under water at about {flood} cm. Wait for the next low tide.",
     "unsafeLine1WithNext": "Next window: {day} {time}",
     "unsafeLine2WithNext": "last departure {time}",
     "unsafeLine1NoNext": "No windows in the forecast",
@@ -43,19 +38,19 @@
     "levelNow": "The water is {cm} cm right now",
     "puddleWarning": "Proceed with caution. Parts of the road may still be flooded — wait for puddles to recede if you meet them.",
     "floodsAt": "The water reaches the road at {time}",
-    "stormBanner": "Weather & wind: {cm} cm above the astronomical tide, factored into the forecast.",
-    "shortSafe": "departure by {time}",
+    "shortSafe": "by {time} · indicative",
     "shortCaution": "too late to start",
     "shortUnsafe": "next {time}",
     "shortNone": "no windows",
     "staleBanner": "The latest actual water-level measurement was {duration} — showing DMI's forecast water level for this time instead. Be extra careful.",
     "freshFresh": "Measured {duration}",
-    "freshStale": "Measurement {duration} — showing forecast"
+    "freshStale": "Measurement {duration} — showing forecast",
+    "advisory": "Guidance based on DMI data — always judge the conditions on site yourself."
   },
   "retur": {
     "titleOk": "Heading back today?",
-    "bodyOk": "Leave Mandø by {time} at the latest — the same deadline applies in both directions.",
-    "titleNone": "No more safe departures today",
+    "bodyOk": "Leave Mandø by {time} at the latest (indicative) — the same deadline applies in both directions.",
+    "titleNone": "No more crossing windows today",
     "bodyWithNext": "Next window: {day} {time} → last departure {deadline}.",
     "bodyNoNext": "No windows in the forecast."
   },
@@ -80,8 +75,7 @@
   "road": {
     "title": "The road right now",
     "roadLabel": "The causeway · ~{cm} cm",
-    "limitLabel": "{cm} cm · passable limit",
-    "caption": "Cross-section of the road. The roadbed floods at about {road} cm. Falling water is safe to cross below {falling} cm; while it's rising, you must finish crossing while the water is still {margin} cm below flooding.",
+    "caption": "Cross-section of the road. The roadbed floods at about {road} cm. With falling water the road counts as passable below {falling} cm; while it's rising, the crossing should be finished while the water is still {margin} cm below flooding. Indicative — judge the conditions on site yourself.",
     "play": "Play",
     "pause": "Pause",
     "reset": "Reset",
@@ -100,11 +94,11 @@
   },
   "windows": {
     "title": "When can I cross?",
-    "intro": "These are safe departure times — leave within the green period.",
+    "intro": "Indicative windows calculated from DMI data — only set out within a green period, and judge the conditions yourself.",
     "nowOpen": "Open now",
-    "none": "No safe crossing windows in the forecast period. This usually means a storm is pushing the water up — check again later.",
+    "none": "No passable windows in the forecast period. This usually means a storm is pushing the water up — check again later.",
     "duration": "{hours} h {minutes} min",
-    "lastDeparture": "Depart by {time} at the latest to make this window",
+    "lastDeparture": "Indicative last departure {time} for this window",
     "lowTide": "low tide {time}",
     "floodsAt": "Road floods at {time}",
     "confidenceHigh": "High confidence",
@@ -112,7 +106,7 @@
     "confidenceLow": "Low · check again",
     "confidenceVeryLow": "Very low · indicative",
     "amberNote": "Amber: the road is not flooded yet, but there is no longer enough time for a safe crossing — do not set out.",
-    "tooShort": "Only {duration} — too short for a safe crossing",
+    "tooShort": "Only {duration} — too short to make the crossing",
     "showMore": "See further ahead · up to 7 days",
     "showLess": "Show only the next 48 hours",
     "extendedNote": "Showing up to 7 days ahead. Beyond that the water level cannot be predicted reliably enough — weather and wind shift the windows. Check again closer to your travel day."
@@ -136,30 +130,30 @@
     "calcRowLimit": "Water reaches {limit} cm again",
     "calcRowCrossing": "Crossing, worst case",
     "calcRowBuffer": "Safety buffer",
-    "calcRowDeadline": "Last safe departure",
+    "calcRowDeadline": "Indicative last departure",
     "basisTitle": "Measurements and forecasts",
     "basisBody": "Right now's assessment is based on the measured water level from the {station} station. Future windows are based on DMI's forecast, including weather and wind — which is why confidence drops the further ahead you look.",
     "factsTitle": "Good to know",
-    "fact1": "Mandø can only be reached via the Låningsvej causeway at low tide — typically 2 safe windows a day.",
+    "fact1": "Mandø can only be reached via the Låningsvej causeway at low tide — typically 2 passable windows a day.",
     "fact2": "Expect the crossing to take about {minutes} min by car.",
     "fact3": "Never set out when the water is rising close to the limit.",
+    "fact4": "Strong westerly wind can push the water 20–40 cm higher than the tide table says — go by the measured level, not just the clock.",
+    "officialTitle": "Official guidance",
+    "officialBody": "Esbjerg Municipality states that crossing is safe when the water level at Ribe Kammersluse is below +50 cm. If in doubt, take the tractor bus or call Mandø Brugs og Camping on +45 75 44 51 02.",
     "showChart": "Show water-level chart",
     "hideChart": "Hide water-level chart"
   },
-  "explainer": {
-    "title": "Never seen a tide before?",
-    "whatTitle": "The sea moves twice a day",
-    "whatBody": "Twice every day the sea rises (high tide) and falls (low tide), pulled by the moon. At Mandø the difference is about 2 metres — enough to completely cover the road at high tide.",
-    "roadTitle": "The road is sometimes under water",
-    "roadBody": "Mandø is reached by the Låningsvej, a gravel causeway across the seabed. At low tide it is a normal road; at high tide it disappears under the sea. This is normal and happens twice a day.",
-    "windTitle": "Wind changes everything",
-    "windBody": "Strong westerly wind can push the water much higher than the tide table says, and keep the road flooded all day. That is why this page uses live measurements, not just the tide table.",
-    "ruleTitle": "The golden rule",
-    "ruleBody": "Never start crossing when the water is rising. If you are unsure, wait for the next window or join a guided tractor bus tour from the Vadehavscentret."
+  "notice": {
+    "title": "Before you set out",
+    "body1": "This page is an unofficial aid. It shows live DMI water levels and indicative crossing windows — it does not replace your own judgement of the conditions on site.",
+    "body2": "Never start crossing while the water is rising close to road level. Strong wind can push the water up faster and higher than forecast.",
+    "body3": "Official guidance: crossing is safe when the water level at Ribe Kammersluse is below +50 cm (Esbjerg Municipality). If in doubt, take the tractor bus.",
+    "dismiss": "Got it"
   },
   "footer": {
-    "disclaimer": "This service is a guide for visitors. Weather and tide can change conditions — you are responsible for judging safety before crossing. Call 112 in an emergency.",
-    "source": "Live data: Danish Meteorological Institute (DMI) & Danish Coastal Authority, measuring station at {station}.",
+    "disclaimer": "Unofficial service providing indicative information — no guarantee. Readings can be faulty or delayed, and weather and wind can change conditions quickly. You are responsible for judging safety before you set out. Call 112 in an emergency.",
+    "source": "Based on data from DMI and the Danish Coastal Authority, subsequently processed. Measuring station: {station}.",
+    "official": "Official sources:",
     "data": "Raw data (for locals)",
     "display": "Display mode (for shops & cafés)",
     "admin": "Admin"
@@ -177,16 +171,16 @@
     "selectDay": "Day",
     "stationLabel": "Station",
     "legend": "Road floods at {road} cm.",
-    "legendSafe": "safe to set off",
-    "legendCaution": "passable — do not set off",
+    "legendSafe": "indicative crossing window",
+    "legendCaution": "below road level — too late to set out",
     "legendFlooded": "road flooded",
-    "lastSafeStart": "Last safe start",
+    "lastSafeStart": "Indicative last departure",
     "caution": {
       "title": "Do not start crossing",
-      "late": "The water is below the road here, but rising — it reaches {road} cm at {time}, and a safe crossing takes {minutes} min. Too late to set off.",
-      "lateNoTime": "The water is below the road here, but there is no longer enough time ({minutes} min) for a safe crossing before it rises again.",
-      "early": "No safe crossing window at this time. The next one opens at {time}.",
-      "brief": "The water dips below the road here, but not far enough or for long enough to give a safe crossing window."
+      "late": "The water is below the road here, but rising — it reaches {road} cm at {time}, and the crossing is reckoned at {minutes} min. Too late to set off.",
+      "lateNoTime": "The water is below the road here, but there is no longer enough time ({minutes} min) for the crossing before it rises again.",
+      "early": "No passable window at this time. The next one opens at {time}.",
+      "brief": "The water dips below the road here, but not far enough or for long enough to give a passable window."
     },
     "driftKey": "how far off the forecast was (tap a Δ)",
     "drift": {
@@ -200,7 +194,7 @@
     "road": {
       "tag": "road · {road} cm",
       "title": "Road level",
-      "body": "The line marks the road level ({road} cm) — above it the road is flooded. Green = a safe window with enough time to cross; amber = do not set off, the rising water is too close or the dip is too brief; red = above the road."
+      "body": "The line marks the road level ({road} cm) — above it the road is flooded. Green = an indicative window with enough time to cross; amber = do not set off, the rising water is too close or the dip is too brief; red = above the road."
     },
     "forecastTag": "forecast",
     "noData": "No data for this day yet.",
