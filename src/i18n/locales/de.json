@@ -17,7 +17,8 @@
     "falling": "Das Wasser fällt",
     "today": "Heute",
     "tomorrow": "Morgen",
-    "refreshing": "Wird aktualisiert …"
+    "refreshing": "Wird aktualisiert …",
+    "refresh": "Aktualisieren"
   },
   "verdict": {
     "safeTitle": "Unter der Grenze",

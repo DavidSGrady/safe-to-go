@@ -50,6 +50,22 @@ const freshness = computed(() => {
 // no browser reload UI). Refetches data — no page reload.
 const { pullPx, ready, refreshing } = usePullToRefresh(() => store.refresh())
 
+// The freshness chip doubles as a refresh button — pull-to-refresh only
+// works from the very top of the page, and the chip is what stays in view
+// (sticky) when someone is deep in the day table.
+const chipRefreshing = ref(false)
+async function refreshNow(): Promise<void> {
+  if (chipRefreshing.value) return
+  chipRefreshing.value = true
+  const started = Date.now()
+  try {
+    await store.refresh()
+  } finally {
+    // Keep the spin visible long enough to register as feedback.
+    setTimeout(() => (chipRefreshing.value = false), Math.max(0, 400 - (Date.now() - started)))
+  }
+}
+
 // Observations as a sortable curve we can sample at arbitrary ticks.
 const observedPoints = computed(() =>
   (readingsByStation.value[stationId.value] ?? [])
@@ -494,10 +510,19 @@ watch(
           <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
         </select>
         <button type="button" class="now-btn" @click="jumpToNow()">{{ t('data.jumpToNow') }}</button>
-        <p v-if="freshness" class="fresh" :class="{ stale: !freshness.fresh }" role="status">
+        <button
+          v-if="freshness"
+          type="button"
+          class="fresh"
+          :class="{ stale: !freshness.fresh }"
+          :title="t('common.refresh')"
+          @click="refreshNow()"
+        >
           <span class="fresh-dot" aria-hidden="true"></span>
-          {{ freshness.text }}
-        </p>
+          <span role="status">{{ freshness.text }}</span>
+          <span class="fresh-icon" :class="{ spin: chipRefreshing }" aria-hidden="true">⟳</span>
+          <span class="visually-hidden">{{ t('common.refresh') }}</span>
+        </button>
       </div>
 
       <p class="legend">
@@ -686,15 +711,41 @@ watch(
   }
 }
 
-/* Freshness chip: full-width row inside the sticky controls grid. */
+/* Freshness chip: full-width row inside the sticky controls grid. Also the
+   tap-to-refresh affordance for anyone scrolled past the top of the page. */
 .fresh {
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 6px;
   margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
   font-size: 0.72rem;
   color: var(--text-secondary);
+  cursor: pointer;
+  justify-self: start;
+}
+
+.fresh-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.fresh-icon.spin {
+  animation: ptr-spin 0.8s linear infinite;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .fresh-dot {

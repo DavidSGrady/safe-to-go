@@ -17,7 +17,8 @@
     "falling": "L'eau baisse",
     "today": "Aujourd'hui",
     "tomorrow": "Demain",
-    "refreshing": "Actualisation …"
+    "refreshing": "Actualisation …",
+    "refresh": "Actualiser"
   },
   "verdict": {
     "safeTitle": "Sous la limite",

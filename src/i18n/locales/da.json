@@ -17,7 +17,8 @@
     "falling": "Vandet falder",
     "today": "I dag",
     "tomorrow": "I morgen",
-    "refreshing": "Opdaterer …"
+    "refreshing": "Opdaterer …",
+    "refresh": "Opdater"
   },
   "verdict": {
     "safeTitle": "Under grænsen",
