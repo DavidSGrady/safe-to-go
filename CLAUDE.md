@@ -25,7 +25,9 @@ Two independent systems. **Do the DB migration first, then push git** (migration
 here are written to be backward-compatible so either order is safe, but keep this habit).
 
 1. **Migrations → Supabase.** Project is already linked (`supabase/.temp/linked-project.json`,
-   ref `eslsgbnrrpjrcqpupxhp`). The CLI is authenticated and works non-interactively.
+   ref `eslsgbnrrpjrcqpupxhp`). The CLI needs auth per machine/session: `npx supabase login`
+   (interactive) or `SUPABASE_ACCESS_TOKEN` in the environment — without it, `db push`,
+   `functions deploy` and `projects` commands fail with "Access token not provided".
    - Apply: `npx supabase db push --yes` (the `--yes` global flag skips the confirm prompt).
    - Check state: `npx supabase migration list --linked` and `npx supabase db push --dry-run`
      ("Remote database is up to date" = nothing pending). Each migration runs in a transaction.
