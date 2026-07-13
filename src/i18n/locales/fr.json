@@ -144,6 +144,7 @@
     "disclaimer": "Service non officiel — toutes les heures et couleurs sont données à titre indicatif, sans garantie. Les mesures peuvent être retardées ou erronées, et la météo et le vent peuvent changer rapidement les conditions. C'est à vous de juger s'il est prudent de traverser. Appelez le 112 en cas d'urgence.",
     "source": "Basé sur des données de DMI et de l'Autorité côtière danoise, retraitées par nos soins. Station de mesure : {station}.",
     "official": "Sources officielles :",
+    "status": "Page d'état (en développement)",
     "data": "Données brutes (pour les locaux)",
     "display": "Mode affichage (pour commerces & cafés)",
     "admin": "Admin"
@@ -156,7 +157,6 @@
   },
   "data": {
     "title": "Données brutes",
-    "back": "Retour au site",
     "intro": "Niveau d'eau mesuré et prévision à {station}, en cm par rapport au DVR90.",
     "selectDay": "Jour",
     "stationLabel": "Station",

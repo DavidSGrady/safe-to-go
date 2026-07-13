@@ -77,7 +77,9 @@ here are written to be backward-compatible so either order is safe, but keep thi
   offset** (`previewOffsetMin` / `setPreviewOffset`): `now` is a computed `realNow + offset`, so
   overriding it time-travels the whole page.
 - `src/stores/auth.ts` — Supabase auth; `isAdmin` = `profiles.role === 'admin'`.
-- `src/pages/` — `HomePage` (public), `AdminPage` (threshold tuning, gated), `LoginPage`.
+- `src/pages/` — `DataPage` (**the public front page at `/`**; `/data` redirects there),
+  `HomePage` (the verdict page, parked at `/status` while it's iterated on with users),
+  `DisplayPage` (`/display`, shop kiosk), `AdminPage` (threshold tuning, gated), `LoginPage`.
 - `src/components/` — `StatusHero`/`StickyVerdict` (verdict), `RoadCrossSection` (road sim),
   `WindowsList`, `ReturnBanner`, `DiveDeeper`, `AdminPreviewBar`.
 - `src/i18n/locales/*.json` — 7 locales (da, en, de, nl, fr, es, zh). `fallbackLocale: 'en'`.

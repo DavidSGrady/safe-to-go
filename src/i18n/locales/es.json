@@ -144,6 +144,7 @@
     "disclaimer": "Servicio no oficial — todas las horas y colores son solo orientativos, sin garantía. Las mediciones pueden llegar con retraso o ser erróneas, y el tiempo y el viento pueden cambiar las condiciones rápidamente. Evaluar si es seguro conducir es su propia responsabilidad. Llame al 112 en caso de emergencia.",
     "source": "Basado en datos de DMI y la Autoridad Costera Danesa, procesados posteriormente. Estación de medición: {station}.",
     "official": "Fuentes oficiales:",
+    "status": "Página de estado (en desarrollo)",
     "data": "Datos sin procesar (locales)",
     "display": "Modo pantalla (para tiendas y cafés)",
     "admin": "Admin"
@@ -156,7 +157,6 @@
   },
   "data": {
     "title": "Datos sin procesar",
-    "back": "Volver al sitio",
     "intro": "Nivel del agua medido y pronóstico en {station}, en cm respecto al DVR90.",
     "selectDay": "Día",
     "stationLabel": "Estación",

@@ -1,12 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { isDemoMode } from '@/lib/supabase'
-import HomePage from '@/pages/HomePage.vue'
+import DataPage from '@/pages/DataPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home', component: HomePage },
+    // The raw-data page is the public front page while the verdict page is
+    // still being iterated on with users. Old /data links keep working.
+    { path: '/', name: 'home', component: DataPage },
+    { path: '/data', redirect: '/' },
+    {
+      path: '/status',
+      name: 'status',
+      component: () => import('@/pages/HomePage.vue'),
+    },
     {
       path: '/login',
       name: 'login',
@@ -17,11 +25,6 @@ const router = createRouter({
       name: 'admin',
       component: () => import('@/pages/AdminPage.vue'),
       meta: { requiresAdmin: true },
-    },
-    {
-      path: '/data',
-      name: 'data',
-      component: () => import('@/pages/DataPage.vue'),
     },
     {
       path: '/display',

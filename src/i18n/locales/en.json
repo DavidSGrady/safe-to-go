@@ -154,6 +154,7 @@
     "disclaimer": "Unofficial service — all times and colours are guidance only, with no guarantee. Readings can be delayed or faulty, and weather and wind can change conditions quickly. Judging whether it is safe to drive is your own responsibility. Call 112 in an emergency.",
     "source": "Based on data from DMI and the Danish Coastal Authority, subsequently processed. Measuring station: {station}.",
     "official": "Official sources:",
+    "status": "Status page (in development)",
     "data": "Raw data (for locals)",
     "display": "Display mode (for shops & cafés)",
     "admin": "Admin"
@@ -166,7 +167,6 @@
   },
   "data": {
     "title": "Raw data",
-    "back": "Back to the site",
     "intro": "Measured water level and forecast at {station}, in cm relative to DVR90.",
     "selectDay": "Day",
     "stationLabel": "Station",

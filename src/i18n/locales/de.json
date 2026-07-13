@@ -144,6 +144,7 @@
     "disclaimer": "Inoffizieller Dienst — alle Zeiten und Farben sind nur eine Orientierung, ohne Gewähr. Messungen können verzögert oder fehlerhaft sein, und Wetter und Wind können die Bedingungen schnell ändern. Ob die Fahrt sicher ist, müssen Sie selbst beurteilen — die Verantwortung liegt bei Ihnen. Rufen Sie im Notfall die 112 an.",
     "source": "Basierend auf Daten von DMI und der dänischen Küstenbehörde, anschließend weiterverarbeitet. Messstation: {station}.",
     "official": "Offizielle Quellen:",
+    "status": "Statusseite (in Entwicklung)",
     "data": "Rohdaten (für Einheimische)",
     "display": "Bildschirmmodus (für Geschäfte & Cafés)",
     "admin": "Admin"
@@ -156,7 +157,6 @@
   },
   "data": {
     "title": "Rohdaten",
-    "back": "Zurück zur Seite",
     "intro": "Gemessener Wasserstand und Prognose bei {station}, in cm bezogen auf DVR90.",
     "selectDay": "Tag",
     "stationLabel": "Messstation",

@@ -154,6 +154,7 @@
     "disclaimer": "Uofficiel tjeneste — alle tider og farver er vejledende og uden garanti. Målinger kan være forsinkede eller fejlbehæftede, og vejr og vind kan hurtigt ændre forholdene. Det er dit eget ansvar at vurdere, om det er sikkert at køre. Ring 112 i nødstilfælde.",
     "source": "Baseret på data fra DMI og Kystdirektoratet, efterfølgende bearbejdet. Målestation: {station}.",
     "official": "Officielle kilder:",
+    "status": "Statusside (under udvikling)",
     "data": "Rådata (for lokale)",
     "display": "Skærmvisning (til butikker & caféer)",
     "admin": "Admin"
@@ -166,7 +167,6 @@
   },
   "data": {
     "title": "Rådata",
-    "back": "Tilbage til siden",
     "intro": "Målt vandstand og prognose ved {station}, i cm i forhold til DVR90.",
     "selectDay": "Dag",
     "stationLabel": "Målestation",

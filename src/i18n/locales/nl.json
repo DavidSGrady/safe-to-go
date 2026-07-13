@@ -144,6 +144,7 @@
     "disclaimer": "Onofficiële dienst — alle tijden en kleuren zijn alleen een leidraad, zonder garantie. Metingen kunnen vertraagd of foutief zijn, en weer en wind kunnen de omstandigheden snel veranderen. Het beoordelen of oversteken veilig is, blijft uw eigen verantwoordelijkheid. Bel 112 in een noodgeval.",
     "source": "Gebaseerd op gegevens van DMI en de Deense Kustautoriteit, vervolgens bewerkt. Meetstation: {station}.",
     "official": "Officiële bronnen:",
+    "status": "Statuspagina (in ontwikkeling)",
     "data": "Ruwe data (voor locals)",
     "display": "Schermweergave (voor winkels & cafés)",
     "admin": "Admin"
@@ -156,7 +157,6 @@
   },
   "data": {
     "title": "Ruwe data",
-    "back": "Terug naar de site",
     "intro": "Gemeten waterstand en voorspelling bij {station}, in cm ten opzichte van DVR90.",
     "selectDay": "Dag",
     "stationLabel": "Meetstation",

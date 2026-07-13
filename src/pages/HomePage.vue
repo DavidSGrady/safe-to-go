@@ -104,7 +104,7 @@ onBeforeUnmount(() => observer?.disconnect())
         <a href="https://mandoebussen.dk" target="_blank" rel="noopener">Mandøbussen</a>
       </p>
       <p class="muted">
-        <RouterLink to="/data">{{ t('footer.data') }}</RouterLink>
+        <RouterLink to="/">{{ t('footer.data') }}</RouterLink>
       </p>
       <p class="muted">
         <RouterLink to="/display">{{ t('footer.display') }}</RouterLink>

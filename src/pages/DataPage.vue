@@ -7,6 +7,8 @@ import { fmtTime, localTimeMs, startOfNextLocalDay } from '@/lib/format'
 import { findWindows } from '@/lib/tide'
 import type { SafeWindow } from '@/lib/types'
 import { STATIONS, stationName } from '@/lib/stations'
+import LangSwitcher from '@/components/LangSwitcher.vue'
+import FirstVisitNotice from '@/components/FirstVisitNotice.vue'
 
 const { t, locale } = useI18n()
 const store = useStatusStore()
@@ -428,11 +430,16 @@ watch(
 <template>
   <div class="page">
     <header class="top">
-      <h1>{{ t('data.title') }}</h1>
-      <RouterLink to="/" class="muted">{{ t('data.back') }}</RouterLink>
+      <div>
+        <h1 class="brand">{{ t('app.title') }}</h1>
+        <span class="brand-sub">{{ t('app.subtitle') }}</span>
+      </div>
+      <LangSwitcher />
     </header>
 
     <p class="secondary intro">{{ t('data.intro', { station: viewStationName }) }}</p>
+
+    <FirstVisitNotice />
 
     <div v-if="loading && !status" class="card skeleton" aria-busy="true"></div>
 
@@ -562,6 +569,28 @@ watch(
           </li>
         </ul>
       </footer>
+
+      <footer class="site-footer">
+        <p class="muted">{{ t('footer.disclaimer') }}</p>
+        <p class="muted">{{ t('footer.source', { station: viewStationName }) }}</p>
+        <p class="muted">
+          {{ t('footer.official') }}
+          <a href="https://oplev.esbjerg.dk/oplev-naturen/ved-vandet/mandoe" target="_blank" rel="noopener">Esbjerg Kommune</a>
+          ·
+          <a href="https://www.dmi.dk/vandstand/" target="_blank" rel="noopener">DMI vandstand</a>
+          ·
+          <a href="https://mandoebussen.dk" target="_blank" rel="noopener">Mandøbussen</a>
+        </p>
+        <p class="muted">
+          <RouterLink to="/status">{{ t('footer.status') }}</RouterLink>
+        </p>
+        <p class="muted">
+          <RouterLink to="/display">{{ t('footer.display') }}</RouterLink>
+        </p>
+        <p class="muted">
+          <RouterLink to="/admin">{{ t('footer.admin') }}</RouterLink>
+        </p>
+      </footer>
     </template>
   </div>
 </template>
@@ -570,10 +599,30 @@ watch(
 .top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
   margin-bottom: 8px;
   flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.brand-sub {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.site-footer {
+  margin-top: 24px;
+}
+
+.site-footer .muted {
+  margin-bottom: 6px;
 }
 .top h1 {
   font-size: 1.3rem;
