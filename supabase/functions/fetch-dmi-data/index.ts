@@ -302,12 +302,24 @@ async function fetchStationPrognosis(station: StationConfig): Promise<ForecastRo
     ? new Date(series.generatedTime).toISOString()
     : new Date().toISOString()
 
+  // Drop the head of each run: the first point (≤ ~10 min after generation)
+  // is intermittently corrupt upstream — e.g. +1 cm between neighbours at
+  // +39/+45 — and, being the last write before that timestamp slips into the
+  // past, it would become the row's permanent value. Skipping it costs
+  // nothing: the previous runs already wrote a reliable 10-to-20-minute-ahead
+  // value for the same timestamp, and it now simply survives.
+  const genMs = Date.parse(generatedAt)
+  const HEAD_SKIP_MS = 12 * 60_000
+
   const rows: ForecastRow[] = []
   for (const v of values) {
     if (v?.time && typeof v.value === 'number' && Number.isFinite(v.value)) {
+      const t = Date.parse(String(v.time))
+      if (!Number.isFinite(t)) continue
+      if (Number.isFinite(genMs) && t - genMs < HEAD_SKIP_MS) continue
       rows.push({
         station_id: station.obsId,
-        forecast_at: new Date(v.time).toISOString(),
+        forecast_at: new Date(t).toISOString(),
         value_cm: Math.round(v.value),
         source: SOURCE_STATION,
         generated_at: generatedAt,
