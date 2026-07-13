@@ -16,7 +16,8 @@
     "rising": "Water is rising",
     "falling": "Water is falling",
     "today": "Today",
-    "tomorrow": "Tomorrow"
+    "tomorrow": "Tomorrow",
+    "refreshing": "Refreshing …"
   },
   "verdict": {
     "safeTitle": "Below the limit",

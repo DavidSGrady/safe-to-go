@@ -16,7 +16,8 @@
     "rising": "Vandet stiger",
     "falling": "Vandet falder",
     "today": "I dag",
-    "tomorrow": "I morgen"
+    "tomorrow": "I morgen",
+    "refreshing": "Opdaterer …"
   },
   "verdict": {
     "safeTitle": "Under grænsen",

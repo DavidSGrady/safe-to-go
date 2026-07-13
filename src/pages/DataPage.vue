@@ -3,12 +3,13 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
-import { fmtTime, localTimeMs, startOfNextLocalDay } from '@/lib/format'
+import { fmtTime, localTimeMs, splitDuration, startOfNextLocalDay } from '@/lib/format'
 import { findWindows } from '@/lib/tide'
 import type { SafeWindow } from '@/lib/types'
 import { STATIONS, stationName } from '@/lib/stations'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 import FirstVisitNotice from '@/components/FirstVisitNotice.vue'
+import { usePullToRefresh } from '@/composables/usePullToRefresh'
 
 const { t, locale } = useI18n()
 const store = useStatusStore()
@@ -29,6 +30,25 @@ watch(stationId, (v) => sessionStorage.setItem(STATION_KEY, v))
 
 const viewStatus = computed(() => statusByStation.value[stationId.value] ?? null)
 const viewStationName = computed(() => stationName(stationId.value))
+
+// Freshness chip in the sticky controls: how old the newest measurement for
+// the viewed station is. Ticks with the 30 s clock, flips to the stale style
+// past the app-wide freshness window (same logic as the status hero).
+const freshness = computed(() => {
+  const s = viewStatus.value
+  if (!s || s.lastObservedAt === null) return null
+  const { hours, minutes } = splitDuration(Math.max(0, now.value - s.lastObservedAt))
+  const duration =
+    hours > 0 ? t('common.agoHoursMinutes', { hours, minutes }) : t('common.agoMinutes', { minutes })
+  return {
+    fresh: s.dataFresh,
+    text: s.dataFresh ? t('verdict.freshFresh', { duration }) : t('verdict.freshStale', { duration }),
+  }
+})
+
+// Pull-to-refresh for phones (incl. installed standalone PWA, where there is
+// no browser reload UI). Refetches data — no page reload.
+const { pullPx, ready, refreshing } = usePullToRefresh(() => store.refresh())
 
 // Observations as a sortable curve we can sample at arbitrary ticks.
 const observedPoints = computed(() =>
@@ -429,6 +449,16 @@ watch(
 
 <template>
   <div class="page">
+    <div
+      v-if="pullPx > 0 || refreshing"
+      class="ptr"
+      :style="{ height: pullPx + 'px' }"
+      role="status"
+      :aria-label="t('common.refreshing')"
+    >
+      <span class="ptr-icon" :class="{ spin: refreshing, ready }" aria-hidden="true">⟳</span>
+    </div>
+
     <header class="top">
       <div>
         <h1 class="brand">{{ t('app.title') }}</h1>
@@ -464,6 +494,10 @@ watch(
           <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
         </select>
         <button type="button" class="now-btn" @click="jumpToNow()">{{ t('data.jumpToNow') }}</button>
+        <p v-if="freshness" class="fresh" :class="{ stale: !freshness.fresh }" role="status">
+          <span class="fresh-dot" aria-hidden="true"></span>
+          {{ freshness.text }}
+        </p>
       </div>
 
       <p class="legend">
@@ -619,6 +653,65 @@ watch(
 
 .site-footer {
   margin-top: 24px;
+}
+
+/* Pull-to-refresh indicator: grows with the drag, spins while refetching. */
+.ptr {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ptr-icon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-muted);
+  padding-bottom: 6px;
+  transition: transform 0.15s ease;
+}
+
+.ptr-icon.ready {
+  transform: rotate(180deg);
+  color: var(--text-secondary);
+}
+
+.ptr-icon.spin {
+  animation: ptr-spin 0.8s linear infinite;
+}
+
+@keyframes ptr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Freshness chip: full-width row inside the sticky controls grid. */
+.fresh {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.fresh-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--verdict-safe-accent);
+  flex: none;
+}
+
+.fresh.stale {
+  color: var(--verdict-caution-fg);
+  font-weight: 600;
+}
+
+.fresh.stale .fresh-dot {
+  background: var(--verdict-caution-accent);
 }
 
 .site-footer .muted {

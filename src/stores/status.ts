@@ -56,6 +56,7 @@ export const useStatusStore = defineStore('status', () => {
   const now = computed(() => realNow.value + (previewOffsetMin.value ?? 0) * 60_000)
 
   let timersStarted = false
+  let lastRefreshAt = 0
 
   /** Full status per station, from that station's own readings/forecast. */
   const statusByStation = computed<Record<string, StatusResult | null>>(() => {
@@ -173,6 +174,7 @@ export const useStatusStore = defineStore('status', () => {
     } finally {
       loading.value = false
       realNow.value = Date.now()
+      lastRefreshAt = Date.now()
     }
   }
 
@@ -184,6 +186,15 @@ export const useStatusStore = defineStore('status', () => {
       realNow.value = Date.now()
     }, RECOMPUTE_MS)
     setInterval(() => void refresh(), REFRESH_MS)
+
+    // Browsers throttle timers in hidden tabs, so a phone waking from the
+    // pocket could sit on stale data until the next poll. Snap the clock
+    // forward immediately and refetch (unless a refresh just ran).
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') return
+      realNow.value = Date.now()
+      if (Date.now() - lastRefreshAt > RECOMPUTE_MS) void refresh()
+    })
 
     if (!isDemoMode) {
       // Live-update when the cron job writes new readings or an admin

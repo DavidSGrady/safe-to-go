@@ -16,7 +16,8 @@
     "rising": "Het water stijgt",
     "falling": "Het water daalt",
     "today": "Vandaag",
-    "tomorrow": "Morgen"
+    "tomorrow": "Morgen",
+    "refreshing": "Vernieuwen …"
   },
   "verdict": {
     "safeTitle": "Onder de grens",

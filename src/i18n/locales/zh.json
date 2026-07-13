@@ -16,7 +16,8 @@
     "rising": "水位正在上升",
     "falling": "水位正在下降",
     "today": "今天",
-    "tomorrow": "明天"
+    "tomorrow": "明天",
+    "refreshing": "正在更新…"
   },
   "verdict": {
     "safeTitle": "水位低于通行线",
