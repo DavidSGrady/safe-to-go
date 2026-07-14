@@ -70,7 +70,7 @@ function select(id: string): void {
 .chip.on {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
 }
 
 .chip:focus-visible {

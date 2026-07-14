@@ -11,6 +11,8 @@
     "forecast": "valor previsto (pronóstico)",
     "agoMinutes": "hace {minutes} min",
     "agoHoursMinutes": "hace {hours} h {minutes} min",
+    "agoMinutesShort": "{minutes} min",
+    "agoHoursMinutesShort": "{hours} h {minutes} min",
     "inMinutes": "en {minutes} min",
     "inHoursMinutes": "en {hours} h {minutes} min",
     "rising": "El agua está subiendo",
@@ -164,7 +166,7 @@
     "stationLabel": "Estación",
     "legend": "La carretera se inunda a {road} cm.",
     "legendSafe": "ventana calculada",
-    "legendCaution": "por debajo de la carretera — demasiado tarde para salir",
+    "legendCaution": "demasiado tarde para salir",
     "legendFlooded": "carretera inundada",
     "lastSafeStart": "Última salida calculada",
     "caution": {
@@ -189,8 +191,13 @@
       "body": "La línea marca el nivel de la carretera ({road} cm) — por encima, la carretera está inundada. Verde = ventana calculada con tiempo suficiente para cruzar; ámbar = no salgas, la subida está demasiado cerca o el descenso es demasiado breve; rojo = por encima de la carretera."
     },
     "forecastTag": "pronóstico",
+    "fcBoundary": "las mediciones terminan aquí · pronóstico a partir de aquí",
     "noData": "Aún no hay datos para este día.",
     "jumpToNow": "Ir a ahora",
+    "jumpToNowShort": "Ir a ahora",
+    "nowLabel": "Ahora",
+    "trendRising": "sube",
+    "trendFalling": "baja",
     "nowTag": "ahora",
     "sources": {
       "title": "Fuentes de datos",

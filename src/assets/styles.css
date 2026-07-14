@@ -1,7 +1,8 @@
 /* Design tokens, ported from the "Safe to Go — Mandø" redesign spec.
-   Light mode only. */
+   Light is the reference palette; dark overrides every token below in the
+   prefers-color-scheme block so components must only ever use the tokens. */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --page: #f7f8f6;
   --surface: #fcfcfb;
   --text-primary: #1b2b2e;
@@ -10,7 +11,10 @@
   --grid: #edf0ec;
   --baseline: #dfe3de;
   --border: #e2e6e1;
+  --border-strong: #cbd3cb;
   --accent: #0f6e66;
+  /* Text/icons sitting on an --accent background. */
+  --accent-contrast: #ffffff;
 
   /* Verdict panel — safe (green) / caution (amber) / unsafe (red) */
   --verdict-safe-bg: #e7f2e9;
@@ -57,6 +61,62 @@
 
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark theme: follows the OS preference. Same hue family as light — deep
+   sea-green neutrals — with the verdict hues lifted for contrast on dark
+   grounds. Every token above must have a value here. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #101513;
+    --surface: #171d1a;
+    --text-primary: #e4eae5;
+    --text-secondary: #aab7b0;
+    --text-muted: #7f8e87;
+    --grid: #1f2723;
+    --baseline: #2b342f;
+    --border: #26302a;
+    --border-strong: #38443d;
+    --accent: #4cb2a4;
+    --accent-contrast: #0d1412;
+
+    --verdict-safe-bg: #14291e;
+    --verdict-safe-bd: #1e4630;
+    --verdict-safe-fg: #a8dcba;
+    --verdict-safe-accent: #4db480;
+
+    --verdict-caution-bg: #2b2213;
+    --verdict-caution-bd: #4d3c1a;
+    --verdict-caution-fg: #e3c07a;
+    --verdict-caution-accent: #d9a544;
+
+    --verdict-unsafe-bg: #2d1815;
+    --verdict-unsafe-bd: #543028;
+    --verdict-unsafe-fg: #eba9a0;
+    --verdict-unsafe-accent: #e26f60;
+
+    --verdict-unknown-bg: #1d2420;
+    --verdict-unknown-bd: #2f3a35;
+    --verdict-unknown-fg: #b9c6c0;
+    --verdict-unknown-accent: #7f8e87;
+
+    --water-safe-fill: rgba(77, 180, 128, 0.25);
+    --water-caution-fill: rgba(217, 165, 68, 0.26);
+    --water-unsafe-fill: rgba(226, 111, 96, 0.26);
+
+    --conf-high-bg: #14291e;
+    --conf-high-fg: #a8dcba;
+    --conf-medium-bg: #2b2213;
+    --conf-medium-fg: #e3c07a;
+    --conf-low-bg: #1e242b;
+    --conf-low-fg: #9fb0c0;
+    --conf-verylow-bg: #20262b;
+    --conf-verylow-fg: #8b979f;
+
+    --emergency: #eba9a0;
+
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
 }
 
 * {
@@ -124,7 +184,7 @@ button {
   border-radius: 12px;
   padding: 12px 20px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   font-weight: 600;
   cursor: pointer;
 }

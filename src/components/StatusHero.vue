@@ -218,7 +218,7 @@ const freshnessTxt = computed(() => {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  color: #fff;
+  color: var(--accent-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +258,7 @@ const freshnessTxt = computed(() => {
 .box {
   font-family: var(--font-mono);
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.55);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
   padding: 9px 18px;
   border-radius: 9px;
   display: flex;
@@ -297,8 +297,8 @@ const freshnessTxt = computed(() => {
 .banner {
   font-size: 0.75rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
   padding: 4px 12px;
   border-radius: 999px;
   margin: 0;
@@ -323,7 +323,7 @@ const freshnessTxt = computed(() => {
   gap: 7px;
   font-size: 0.72rem;
   opacity: 0.85;
-  border-top: 1px solid rgba(0, 0, 0, 0.09);
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
   padding-top: 9px;
   margin: 2px 0 0;
   width: 100%;

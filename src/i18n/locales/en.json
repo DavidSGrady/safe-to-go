@@ -11,6 +11,8 @@
     "forecast": "expected value (forecast)",
     "agoMinutes": "{minutes} min ago",
     "agoHoursMinutes": "{hours} h {minutes} min ago",
+    "agoMinutesShort": "{minutes} min",
+    "agoHoursMinutesShort": "{hours} h {minutes} min",
     "inMinutes": "in {minutes} min",
     "inHoursMinutes": "in {hours} h {minutes} min",
     "rising": "Water is rising",
@@ -174,7 +176,7 @@
     "stationLabel": "Station",
     "legend": "Road floods at {road} cm.",
     "legendSafe": "calculated window",
-    "legendCaution": "below road level — too late to set out",
+    "legendCaution": "too late to set out",
     "legendFlooded": "road flooded",
     "lastSafeStart": "Calculated last departure",
     "caution": {
@@ -199,8 +201,13 @@
       "body": "The line marks the road level ({road} cm) — above it the road is flooded. Green = a calculated window with enough time to cross; amber = do not set off, the rising water is too close or the dip is too brief; red = above the road."
     },
     "forecastTag": "forecast",
+    "fcBoundary": "measurements end here · forecast from here on",
     "noData": "No data for this day yet.",
     "jumpToNow": "Jump to now",
+    "jumpToNowShort": "Jump to now",
+    "nowLabel": "Now",
+    "trendRising": "rising",
+    "trendFalling": "falling",
     "nowTag": "now",
     "sources": {
       "title": "Data sources",

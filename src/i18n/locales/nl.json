@@ -11,6 +11,8 @@
     "forecast": "verwachte waarde (voorspelling)",
     "agoMinutes": "{minutes} min geleden",
     "agoHoursMinutes": "{hours} u {minutes} min geleden",
+    "agoMinutesShort": "{minutes} min",
+    "agoHoursMinutesShort": "{hours} u {minutes} min",
     "inMinutes": "over {minutes} min",
     "inHoursMinutes": "over {hours} u {minutes} min",
     "rising": "Het water stijgt",
@@ -164,7 +166,7 @@
     "stationLabel": "Meetstation",
     "legend": "De weg overstroomt bij {road} cm.",
     "legendSafe": "berekend venster",
-    "legendCaution": "onder wegniveau — te laat om te vertrekken",
+    "legendCaution": "te laat om te vertrekken",
     "legendFlooded": "weg overstroomd",
     "lastSafeStart": "Berekend laatste vertrek",
     "caution": {
@@ -189,8 +191,13 @@
       "body": "De lijn markeert de weghoogte ({road} cm) — daarboven staat de weg onder water. Groen = berekend venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de weg."
     },
     "forecastTag": "voorspelling",
+    "fcBoundary": "metingen eindigen hier · vanaf hier voorspelling",
     "noData": "Nog geen gegevens voor deze dag.",
     "jumpToNow": "Spring naar nu",
+    "jumpToNowShort": "Naar nu",
+    "nowLabel": "Nu",
+    "trendRising": "stijgt",
+    "trendFalling": "daalt",
     "nowTag": "nu",
     "sources": {
       "title": "Databronnen",

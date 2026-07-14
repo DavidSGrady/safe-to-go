@@ -301,7 +301,7 @@ const timeTxt = computed(() => fmtTime(scrubTime.value, locale.value))
 .round-btn.play {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   font-size: 11px;
 }
 

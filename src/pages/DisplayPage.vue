@@ -268,7 +268,7 @@ function printPage(): void {
 
 .demo-banner {
   background: var(--verdict-caution-accent);
-  color: #fff;
+  color: var(--accent-contrast);
   border-radius: 12px;
   padding: 8px 14px;
   font-size: 0.85rem;

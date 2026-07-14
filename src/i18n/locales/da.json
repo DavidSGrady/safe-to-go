@@ -11,6 +11,8 @@
     "forecast": "forventet værdi (prognose)",
     "agoMinutes": "for {minutes} min siden",
     "agoHoursMinutes": "for {hours} t {minutes} min siden",
+    "agoMinutesShort": "{minutes} min",
+    "agoHoursMinutesShort": "{hours} t {minutes} min",
     "inMinutes": "om {minutes} min",
     "inHoursMinutes": "om {hours} t {minutes} min",
     "rising": "Vandet stiger",
@@ -174,7 +176,7 @@
     "stationLabel": "Målestation",
     "legend": "Vejen oversvømmes ved {road} cm.",
     "legendSafe": "beregnet vindue",
-    "legendCaution": "under vejniveau — for sent at køre ud",
+    "legendCaution": "for sent at køre ud",
     "legendFlooded": "vejen oversvømmet",
     "lastSafeStart": "Beregnet sidste afgang",
     "caution": {
@@ -199,8 +201,13 @@
       "body": "Stregen markerer vejens niveau ({road} cm) — over stregen står vejen under vand. Grøn = beregnet vindue med tid nok til overfarten; gul = kør ikke ud, det stigende vand er for tæt på, eller dykket er for kort; rød = over vejen."
     },
     "forecastTag": "prognose",
+    "fcBoundary": "målinger slutter her · herfra prognose",
     "noData": "Ingen data for denne dag endnu.",
     "jumpToNow": "Hop til nu",
+    "jumpToNowShort": "Hop til nu",
+    "nowLabel": "Nu",
+    "trendRising": "stiger",
+    "trendFalling": "falder",
     "nowTag": "nu",
     "sources": {
       "title": "Datakilder",

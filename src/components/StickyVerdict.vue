@@ -71,7 +71,7 @@ const short = computed(() => {
   left: 0;
   right: 0;
   z-index: 50;
-  color: #fff;
+  color: var(--accent-contrast);
   transform: translateY(-100%);
   transition: transform 0.25s ease;
   box-shadow: 0 2px 10px rgba(27, 43, 46, 0.18);

@@ -69,7 +69,7 @@ function dismiss() {
   font-size: 0.82rem;
   font-weight: 600;
   color: inherit;
-  background: rgba(255, 255, 255, 0.55);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
   border: 1px solid var(--verdict-caution-bd);
   border-radius: 999px;
   padding: 6px 16px;

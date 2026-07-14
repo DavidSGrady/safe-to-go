@@ -43,7 +43,21 @@ const freshness = computed(() => {
   return {
     fresh: s.dataFresh,
     text: s.dataFresh ? t('verdict.freshFresh', { duration }) : t('verdict.freshStale', { duration }),
+    // Narrow screens: just the age, so the chip leaves room for the now-strip.
+    short:
+      hours > 0
+        ? t('common.agoHoursMinutesShort', { hours, minutes })
+        : t('common.agoMinutesShort', { minutes }),
   }
+})
+
+// The now-strip in the sticky controls: current level + trend for the viewed
+// station. Rising vs falling is the heart of the safety model, and this is
+// the only place the raw-data page states it.
+const nowInfo = computed(() => {
+  const s = viewStatus.value
+  if (!s || s.currentLevelCm === null) return null
+  return { level: Math.round(s.currentLevelCm), rising: s.rising }
 })
 
 // Pull-to-refresh for phones (incl. installed standalone PWA, where there is
@@ -354,6 +368,23 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', onDocKeydown)
 })
 
+// Where measurements hand over to forecast: the last observed row, provided
+// forecast rows follow it. One divider in the list marks the boundary; the
+// hatched bars + hourly tags carry "forecast" the rest of the way down.
+const fcBoundaryT = computed<number | null>(() => {
+  let lastObs: number | null = null
+  let forecastAfter = false
+  for (const r of rows.value) {
+    if (r.observed !== null) {
+      lastObs = r.t
+      forecastAfter = false
+    } else if (lastObs !== null) {
+      forecastAfter = true
+    }
+  }
+  return forecastAfter ? lastObs : null
+})
+
 // The row whose time slot contains "now" (only meaningful on today's view).
 const nowRowT = computed(() => {
   if (selectedOffset.value !== 0) return null
@@ -491,46 +522,64 @@ watch(
 
     <template v-else>
       <div ref="controlsEl" class="controls">
-        <span class="day-label">{{ t('data.stationLabel') }}</span>
-        <div class="seg" role="group" :aria-label="t('data.stationLabel')">
+        <div class="ctl-row">
+          <div class="seg" role="group" :aria-label="t('data.stationLabel')">
+            <button
+              v-for="s in STATIONS"
+              :key="s.id"
+              type="button"
+              class="seg-btn"
+              :class="{ active: s.id === stationId }"
+              :aria-pressed="s.id === stationId"
+              @click="stationId = s.id"
+            >
+              {{ s.name }}
+            </button>
+          </div>
+          <select v-model.number="selectedOffset" class="select" :aria-label="t('data.selectDay')">
+            <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
+          </select>
+        </div>
+        <div class="ctl-row">
+          <button v-if="nowInfo" type="button" class="now-strip" @click="jumpToNow()">
+            <span class="now-dot" aria-hidden="true"></span>
+            <span class="now-lbl">{{ t('data.nowLabel') }}</span>
+            <span class="now-val mono">{{ signed(nowInfo.level) }} cm</span>
+            <span class="now-trend">
+              <template v-if="nowInfo.rising !== null">
+                {{ nowInfo.rising ? '↗' : '↘' }}
+                {{ t(nowInfo.rising ? 'data.trendRising' : 'data.trendFalling') }}
+              </template>
+            </span>
+            <span class="now-jump">{{ t('data.jumpToNowShort') }}</span>
+          </button>
+          <button v-else type="button" class="now-btn" @click="jumpToNow()">
+            {{ t('data.jumpToNow') }}
+          </button>
           <button
-            v-for="s in STATIONS"
-            :key="s.id"
+            v-if="freshness"
             type="button"
-            class="seg-btn"
-            :class="{ active: s.id === stationId }"
-            :aria-pressed="s.id === stationId"
-            @click="stationId = s.id"
+            class="fresh"
+            :class="{ stale: !freshness.fresh }"
+            :title="t('common.refresh')"
+            @click="refreshNow()"
           >
-            {{ s.name }}
+            <span class="fresh-dot" aria-hidden="true"></span>
+            <span role="status" class="fresh-long">{{ freshness.text }}</span>
+            <span class="fresh-short" aria-hidden="true">{{ freshness.short }}</span>
+            <span class="fresh-icon" :class="{ spin: chipRefreshing }" aria-hidden="true">⟳</span>
+            <span class="visually-hidden">{{ t('common.refresh') }}</span>
           </button>
         </div>
-        <label for="day" class="day-label">{{ t('data.selectDay') }}</label>
-        <select id="day" v-model.number="selectedOffset" class="select">
-          <option v-for="d in dayOptions" :key="d.value" :value="d.value">{{ d.label }}</option>
-        </select>
-        <button type="button" class="now-btn" @click="jumpToNow()">{{ t('data.jumpToNow') }}</button>
-        <button
-          v-if="freshness"
-          type="button"
-          class="fresh"
-          :class="{ stale: !freshness.fresh }"
-          :title="t('common.refresh')"
-          @click="refreshNow()"
-        >
-          <span class="fresh-dot" aria-hidden="true"></span>
-          <span role="status">{{ freshness.text }}</span>
-          <span class="fresh-icon" :class="{ spin: chipRefreshing }" aria-hidden="true">⟳</span>
-          <span class="visually-hidden">{{ t('common.refresh') }}</span>
-        </button>
       </div>
 
       <p class="legend">
-        {{ t('data.legend', { road: roadLevel }) }}
-        <span class="legend-key"><span class="dot safe"></span>{{ t('data.legendSafe') }}</span>
-        <span class="legend-key"><span class="dot caution"></span>{{ t('data.legendCaution') }}</span>
-        <span class="legend-key"><span class="dot flooded"></span>{{ t('data.legendFlooded') }}</span>
-        <span class="legend-key"><span class="drift-key">Δ</span>{{ t('data.driftKey') }}</span>
+        <span class="legend-lead">{{ t('data.legend', { road: roadLevel }) }}</span>
+        <span class="chip"><span class="dot safe"></span>{{ t('data.legendSafe') }}</span>
+        <span class="chip"><span class="dot caution"></span>{{ t('data.legendCaution') }}</span>
+        <span class="chip"><span class="dot flooded"></span>{{ t('data.legendFlooded') }}</span>
+        <span class="chip"><span class="swatch" aria-hidden="true"></span>{{ t('data.forecastTag') }}</span>
+        <span class="chip"><span class="drift-key">Δ</span>{{ t('data.drift.title') }}</span>
       </p>
 
       <p v-if="rows.length === 0" class="card none">{{ t('data.noData') }}</p>
@@ -552,22 +601,26 @@ watch(
         </div>
         <span></span>
         <span></span>
-        <div v-if="roadOpen" class="drift-pop road-pop" role="note">
-          <strong>{{ t('data.road.title') }}</strong>
-          <p>{{ t('data.road.body', { road: roadLevel }) }}</p>
-        </div>
+        <Transition name="pop">
+          <div v-if="roadOpen" class="drift-pop road-pop" role="note">
+            <strong>{{ t('data.road.title') }}</strong>
+            <p>{{ t('data.road.body', { road: roadLevel }) }}</p>
+          </div>
+        </Transition>
       </div>
 
       <ol v-if="rows.length > 0" class="rows" :aria-label="t('data.title')">
         <template v-for="r in rows" :key="r.t">
           <li
             class="row"
-            :class="{ 'is-now': r.t === nowRowT }"
+            :class="{ 'is-now': r.t === nowRowT, hour: r.time.endsWith('00') }"
             :id="r.t === nowRowT ? 'now-row' : undefined"
             :aria-current="r.t === nowRowT ? 'time' : undefined"
             :title="r.t === nowRowT ? t('data.nowTag') : undefined"
           >
-            <span class="time mono">{{ r.time }}</span>
+            <span class="time mono">
+              <span class="time-h">{{ r.time.slice(0, 2) }}</span><span class="time-m">{{ r.time.slice(2) }}</span>
+            </span>
             <div class="bar-cell">
               <div class="bar-track">
                 <div
@@ -585,10 +638,12 @@ watch(
                 :aria-label="t('data.caution.title')"
                 @click="toggleCaution(r.t)"
               ></button>
-              <div v-if="cautionOpenT === r.t" class="drift-pop caution-pop" role="note">
-                <strong>{{ t('data.caution.title') }}</strong>
-                <p>{{ cautionText(r) }}</p>
-              </div>
+              <Transition name="pop">
+                <div v-if="cautionOpenT === r.t" class="drift-pop caution-pop" role="note">
+                  <strong>{{ t('data.caution.title') }}</strong>
+                  <p>{{ cautionText(r) }}</p>
+                </div>
+              </Transition>
             </div>
             <span class="val mono" :class="{ muted: r.observed === null }">
               {{ signed(r.observed ?? r.forecast ?? 0) }}
@@ -603,17 +658,29 @@ watch(
               >
                 Δ{{ signed(r.drift) }}
               </button>
-              <div v-if="driftOpenT === r.t" class="drift-pop" role="note">
-                <strong>{{ t('data.drift.title') }}</strong>
-                <p>{{ driftText(r) }}</p>
-                <p class="drift-pop-generic">{{ t('data.drift.generic') }}</p>
-              </div>
+              <Transition name="pop">
+                <div v-if="driftOpenT === r.t" class="drift-pop" role="note">
+                  <strong>{{ t('data.drift.title') }}</strong>
+                  <p>{{ driftText(r) }}</p>
+                  <p class="drift-pop-generic">{{ t('data.drift.generic') }}</p>
+                </div>
+              </Transition>
             </div>
-            <span v-else-if="r.observed === null" class="tag">{{ t('data.forecastTag') }}</span>
+            <span v-else-if="r.observed === null && r.time.endsWith('00')" class="tag">{{
+              t('data.forecastTag')
+            }}</span>
             <span v-else class="tag spacer"></span>
           </li>
           <li v-if="deadlineByRowT.has(r.t)" class="deadline-row" role="note">
-            {{ t('data.lastSafeStart') }} · {{ deadlineByRowT.get(r.t) }}
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.4" />
+              <path d="M6 3.2V6l1.9 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+            {{ t('data.lastSafeStart') }}
+            <span class="deadline-time mono">{{ deadlineByRowT.get(r.t) }}</span>
+          </li>
+          <li v-if="r.t === fcBoundaryT" class="fc-divider" role="note">
+            {{ t('data.fcBoundary') }}
           </li>
         </template>
       </ol>
@@ -642,11 +709,9 @@ watch(
         </p>
         <p class="muted">
           <RouterLink to="/status">{{ t('footer.status') }}</RouterLink>
-        </p>
-        <p class="muted">
+          ·
           <RouterLink to="/display">{{ t('footer.display') }}</RouterLink>
-        </p>
-        <p class="muted">
+          ·
           <RouterLink to="/admin">{{ t('footer.admin') }}</RouterLink>
         </p>
       </footer>
@@ -665,7 +730,9 @@ watch(
 }
 
 .brand {
-  font-weight: 800;
+  /* 700 is the heaviest weight the font link actually loads — asking for
+     800 got a synthesized bold. */
+  font-weight: 700;
   font-size: 1.15rem;
   margin: 0;
 }
@@ -711,22 +778,35 @@ watch(
   }
 }
 
-/* Freshness chip: full-width row inside the sticky controls grid. Also the
-   tap-to-refresh affordance for anyone scrolled past the top of the page. */
+/* Freshness chip: sits after the now-strip. Also the tap-to-refresh
+   affordance for anyone scrolled past the top of the page. On narrow
+   screens the label collapses to just the age. */
 .fresh {
-  grid-column: 1 / -1;
+  flex: none;
   display: flex;
   align-items: center;
   gap: 6px;
   margin: 0;
-  padding: 0;
+  padding: 4px 0 4px 8px;
   border: none;
   background: none;
   font: inherit;
   font-size: 0.72rem;
   color: var(--text-secondary);
   cursor: pointer;
-  justify-self: start;
+}
+
+.fresh-short {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .fresh-long {
+    display: none;
+  }
+  .fresh-short {
+    display: inline;
+  }
 }
 
 .fresh-icon {
@@ -780,22 +860,28 @@ watch(
 
 /* Sticky so day/station/now controls stay reachable while scrolling the
    long table (the page is mobile-first; the column is phone-width anyway).
-   Negative margins bleed the background to the page edges. */
+   Negative margins bleed the background to the page edges. Two compact
+   rows: station + day pickers, then the now-strip + freshness chip. */
 .controls {
   position: sticky;
   top: 0;
   z-index: 10;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin: 0 -16px 12px;
-  padding: 10px 16px;
+  padding: 10px 16px 8px;
   background: var(--page);
   border-bottom: 1px solid var(--border);
 }
+.ctl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
 .seg {
-  grid-column: 2 / -1;
+  flex: 1.2;
   display: flex;
   min-width: 0;
   border: 1px solid var(--border);
@@ -822,25 +908,75 @@ watch(
 }
 .seg-btn.active {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   font-weight: 600;
-}
-.day-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  flex: none;
 }
 .select {
   flex: 1;
   min-width: 0;
-  padding: 8px 10px;
+  padding: 8px 8px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
   color: var(--text-primary);
   font: inherit;
+  font-size: 0.82rem;
   accent-color: var(--accent);
+}
+
+/* Now-strip: current level + trend, doubling as the jump-to-now control. */
+.now-strip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  text-align: left;
+}
+.now-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+  animation: now-pulse 2.4s ease-in-out infinite;
+}
+@keyframes now-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+.now-lbl {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex: none;
+}
+.now-val {
+  font-weight: 600;
+  font-size: 0.92rem;
+  flex: none;
+}
+.now-trend {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.now-jump {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  flex: none;
+  white-space: nowrap;
 }
 .now-btn {
   flex: none;
@@ -862,19 +998,40 @@ watch(
   margin: 0 0 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
+  gap: 4px 8px;
   align-items: center;
 }
-.legend-key {
+.legend-lead {
+  flex-basis: 100%;
+  color: var(--text-secondary);
+}
+.chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
 }
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 3px;
   display: inline-block;
+}
+/* Mini sample of the hatched forecast bars. */
+.swatch {
+  width: 14px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+  background-color: color-mix(in srgb, var(--text-muted) 55%, transparent);
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 3px,
+    color-mix(in srgb, var(--surface) 65%, transparent) 3px 6px
+  );
 }
 .dot.safe {
   background: var(--verdict-safe-accent);
@@ -969,21 +1126,34 @@ watch(
   padding: 5px 12px;
   font-size: 12.5px;
 }
-.row:nth-child(even) {
-  background: var(--page);
+/* The full hour is the table's rhythm: a rule above each :00 row instead of
+   zebra striping — calmer, and easier to scan by hour. */
+.row.hour {
+  border-top: 1px solid var(--border-strong);
+}
+.rows > li:first-child {
+  border-top: none;
 }
 .row.is-now {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   box-shadow: inset 3px 0 0 var(--accent);
 }
-.row.is-now .time {
+.row.is-now .time,
+.row.is-now .time .time-h {
   color: var(--accent);
   font-weight: 700;
 }
 
 .time {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 12px;
+}
+.time .time-h {
+  color: var(--text-secondary);
+}
+.row.hour .time .time-h {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .bar-cell {
@@ -1002,7 +1172,7 @@ watch(
   left: 0;
   top: 0;
   bottom: 0;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px 2px 2px 4px;
 }
 .bar-fill.is-safe {
   background: var(--verdict-safe-accent);
@@ -1013,8 +1183,15 @@ watch(
 .bar-fill.is-flooded {
   background: var(--verdict-unsafe-accent);
 }
+/* Forecast bars are hatched (the instrument convention for "projected"),
+   so forecast-ness stays visible on every row, not just at the divider. */
 .bar-fill.is-forecast {
-  opacity: 0.45;
+  opacity: 0.55;
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 3px,
+    color-mix(in srgb, var(--surface) 65%, transparent) 3px 6px
+  );
 }
 
 /* Invisible tap target over an amber bar — stretched a few px beyond the
@@ -1039,13 +1216,14 @@ watch(
   left: calc(-3.4em - 8px);
 }
 
-/* "Last safe start" boundary between the green and amber rows of a window. */
+/* "Last safe start" boundary between the green and amber rows of a window —
+   the most important line in the table, so it gets a clock and a solid pill. */
 .deadline-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 2px 12px;
-  font-size: 10.5px;
+  padding: 4px 12px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--verdict-safe-accent);
   background: color-mix(in srgb, var(--verdict-safe-accent) 10%, transparent);
@@ -1058,6 +1236,34 @@ watch(
   flex: 1;
   background: var(--verdict-safe-accent);
   opacity: 0.5;
+}
+.deadline-row svg {
+  flex: none;
+}
+.deadline-time {
+  background: var(--verdict-safe-accent);
+  color: var(--page);
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 11.5px;
+}
+
+/* Where measurements hand over to forecast. */
+.fc-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 12px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.fc-divider::before,
+.fc-divider::after {
+  content: '';
+  height: 0;
+  flex: 1;
+  border-top: 1px dashed var(--border-strong);
 }
 .road-marker {
   position: absolute;
@@ -1121,6 +1327,17 @@ watch(
   margin-top: 6px !important;
   color: var(--text-muted);
   font-size: 11px;
+}
+/* Popovers fade in with a small rise (the global reduced-motion rule
+   disables this for users who ask for it). */
+.pop-enter-active,
+.pop-leave-active {
+  transition: opacity 0.13s ease, transform 0.13s ease;
+}
+.pop-enter-from,
+.pop-leave-to {
+  opacity: 0;
+  transform: translateY(3px);
 }
 .tag {
   text-align: right;

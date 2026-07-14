@@ -11,6 +11,8 @@
     "forecast": "erwarteter Wert (Prognose)",
     "agoMinutes": "vor {minutes} Min.",
     "agoHoursMinutes": "vor {hours} Std. {minutes} Min.",
+    "agoMinutesShort": "{minutes} Min.",
+    "agoHoursMinutesShort": "{hours} Std. {minutes} Min.",
     "inMinutes": "in {minutes} Min.",
     "inHoursMinutes": "in {hours} Std. {minutes} Min.",
     "rising": "Das Wasser steigt",
@@ -164,7 +166,7 @@
     "stationLabel": "Messstation",
     "legend": "Die Straße wird bei {road} cm überflutet.",
     "legendSafe": "berechnetes Fenster",
-    "legendCaution": "unter Straßenniveau — zu spät zum Losfahren",
+    "legendCaution": "zu spät zum Losfahren",
     "legendFlooded": "Straße überflutet",
     "lastSafeStart": "Berechnete letzte Abfahrt",
     "caution": {
@@ -189,8 +191,13 @@
       "body": "Die Linie markiert das Straßenniveau ({road} cm) — darüber ist die Straße überflutet. Grün = berechnetes Fenster mit genug Zeit für die Überfahrt; Gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; Rot = über der Straße."
     },
     "forecastTag": "Prognose",
+    "fcBoundary": "Messungen enden hier · ab hier Prognose",
     "noData": "Noch keine Daten für diesen Tag.",
     "jumpToNow": "Zu jetzt springen",
+    "jumpToNowShort": "Zu jetzt",
+    "nowLabel": "Jetzt",
+    "trendRising": "steigt",
+    "trendFalling": "fällt",
     "nowTag": "jetzt",
     "sources": {
       "title": "Datenquellen",

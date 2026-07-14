@@ -11,6 +11,8 @@
     "forecast": "valeur attendue (prévision)",
     "agoMinutes": "il y a {minutes} min",
     "agoHoursMinutes": "il y a {hours} h {minutes} min",
+    "agoMinutesShort": "{minutes} min",
+    "agoHoursMinutesShort": "{hours} h {minutes} min",
     "inMinutes": "dans {minutes} min",
     "inHoursMinutes": "dans {hours} h {minutes} min",
     "rising": "L'eau monte",
@@ -164,7 +166,7 @@
     "stationLabel": "Station",
     "legend": "La route est submergée à {road} cm.",
     "legendSafe": "créneau calculé",
-    "legendCaution": "sous le niveau de la route — trop tard pour partir",
+    "legendCaution": "trop tard pour partir",
     "legendFlooded": "route inondée",
     "lastSafeStart": "Dernier départ calculé",
     "caution": {
@@ -189,8 +191,13 @@
       "body": "La ligne marque le niveau de la route ({road} cm) — au-dessus, la route est inondée. Vert = créneau calculé avec assez de temps pour traverser ; orange = ne partez pas, la marée montante est trop proche ou le creux trop bref ; rouge = au-dessus de la route."
     },
     "forecastTag": "prévision",
+    "fcBoundary": "fin des mesures · prévisions à partir d'ici",
     "noData": "Pas encore de données pour ce jour.",
     "jumpToNow": "Aller à maintenant",
+    "jumpToNowShort": "Maintenant",
+    "nowLabel": "Actuel",
+    "trendRising": "monte",
+    "trendFalling": "baisse",
     "nowTag": "maintenant",
     "sources": {
       "title": "Sources des données",

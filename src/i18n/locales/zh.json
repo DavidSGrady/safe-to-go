@@ -11,6 +11,8 @@
     "forecast": "预期值（预测）",
     "agoMinutes": "{minutes} 分钟前",
     "agoHoursMinutes": "{hours} 小时 {minutes} 分钟前",
+    "agoMinutesShort": "{minutes} 分钟",
+    "agoHoursMinutesShort": "{hours} 小时 {minutes} 分钟",
     "inMinutes": "{minutes} 分钟后",
     "inHoursMinutes": "{hours} 小时 {minutes} 分钟后",
     "rising": "水位正在上升",
@@ -164,7 +166,7 @@
     "stationLabel": "测量站",
     "legend": "道路在 {road} 厘米时被淹没。",
     "legendSafe": "推算通行时段",
-    "legendCaution": "低于路面——出发已太晚",
+    "legendCaution": "出发已太晚",
     "legendFlooded": "道路被淹",
     "lastSafeStart": "推算最后出发时间",
     "caution": {
@@ -189,8 +191,13 @@
       "body": "这条线表示路面高度（{road} 厘米）——高于此线即道路被淹。绿色 = 推算通行时段，且有足够时间完成通行；黄色 = 请勿出发，涨水太近或低水时间太短；红色 = 高于路面。"
     },
     "forecastTag": "预测",
+    "fcBoundary": "实测数据到此为止 · 以下为预测",
     "noData": "这一天暂无数据。",
     "jumpToNow": "跳到现在",
+    "jumpToNowShort": "跳到现在",
+    "nowLabel": "现在",
+    "trendRising": "上升",
+    "trendFalling": "下降",
     "nowTag": "现在",
     "sources": {
       "title": "数据来源",
