@@ -179,6 +179,7 @@
     "legendCaution": "too late to set out",
     "legendFlooded": "road flooded",
     "lastSafeStart": "Calculated last departure",
+    "estimateNote": "An estimate — use your own judgement",
     "caution": {
       "title": "Do not start crossing",
       "late": "The water is below the road here, but rising — it reaches {road} cm at {time}, and the crossing is reckoned at {minutes} min. Too late to set off.",

@@ -169,6 +169,7 @@
     "legendCaution": "demasiado tarde para salir",
     "legendFlooded": "carretera inundada",
     "lastSafeStart": "Última salida calculada",
+    "estimateNote": "Una estimación — use su propio criterio",
     "caution": {
       "title": "No salgas ahora",
       "late": "Aquí el agua está por debajo de la carretera, pero subiendo — alcanza {road} cm a las {time}, y el cruce se calcula en {minutes} min. Demasiado tarde para salir.",

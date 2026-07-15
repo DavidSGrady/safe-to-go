@@ -179,6 +179,7 @@
     "legendCaution": "for sent at køre ud",
     "legendFlooded": "vejen oversvømmet",
     "lastSafeStart": "Beregnet sidste afgang",
+    "estimateNote": "Estimat — brug egen dømmekraft",
     "caution": {
       "title": "Kør ikke ud nu",
       "late": "Vandet er under vejniveau her, men stigende — det når {road} cm kl. {time}, og overfarten regnes til {minutes} min. Det er for sent at køre ud.",

@@ -169,6 +169,7 @@
     "legendCaution": "出发已太晚",
     "legendFlooded": "道路被淹",
     "lastSafeStart": "推算最后出发时间",
+    "estimateNote": "仅为估算 — 请自行判断",
     "caution": {
       "title": "现在请勿出发",
       "late": "此时水位低于路面，但正在上涨 — {time} 将达到 {road} 厘米，而通行按 {minutes} 分钟计算。已来不及出发。",

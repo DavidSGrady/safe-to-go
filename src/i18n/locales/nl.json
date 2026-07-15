@@ -169,6 +169,7 @@
     "legendCaution": "te laat om te vertrekken",
     "legendFlooded": "weg overstroomd",
     "lastSafeStart": "Berekend laatste vertrek",
+    "estimateNote": "Een schatting — vertrouw op je eigen oordeel",
     "caution": {
       "title": "Vertrek nu niet",
       "late": "Het water staat hier onder wegniveau, maar stijgt — om {time} bereikt het {road} cm, en voor de oversteek wordt {minutes} min gerekend. Te laat om te vertrekken.",

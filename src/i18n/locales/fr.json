@@ -169,6 +169,7 @@
     "legendCaution": "trop tard pour partir",
     "legendFlooded": "route inondée",
     "lastSafeStart": "Dernier départ calculé",
+    "estimateNote": "Une estimation — fiez-vous à votre propre jugement",
     "caution": {
       "title": "Ne commencez pas la traversée",
       "late": "L'eau est ici sous le niveau de la route, mais elle monte — elle atteint {road} cm à {time}, et la traversée est estimée à {minutes} min. Trop tard pour partir.",

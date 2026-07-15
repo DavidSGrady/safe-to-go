@@ -169,6 +169,7 @@
     "legendCaution": "zu spät zum Losfahren",
     "legendFlooded": "Straße überflutet",
     "lastSafeStart": "Berechnete letzte Abfahrt",
+    "estimateNote": "Ein Schätzwert — verlassen Sie sich auf Ihr eigenes Urteil",
     "caution": {
       "title": "Jetzt nicht losfahren",
       "late": "Das Wasser steht hier unter Straßenniveau, steigt aber — um {time} erreicht es {road} cm, und die Überfahrt wird mit {minutes} Min. angesetzt. Zu spät zum Losfahren.",

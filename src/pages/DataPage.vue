@@ -632,6 +632,7 @@ watch(
           <div v-if="roadOpen" class="drift-pop road-pop" role="note">
             <strong>{{ t('data.road.title') }}</strong>
             <p>{{ t('data.road.body', { road: roadLevel }) }}</p>
+            <p class="drift-pop-generic">{{ t('data.estimateNote') }}</p>
           </div>
         </Transition>
       </div>
@@ -699,12 +700,17 @@ watch(
             <span v-else class="tag spacer"></span>
           </li>
           <li v-if="deadlineByRowT.has(r.t)" class="deadline-row" role="note">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.4" />
-              <path d="M6 3.2V6l1.9 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
-            </svg>
-            {{ t('data.lastSafeStart') }}
-            <span class="deadline-time mono">{{ deadlineByRowT.get(r.t) }}</span>
+            <span class="deadline-body">
+              <span class="deadline-main">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.4" />
+                  <path d="M6 3.2V6l1.9 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg>
+                {{ t('data.lastSafeStart') }}
+                <span class="deadline-time mono">{{ deadlineByRowT.get(r.t) }}</span>
+              </span>
+              <span class="deadline-note">{{ t('data.estimateNote') }}</span>
+            </span>
           </li>
           <li v-if="r.t === fcBoundaryT" class="fc-divider" role="note">
             {{ t('data.fcBoundary') }}
@@ -1248,7 +1254,24 @@ watch(
   font-weight: 700;
   color: var(--verdict-safe-accent);
   background: color-mix(in srgb, var(--verdict-safe-accent) 10%, transparent);
+}
+.deadline-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.deadline-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   white-space: nowrap;
+}
+.deadline-note {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.85;
+  text-align: center;
 }
 .deadline-row::before,
 .deadline-row::after {
