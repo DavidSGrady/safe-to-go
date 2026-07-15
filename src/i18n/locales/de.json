@@ -198,6 +198,8 @@
     "nowLabel": "Jetzt",
     "trendRising": "steigt",
     "trendFalling": "fällt",
+    "checkedNoNew": "Gerade geprüft · nichts Neues",
+    "checkedNoNewShort": "Geprüft · nichts Neues",
     "nowTag": "jetzt",
     "sources": {
       "title": "Datenquellen",

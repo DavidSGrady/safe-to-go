@@ -198,6 +198,8 @@
     "nowLabel": "Nu",
     "trendRising": "stijgt",
     "trendFalling": "daalt",
+    "checkedNoNew": "Zojuist gecontroleerd · niets nieuws",
+    "checkedNoNewShort": "Gecheckt · niets nieuws",
     "nowTag": "nu",
     "sources": {
       "title": "Databronnen",

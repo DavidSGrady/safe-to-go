@@ -61,8 +61,27 @@ const nowInfo = computed(() => {
 })
 
 // Pull-to-refresh for phones (incl. installed standalone PWA, where there is
-// no browser reload UI). Refetches data — no page reload.
-const { pullPx, ready, refreshing } = usePullToRefresh(() => store.refresh())
+// no browser reload UI). Refetches data — no page reload. Shares the
+// "checked, nothing new" feedback with the chip below.
+const { pullPx, ready, refreshing } = usePullToRefresh(checkForNew)
+
+// After a refresh that found nothing newer, the chip's age text wouldn't
+// change — indistinguishable from a refresh that silently failed. Show
+// "checked just now · nothing new" for a few seconds so the outcome is
+// visible either way (new data updates the age text by itself).
+const checkedNoNew = ref(false)
+let checkedTimer: ReturnType<typeof setTimeout> | undefined
+async function checkForNew(): Promise<void> {
+  const before = viewStatus.value?.lastObservedAt ?? null
+  await store.refresh()
+  const after = viewStatus.value?.lastObservedAt ?? null
+  if (before !== null && after === before) {
+    checkedNoNew.value = true
+    clearTimeout(checkedTimer)
+    checkedTimer = setTimeout(() => (checkedNoNew.value = false), 6000)
+  }
+}
+onBeforeUnmount(() => clearTimeout(checkedTimer))
 
 // The freshness chip doubles as a refresh button — pull-to-refresh only
 // works from the very top of the page, and the chip is what stays in view
@@ -73,7 +92,7 @@ async function refreshNow(): Promise<void> {
   chipRefreshing.value = true
   const started = Date.now()
   try {
-    await store.refresh()
+    await checkForNew()
   } finally {
     // Keep the spin visible long enough to register as feedback.
     setTimeout(() => (chipRefreshing.value = false), Math.max(0, 400 - (Date.now() - started)))
@@ -565,9 +584,17 @@ watch(
             @click="refreshNow()"
           >
             <span class="fresh-dot" aria-hidden="true"></span>
-            <span role="status" class="fresh-long">{{ freshness.text }}</span>
-            <span class="fresh-short" aria-hidden="true">{{ freshness.short }}</span>
-            <span class="fresh-icon" :class="{ spin: chipRefreshing }" aria-hidden="true">⟳</span>
+            <template v-if="checkedNoNew && !chipRefreshing">
+              <span role="status" class="fresh-long">{{ t('data.checkedNoNew') }}</span>
+              <span class="fresh-short" aria-hidden="true">{{ t('data.checkedNoNewShort') }}</span>
+            </template>
+            <template v-else>
+              <span role="status" class="fresh-long">{{ freshness.text }}</span>
+              <span class="fresh-short" aria-hidden="true">{{ freshness.short }}</span>
+            </template>
+            <span class="fresh-icon" :class="{ spin: chipRefreshing }" aria-hidden="true">
+              {{ checkedNoNew && !chipRefreshing ? '✓' : '⟳' }}
+            </span>
             <span class="visually-hidden">{{ t('common.refresh') }}</span>
           </button>
         </div>
@@ -1126,14 +1153,8 @@ watch(
   padding: 5px 12px;
   font-size: 12.5px;
 }
-/* The full hour is the table's rhythm: a rule above each :00 row instead of
-   zebra striping — calmer, and easier to scan by hour. */
-.row.hour {
-  border-top: 1px solid var(--border-strong);
-}
-.rows > li:first-child {
-  border-top: none;
-}
+/* The full hour is the table's rhythm: the :00 rows carry an emphasized
+   hour digit (below) rather than divider lines, which proved too noisy. */
 .row.is-now {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   box-shadow: inset 3px 0 0 var(--accent);

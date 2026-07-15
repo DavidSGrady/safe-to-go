@@ -198,6 +198,8 @@
     "nowLabel": "Actuel",
     "trendRising": "monte",
     "trendFalling": "baisse",
+    "checkedNoNew": "Vérifié à l'instant · rien de neuf",
+    "checkedNoNewShort": "Vérifié · rien de neuf",
     "nowTag": "maintenant",
     "sources": {
       "title": "Sources des données",

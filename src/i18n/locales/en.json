@@ -208,6 +208,8 @@
     "nowLabel": "Now",
     "trendRising": "rising",
     "trendFalling": "falling",
+    "checkedNoNew": "Checked just now · nothing new",
+    "checkedNoNewShort": "Checked · nothing new",
     "nowTag": "now",
     "sources": {
       "title": "Data sources",

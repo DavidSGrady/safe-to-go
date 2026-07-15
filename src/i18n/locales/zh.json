@@ -198,6 +198,8 @@
     "nowLabel": "现在",
     "trendRising": "上升",
     "trendFalling": "下降",
+    "checkedNoNew": "刚刚检查过 · 暂无更新",
+    "checkedNoNewShort": "已检查 · 暂无更新",
     "nowTag": "现在",
     "sources": {
       "title": "数据来源",

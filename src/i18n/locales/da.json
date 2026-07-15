@@ -208,6 +208,8 @@
     "nowLabel": "Nu",
     "trendRising": "stiger",
     "trendFalling": "falder",
+    "checkedNoNew": "Tjekket lige nu · intet nyt",
+    "checkedNoNewShort": "Tjekket · intet nyt",
     "nowTag": "nu",
     "sources": {
       "title": "Datakilder",
