@@ -164,18 +164,18 @@
     "intro": "Niveau d'eau mesuré et prévision à {station}, en cm par rapport au DVR90.",
     "selectDay": "Jour",
     "stationLabel": "Station",
-    "legend": "La route est submergée à {road} cm.",
+    "legend": "Limite officielle de passage sûr (commune d'Esbjerg) : {road} cm.",
     "legendSafe": "créneau calculé",
     "legendCaution": "trop tard pour partir",
-    "legendFlooded": "route inondée",
+    "legendFlooded": "au-dessus de la limite",
     "lastSafeStart": "Dernier départ calculé",
     "estimateNote": "Une estimation — fiez-vous à votre propre jugement",
     "caution": {
       "title": "Ne commencez pas la traversée",
-      "late": "L'eau est ici sous le niveau de la route, mais elle monte — elle atteint {road} cm à {time}, et la traversée est estimée à {minutes} min. Trop tard pour partir.",
-      "lateNoTime": "L'eau est ici sous le niveau de la route, mais il ne reste plus assez de temps ({minutes} min) pour la traversée avant qu'elle ne remonte.",
+      "late": "L'eau est ici sous la limite, mais elle monte — elle atteint {road} cm à {time}, et la traversée est comptée à {minutes} min. Il est trop tard pour partir.",
+      "lateNoTime": "L'eau est ici sous la limite, mais il ne reste plus assez de temps ({minutes} min) pour la traversée avant qu'elle ne remonte.",
       "early": "Pas de créneau à ce moment. Le prochain ouvre à {time}.",
-      "brief": "L'eau descend ici sous le niveau de la route, mais pas assez bas ni assez longtemps pour offrir un créneau."
+      "brief": "L'eau passe ici sous la limite, mais pas assez bas ni assez longtemps pour une fenêtre."
     },
     "driftKey": "écart de la prévision (touchez un Δ)",
     "drift": {
@@ -185,11 +185,11 @@
       "exact": "À {time}, la prévision correspondait exactement à la mesure.",
       "generic": "Δ = niveau mesuré moins la prévision au même moment — un indicateur rapide de la fiabilité de la prévision."
     },
-    "roadMarker": "Niveau de la route",
+    "roadMarker": "Limite officielle",
     "road": {
-      "tag": "route · {road} cm",
-      "title": "Niveau de la route",
-      "body": "La ligne marque le niveau de la route ({road} cm) — au-dessus, la route est inondée. Vert = créneau calculé avec assez de temps pour traverser ; orange = ne partez pas, la marée montante est trop proche ou le creux trop bref ; rouge = au-dessus de la route."
+      "tag": "limite officielle · {road} cm",
+      "title": "La limite officielle",
+      "body": "La ligne marque la limite officielle de la commune d'Esbjerg pour un passage sûr : {road} cm, mesurés à Ribe Kammersluse. Le niveau réel de la route varie sur sa longueur et n'est pas publié — au-dessus de la ligne signifie au-dessus de la limite officielle, pas nécessairement que la route est sous l'eau. Vert = fenêtre calculée avec assez de temps pour traverser ; jaune = ne partez pas, la marée montante est trop proche ou le creux trop court ; rouge = au-dessus de la limite."
     },
     "forecastTag": "prévision",
     "fcBoundary": "fin des mesures · prévisions à partir d'ici",

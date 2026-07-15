@@ -164,18 +164,18 @@
     "intro": "Nivel del agua medido y pronóstico en {station}, en cm respecto al DVR90.",
     "selectDay": "Día",
     "stationLabel": "Estación",
-    "legend": "La carretera se inunda a {road} cm.",
+    "legend": "Límite oficial de paso seguro (municipio de Esbjerg): {road} cm.",
     "legendSafe": "ventana calculada",
     "legendCaution": "demasiado tarde para salir",
-    "legendFlooded": "carretera inundada",
+    "legendFlooded": "por encima del límite",
     "lastSafeStart": "Última salida calculada",
     "estimateNote": "Una estimación — use su propio criterio",
     "caution": {
       "title": "No salgas ahora",
-      "late": "Aquí el agua está por debajo de la carretera, pero subiendo — alcanza {road} cm a las {time}, y el cruce se calcula en {minutes} min. Demasiado tarde para salir.",
-      "lateNoTime": "Aquí el agua está por debajo de la carretera, pero ya no queda tiempo suficiente ({minutes} min) para el cruce antes de que vuelva a subir.",
+      "late": "Aquí el agua está por debajo del límite, pero subiendo — alcanza {road} cm a las {time}, y el cruce se calcula en {minutes} min. Es demasiado tarde para salir.",
+      "lateNoTime": "Aquí el agua está por debajo del límite, pero ya no queda tiempo suficiente ({minutes} min) para el cruce antes de que vuelva a subir.",
       "early": "No hay ventana en este momento. La próxima abre a las {time}.",
-      "brief": "Aquí el agua baja del nivel de la carretera, pero no lo suficiente ni durante el tiempo necesario para abrir una ventana."
+      "brief": "Aquí el agua baja del límite, pero no lo suficiente ni por bastante tiempo para una ventana."
     },
     "driftKey": "cuánto se desvió el pronóstico (toca un Δ)",
     "drift": {
@@ -185,11 +185,11 @@
       "exact": "A las {time} el pronóstico coincidió exactamente con la medición.",
       "generic": "Δ = nivel medido menos el pronóstico para el mismo momento — una comprobación rápida de la fiabilidad del pronóstico."
     },
-    "roadMarker": "Nivel de la carretera",
+    "roadMarker": "Límite oficial",
     "road": {
-      "tag": "carretera · {road} cm",
-      "title": "Nivel de la carretera",
-      "body": "La línea marca el nivel de la carretera ({road} cm) — por encima, la carretera está inundada. Verde = ventana calculada con tiempo suficiente para cruzar; ámbar = no salgas, la subida está demasiado cerca o el descenso es demasiado breve; rojo = por encima de la carretera."
+      "tag": "límite oficial · {road} cm",
+      "title": "El límite oficial",
+      "body": "La línea marca el límite oficial del municipio de Esbjerg para un paso seguro: {road} cm medidos en Ribe Kammersluse. El nivel real de la carretera varía a lo largo del trayecto y no está publicado — por encima de la línea significa por encima del límite oficial, no necesariamente que la carretera esté bajo el agua. Verde = ventana calculada con tiempo suficiente para cruzar; ámbar = no salga, el agua que sube está demasiado cerca o el descenso es demasiado corto; rojo = por encima del límite."
     },
     "forecastTag": "pronóstico",
     "fcBoundary": "las mediciones terminan aquí · pronóstico a partir de aquí",

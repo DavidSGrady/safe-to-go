@@ -174,18 +174,18 @@
     "intro": "Measured water level and forecast at {station}, in cm relative to DVR90.",
     "selectDay": "Day",
     "stationLabel": "Station",
-    "legend": "Road floods at {road} cm.",
+    "legend": "Official limit for safe passage (Esbjerg Municipality): {road} cm.",
     "legendSafe": "calculated window",
     "legendCaution": "too late to set out",
-    "legendFlooded": "road flooded",
+    "legendFlooded": "above the limit",
     "lastSafeStart": "Calculated last departure",
     "estimateNote": "An estimate — use your own judgement",
     "caution": {
       "title": "Do not start crossing",
-      "late": "The water is below the road here, but rising — it reaches {road} cm at {time}, and the crossing is reckoned at {minutes} min. Too late to set off.",
-      "lateNoTime": "The water is below the road here, but there is no longer enough time ({minutes} min) for the crossing before it rises again.",
+      "late": "The water is below the limit here, but rising — it reaches {road} cm at {time}, and the crossing is reckoned at {minutes} min. It is too late to set out.",
+      "lateNoTime": "The water is below the limit here, but there is no longer enough time ({minutes} min) for the crossing before it rises again.",
       "early": "No window at this time. The next one opens at {time}.",
-      "brief": "The water dips below the road here, but not far enough or for long enough to give a window."
+      "brief": "The water dips below the limit here, but not far enough or long enough for a window."
     },
     "driftKey": "how far off the forecast was (tap a Δ)",
     "drift": {
@@ -195,11 +195,11 @@
       "exact": "At {time} the forecast matched the measured level exactly.",
       "generic": "Δ = measured water level minus the forecast for the same time — a quick check of how well the forecast is tracking reality."
     },
-    "roadMarker": "Road level",
+    "roadMarker": "Official limit",
     "road": {
-      "tag": "road · {road} cm",
-      "title": "Road level",
-      "body": "The line marks the road level ({road} cm) — above it the road is flooded. Green = a calculated window with enough time to cross; amber = do not set off, the rising water is too close or the dip is too brief; red = above the road."
+      "tag": "official limit · {road} cm",
+      "title": "The official limit",
+      "body": "The line marks Esbjerg Municipality's official limit for safe passage: {road} cm measured at Ribe Kammersluse. The road's actual level varies along its length and is not published — above the line means above the official limit, not necessarily that the road is underwater. Green = calculated window with enough time to cross; amber = do not set out, the rising water is too close or the dip is too short; red = above the limit."
     },
     "forecastTag": "forecast",
     "fcBoundary": "measurements end here · forecast from here on",

@@ -164,18 +164,18 @@
     "intro": "Gemeten waterstand en voorspelling bij {station}, in cm ten opzichte van DVR90.",
     "selectDay": "Dag",
     "stationLabel": "Meetstation",
-    "legend": "De weg overstroomt bij {road} cm.",
+    "legend": "Officiële grens voor veilige oversteek (gemeente Esbjerg): {road} cm.",
     "legendSafe": "berekend venster",
     "legendCaution": "te laat om te vertrekken",
-    "legendFlooded": "weg overstroomd",
+    "legendFlooded": "boven de grens",
     "lastSafeStart": "Berekend laatste vertrek",
     "estimateNote": "Een schatting — vertrouw op je eigen oordeel",
     "caution": {
       "title": "Vertrek nu niet",
-      "late": "Het water staat hier onder wegniveau, maar stijgt — om {time} bereikt het {road} cm, en voor de oversteek wordt {minutes} min gerekend. Te laat om te vertrekken.",
-      "lateNoTime": "Het water staat hier onder wegniveau, maar er is niet genoeg tijd meer ({minutes} min) voor de oversteek voordat het weer stijgt.",
+      "late": "Het water staat hier onder de grens, maar stijgt — om {time} bereikt het {road} cm, en voor de oversteek wordt {minutes} min gerekend. Het is te laat om te vertrekken.",
+      "lateNoTime": "Het water staat hier onder de grens, maar er is niet genoeg tijd ({minutes} min) meer voor de oversteek voordat het weer stijgt.",
       "early": "Geen venster op dit moment. Het volgende opent om {time}.",
-      "brief": "Het water zakt hier onder wegniveau, maar niet ver of lang genoeg voor een venster."
+      "brief": "Het water zakt hier onder de grens, maar niet ver of lang genoeg voor een venster."
     },
     "driftKey": "hoeveel de voorspelling ernaast zat (tik op een Δ)",
     "drift": {
@@ -185,11 +185,11 @@
       "exact": "Om {time} kwam de voorspelling precies overeen met de meting.",
       "generic": "Δ = gemeten waterstand min de voorspelling voor hetzelfde tijdstip — laat zien hoe goed de voorspelling de werkelijkheid volgt."
     },
-    "roadMarker": "Weghoogte",
+    "roadMarker": "Officiële grens",
     "road": {
-      "tag": "weg · {road} cm",
-      "title": "Weghoogte",
-      "body": "De lijn markeert de weghoogte ({road} cm) — daarboven staat de weg onder water. Groen = berekend venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de weg."
+      "tag": "officiële grens · {road} cm",
+      "title": "De officiële grens",
+      "body": "De lijn markeert de officiële grens van de gemeente Esbjerg voor een veilige oversteek: {road} cm, gemeten bij Ribe Kammersluse. De werkelijke hoogte van de weg varieert over de lengte en is niet gepubliceerd — boven de lijn betekent boven de officiële grens, niet per se dat de weg onder water staat. Groen = berekend venster met genoeg tijd om over te steken; geel = vertrek niet, het stijgende water is te dichtbij of de dip is te kort; rood = boven de grens."
     },
     "forecastTag": "voorspelling",
     "fcBoundary": "metingen eindigen hier · vanaf hier voorspelling",

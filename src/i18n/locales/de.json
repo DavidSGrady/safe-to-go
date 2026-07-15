@@ -164,18 +164,18 @@
     "intro": "Gemessener Wasserstand und Prognose bei {station}, in cm bezogen auf DVR90.",
     "selectDay": "Tag",
     "stationLabel": "Messstation",
-    "legend": "Die Straße wird bei {road} cm überflutet.",
+    "legend": "Offizielle Grenze für sichere Überfahrt (Kommune Esbjerg): {road} cm.",
     "legendSafe": "berechnetes Fenster",
     "legendCaution": "zu spät zum Losfahren",
-    "legendFlooded": "Straße überflutet",
+    "legendFlooded": "über der Grenze",
     "lastSafeStart": "Berechnete letzte Abfahrt",
     "estimateNote": "Ein Schätzwert — verlassen Sie sich auf Ihr eigenes Urteil",
     "caution": {
       "title": "Jetzt nicht losfahren",
-      "late": "Das Wasser steht hier unter Straßenniveau, steigt aber — um {time} erreicht es {road} cm, und die Überfahrt wird mit {minutes} Min. angesetzt. Zu spät zum Losfahren.",
-      "lateNoTime": "Das Wasser steht hier unter Straßenniveau, aber die Zeit ({minutes} Min.) reicht nicht mehr für die Überfahrt, bevor es wieder steigt.",
+      "late": "Das Wasser steht hier unter der Grenze, steigt aber — um {time} erreicht es {road} cm, und die Überfahrt wird mit {minutes} Min. gerechnet. Es ist zu spät loszufahren.",
+      "lateNoTime": "Das Wasser steht hier unter der Grenze, aber die Zeit ({minutes} Min.) reicht nicht mehr für die Überfahrt, bevor es wieder steigt.",
       "early": "Kein Fenster zu diesem Zeitpunkt. Das nächste öffnet um {time}.",
-      "brief": "Das Wasser fällt hier unter Straßenniveau, aber nicht tief oder lange genug für ein Fenster."
+      "brief": "Das Wasser fällt hier unter die Grenze, aber nicht tief oder lange genug für ein Fenster."
     },
     "driftKey": "wie weit die Prognose danebenlag (auf ein Δ tippen)",
     "drift": {
@@ -185,11 +185,11 @@
       "exact": "Um {time} traf die Prognose den Messwert genau.",
       "generic": "Δ = gemessener Wasserstand minus Prognose für denselben Zeitpunkt — zeigt, wie gut die Prognose die Realität trifft."
     },
-    "roadMarker": "Straßenhöhe",
+    "roadMarker": "Offizielle Grenze",
     "road": {
-      "tag": "Straße · {road} cm",
-      "title": "Straßenniveau",
-      "body": "Die Linie markiert das Straßenniveau ({road} cm) — darüber ist die Straße überflutet. Grün = berechnetes Fenster mit genug Zeit für die Überfahrt; Gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; Rot = über der Straße."
+      "tag": "offizielle Grenze · {road} cm",
+      "title": "Die offizielle Grenze",
+      "body": "Die Linie markiert die offizielle Grenze der Kommune Esbjerg für eine sichere Überfahrt: {road} cm, gemessen bei Ribe Kammersluse. Die tatsächliche Höhe der Straße variiert entlang der Strecke und ist nicht veröffentlicht — über der Linie heißt über der offiziellen Grenze, nicht unbedingt, dass die Straße unter Wasser steht. Grün = berechnetes Fenster mit genug Zeit für die Überfahrt; gelb = nicht losfahren, das steigende Wasser ist zu nah oder die Senke zu kurz; rot = über der Grenze."
     },
     "forecastTag": "Prognose",
     "fcBoundary": "Messungen enden hier · ab hier Prognose",

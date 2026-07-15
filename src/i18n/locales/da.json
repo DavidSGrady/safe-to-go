@@ -174,18 +174,18 @@
     "intro": "Målt vandstand og prognose ved {station}, i cm i forhold til DVR90.",
     "selectDay": "Dag",
     "stationLabel": "Målestation",
-    "legend": "Vejen oversvømmes ved {road} cm.",
+    "legend": "Officiel grænse for sikker passage (Esbjerg Kommune): {road} cm.",
     "legendSafe": "beregnet vindue",
     "legendCaution": "for sent at køre ud",
-    "legendFlooded": "vejen oversvømmet",
+    "legendFlooded": "over grænsen",
     "lastSafeStart": "Beregnet sidste afgang",
     "estimateNote": "Estimat — brug egen dømmekraft",
     "caution": {
       "title": "Kør ikke ud nu",
-      "late": "Vandet er under vejniveau her, men stigende — det når {road} cm kl. {time}, og overfarten regnes til {minutes} min. Det er for sent at køre ud.",
-      "lateNoTime": "Vandet er under vejniveau her, men der er ikke længere tid nok ({minutes} min) til overfarten, før det stiger igen.",
+      "late": "Vandet er under grænsen her, men stigende — det når {road} cm kl. {time}, og overfarten regnes til {minutes} min. Det er for sent at køre ud.",
+      "lateNoTime": "Vandet er under grænsen her, men der er ikke længere tid nok ({minutes} min) til overfarten, før det stiger igen.",
       "early": "Intet vindue på dette tidspunkt. Det næste åbner kl. {time}.",
-      "brief": "Vandet kommer under vejniveau her, men ikke langt nok ned eller længe nok til et vindue."
+      "brief": "Vandet kommer under grænsen her, men ikke langt nok ned eller længe nok til et vindue."
     },
     "driftKey": "hvor meget prognosen ramte ved siden af (tryk på et Δ)",
     "drift": {
@@ -195,11 +195,11 @@
       "exact": "Kl. {time} ramte prognosen den målte vandstand præcist.",
       "generic": "Δ = målt vandstand minus prognosen for samme tidspunkt — et hurtigt mål for, hvor godt prognosen rammer virkeligheden."
     },
-    "roadMarker": "Vejhøjde",
+    "roadMarker": "Officiel grænse",
     "road": {
-      "tag": "vej · {road} cm",
-      "title": "Vejens niveau",
-      "body": "Stregen markerer vejens niveau ({road} cm) — over stregen står vejen under vand. Grøn = beregnet vindue med tid nok til overfarten; gul = kør ikke ud, det stigende vand er for tæt på, eller dykket er for kort; rød = over vejen."
+      "tag": "officiel grænse · {road} cm",
+      "title": "Den officielle grænse",
+      "body": "Stregen markerer Esbjerg Kommunes officielle grænse for sikker passage: {road} cm målt ved Ribe Kammersluse. Vejens faktiske niveau varierer langs strækningen og er ikke offentliggjort — over stregen betyder over den officielle grænse, ikke nødvendigvis at vejen står under vand. Grøn = beregnet vindue med tid nok til overfarten; gul = kør ikke ud, det stigende vand er for tæt på, eller dykket er for kort; rød = over grænsen."
     },
     "forecastTag": "prognose",
     "fcBoundary": "målinger slutter her · herfra prognose",
