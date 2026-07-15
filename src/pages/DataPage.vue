@@ -1244,7 +1244,8 @@ watch(
 }
 
 /* "Last safe start" boundary between the green and amber rows of a window —
-   the most important line in the table, so it gets a clock and a solid pill. */
+   the most important line in the table, so it gets a clock and a solid pill.
+   Info-blue, not green: it marks a boundary to verify, not a safety verdict. */
 .deadline-row {
   display: flex;
   align-items: center;
@@ -1252,8 +1253,8 @@ watch(
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 700;
-  color: var(--verdict-safe-accent);
-  background: color-mix(in srgb, var(--verdict-safe-accent) 10%, transparent);
+  color: var(--info-accent);
+  background: color-mix(in srgb, var(--info-accent) 10%, transparent);
 }
 .deadline-body {
   display: flex;
@@ -1278,14 +1279,14 @@ watch(
   content: '';
   height: 1px;
   flex: 1;
-  background: var(--verdict-safe-accent);
+  background: var(--info-accent);
   opacity: 0.5;
 }
 .deadline-row svg {
   flex: none;
 }
 .deadline-time {
-  background: var(--verdict-safe-accent);
+  background: var(--info-accent);
   color: var(--page);
   border-radius: 999px;
   padding: 0 8px;

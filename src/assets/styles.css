@@ -15,6 +15,10 @@
   --accent: #0f6e66;
   /* Text/icons sitting on an --accent background. */
   --accent-contrast: #ffffff;
+  /* Informational highlights that must NOT read as a safety verdict
+     (e.g. the "last departure" boundary) — deliberately outside the
+     green/amber/red vocabulary. */
+  --info-accent: #2f6796;
 
   /* Verdict panel — safe (green) / caution (amber) / unsafe (red) */
   --verdict-safe-bg: #e7f2e9;
@@ -79,6 +83,7 @@
     --border-strong: #38443d;
     --accent: #4cb2a4;
     --accent-contrast: #0d1412;
+    --info-accent: #6ea6d8;
 
     --verdict-safe-bg: #14291e;
     --verdict-safe-bd: #1e4630;
