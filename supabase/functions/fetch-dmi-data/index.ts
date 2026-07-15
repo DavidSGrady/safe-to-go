@@ -302,38 +302,32 @@ async function fetchStationPrognosis(station: StationConfig): Promise<ForecastRo
     ? new Date(series.generatedTime).toISOString()
     : new Date().toISOString()
 
-  // Drop the head of each run: points near the generation time are
-  // intermittently corrupt upstream — e.g. +1 cm between neighbours at
-  // +39/+45. Because each run rewrites the series from "now" onward, the
-  // first point that survives this cutoff is the LAST write its timestamp
-  // receives before slipping into the past — so a corrupt survivor becomes
-  // the row's permanent value. A 12-minute skip (2026-07-13) only moved the
-  // permanent author onto the next grid point, which proved corrupt too
-  // (spikes at 12–16 min after generation on 2026-07-14). Skip 25 minutes so
-  // the author is the third grid point; earlier runs already wrote reliable
-  // values for the skipped timestamps and those simply survive.
-  const genMs = Date.parse(generatedAt)
-  const HEAD_SKIP_MS = 25 * 60_000
-
+  // No head skip — deliberately. A run's youngest points are nudged toward
+  // the live observation, making them the MOST accurate value a timestamp
+  // ever receives; its 25-30-minute-out points are pure model, which lags
+  // reality by up to ~30 cm in fast tide phases. Two rounds of head-skipping
+  // (12 min on 2026-07-13, 25 min on 2026-07-14) each froze those stale
+  // model values as the timestamps' permanent rows and produced MORE delta
+  // spikes (25/day) than the original problem (14/day). Youngest write wins.
   const pts: Array<{ t: number; v: number }> = []
   for (const v of values) {
     if (v?.time && typeof v.value === 'number' && Number.isFinite(v.value)) {
       const t = Date.parse(String(v.time))
       if (!Number.isFinite(t)) continue
-      if (Number.isFinite(genMs) && t - genMs < HEAD_SKIP_MS) continue
       pts.push({ t, v: v.value })
     }
   }
   pts.sort((a, b) => a.t - b.t)
 
-  // Second layer, since the corrupt zone has grown once already: reject any
-  // point that is far off its own run's curve. The tide moves ≤ ~7 cm per
-  // 10-minute step and bends only a few cm per step², so a genuine point sits
-  // within a few cm of the line through its neighbours (midpoint inside the
-  // run, linear extrapolation at the ends) — while the corrupt points seen so
-  // far are 19–44 cm off. Judged against the unfiltered array, so one corrupt
-  // point cannot get its neighbour rejected.
-  const SPIKE_CM = 12
+  // The original problem — an intermittently corrupt point near the head of
+  // a run (e.g. +1 cm between neighbours at +39/+45) — is caught by shape,
+  // not by age: reject any point far off its own run's curve (midpoint of
+  // its neighbours inside the run, linear extrapolation at the ends).
+  // 20 cm passes the smooth observation-nudge blend and genuine tide
+  // movement (≤ ~10 cm per 10-minute step, bending a few cm per step²)
+  // while the glitches seen so far sit 30-44 cm off. Judged against the
+  // unfiltered array, so a corrupt point cannot get its neighbour rejected.
+  const SPIKE_CM = 20
   const kept =
     pts.length < 3
       ? pts
