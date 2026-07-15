@@ -1162,8 +1162,26 @@ watch(
 /* The full hour is the table's rhythm: the :00 rows carry an emphasized
    hour digit (below) rather than divider lines, which proved too noisy. */
 .row.is-now {
+  position: relative;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
-  box-shadow: inset 3px 0 0 var(--accent);
+}
+/* The accent edge breathes in sync with the now-strip dot — the "live
+   reading" cue. The tinted background stays static and does the actual
+   row identification. */
+.row.is-now::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  animation: now-pulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .row.is-now::before {
+    animation: none;
+  }
 }
 .row.is-now .time,
 .row.is-now .time .time-h {
