@@ -5,7 +5,13 @@
 
 import { getSupabase, isDemoMode } from './supabase'
 
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined
+// The VAPID *public* key — public by design (it ships in the bundle either
+// way), so it's baked in rather than routed through a Vercel env var. It must
+// match the VAPID_PRIVATE_KEY secret on the Supabase function; rotate both
+// together. An env var still overrides it (e.g. for a separate test project).
+const VAPID_PUBLIC_KEY =
+  (import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined) ??
+  'BORiDvM4psfJuWr6LS-9eLUpUH7DdgZ9QpmWN9zakcJMRG-tUBCQvOdjruneKqeDaXbey2n15IOsdObfOQf6h_M'
 
 /** Marks which station a one-shot subscription was armed for. */
 const MARKER_KEY = 'push.passable'
