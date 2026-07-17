@@ -9,6 +9,7 @@ import type { SafeWindow } from '@/lib/types'
 import { STATIONS, stationName } from '@/lib/stations'
 import LangSwitcher from '@/components/LangSwitcher.vue'
 import FirstVisitNotice from '@/components/FirstVisitNotice.vue'
+import NotifyWhenPassable from '@/components/NotifyWhenPassable.vue'
 import { usePullToRefresh } from '@/composables/usePullToRefresh'
 
 const { t, locale } = useI18n()
@@ -599,6 +600,8 @@ watch(
           </button>
         </div>
       </div>
+
+      <NotifyWhenPassable :status="viewStatus" :station-id="stationId" :now="now" />
 
       <p class="legend">
         <span class="legend-lead">{{ t('data.legend', { road: roadLevel }) }}</span>

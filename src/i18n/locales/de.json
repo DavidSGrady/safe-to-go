@@ -215,6 +215,15 @@
       "missing": "nicht geladen"
     }
   },
+  "notify": {
+    "button": "Benachrichtigen, wenn der Weg passierbar ist",
+    "subscribed": "Sie erhalten eine Benachrichtigung, sobald der Wasserstand unter dem Grenzwert liegt.",
+    "expected": "Voraussichtlich gegen {time} — Richtwert.",
+    "iosHint": "Fügen Sie die Seite dem Home-Bildschirm hinzu, um Benachrichtigungen zu erhalten (Teilen → Zum Home-Bildschirm).",
+    "denied": "Benachrichtigungen sind für diese Seite in den Browser-Einstellungen blockiert.",
+    "cancel": "Abbrechen",
+    "error": "Anmeldung fehlgeschlagen — bitte erneut versuchen."
+  },
   "demo": {
     "banner": "Demo-Modus — synthetische Gezeitendaten, keine echten Messungen."
   },

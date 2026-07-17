@@ -33,6 +33,7 @@
 //                  around −20 cm) and is hourly, so it diverges from dmi.dk.
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import webpush from 'npm:web-push@3.6.7'
 
 const DMI_BASE_URL =
   Deno.env.get('DMI_BASE_URL') ?? 'https://dmigw.govcloud.dk/v2/oceanObs'
@@ -274,7 +275,185 @@ async function ingest() {
     .delete()
     .lt('forecast_at', iso(now - 1 * 24 * 3600_000))
 
-  return { stations: perStation }
+  // --- Push notifications: fault-isolated, must never break ingestion ---
+  let notify: unknown = null
+  try {
+    notify = await notifyPassable(supabase, now)
+  } catch (err) {
+    console.error('notifyPassable failed (non-fatal):', err)
+    notify = { error: String(err) }
+  }
+
+  return { stations: perStation, notify }
+}
+
+// ---------------------------------------------------------------------------
+// Web push: "notify me when the road is passable" (one-shot subscriptions).
+// The frontend subscribes via the push_subscribe RPC; this step fires the
+// notification when falling water reaches the passable limit and deletes the
+// subscription. See supabase/migrations/20260726000000_push_subscriptions.sql.
+// ---------------------------------------------------------------------------
+
+const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') ?? ''
+const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') ?? ''
+const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') ?? 'mailto:michael@kollekt.dk'
+
+/** Readings older than this never trigger a push — better silent than wrong. */
+const PUSH_MAX_READING_AGE_MS = 30 * 60_000
+/** Undeliverable-after TTL: a "passable now" push is stale within hours. */
+const PUSH_TTL_SECONDS = 3 * 3600
+/** Pending subscriptions older than this are dropped (a tide cycle is ~6 h). */
+const PUSH_SUB_MAX_AGE_MS = 24 * 3600_000
+
+interface PushSubRow {
+  id: string
+  station_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  locale: string
+  created_at: string
+}
+
+// The copy is deliberately factual (measurement + limit, "indicative"), never
+// an instruction to drive — the app's liability framing applies to pushes too.
+const PUSH_STRINGS: Record<string, { title: string; body: (level: string, limit: number) => string }> = {
+  da: {
+    title: 'Vandstanden er under grænseværdien',
+    body: (level, limit) => `${level} cm og faldende (grænseværdi ${limit} cm). Vejledende — se aktuel status i appen.`,
+  },
+  en: {
+    title: 'Water level is below the limit',
+    body: (level, limit) => `${level} cm and falling (limit ${limit} cm). Indicative — check the app for current status.`,
+  },
+  de: {
+    title: 'Wasserstand unter dem Grenzwert',
+    body: (level, limit) => `${level} cm und fallend (Grenzwert ${limit} cm). Richtwert — aktuellen Status in der App prüfen.`,
+  },
+  nl: {
+    title: 'Waterstand onder de grenswaarde',
+    body: (level, limit) => `${level} cm en dalend (grenswaarde ${limit} cm). Indicatief — bekijk de actuele status in de app.`,
+  },
+  fr: {
+    title: "Le niveau d'eau est sous le seuil",
+    body: (level, limit) => `${level} cm et en baisse (seuil ${limit} cm). Indicatif — consultez l'appli pour l'état actuel.`,
+  },
+  es: {
+    title: 'El nivel del agua está por debajo del límite',
+    body: (level, limit) => `${level} cm y bajando (límite ${limit} cm). Orientativo — consulta el estado actual en la app.`,
+  },
+  zh: {
+    title: '水位已低于限值',
+    body: (level, limit) => `${level} 厘米，正在下降（限值 ${limit} 厘米）。仅供参考——请在应用中查看当前状态。`,
+  },
+}
+
+function signedCm(v: number): string {
+  return v > 0 ? `+${v}` : String(v)
+}
+
+async function sendPush(sub: PushSubRow, title: string, body: string): Promise<'ok' | 'gone' | 'error'> {
+  try {
+    await webpush.sendNotification(
+      { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+      JSON.stringify({ title, body, tag: 'passable', url: '/' }),
+      { TTL: PUSH_TTL_SECONDS, urgency: 'high' },
+    )
+    return 'ok'
+  } catch (err) {
+    const status = (err as { statusCode?: number }).statusCode
+    if (status === 404 || status === 410) return 'gone' // subscription expired/revoked
+    console.error(`push send failed for ${sub.id} (${status}):`, err)
+    return 'error'
+  }
+}
+
+/**
+ * Fire pending one-shot subscriptions whose station is passable right now.
+ * Passable mirrors passableLimitAt() in src/lib/tide.ts: the falling limit
+ * while water falls, the stricter rising limit otherwise (equal readings
+ * count as rising, the cautious side). Only fresh readings (< 30 min) newer
+ * than the subscription itself can trigger — stale data stays silent.
+ */
+async function notifyPassable(supabase: Supa, now: number) {
+  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return { skipped: 'no VAPID keys' }
+  webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)
+
+  // Housekeeping: pending subs beyond a tide cycle are stale intent.
+  await supabase
+    .from('push_subscriptions')
+    .delete()
+    .lt('created_at', new Date(now - PUSH_SUB_MAX_AGE_MS).toISOString())
+
+  const { data: subs, error: subsError } = await supabase
+    .from('push_subscriptions')
+    .select('id,station_id,endpoint,p256dh,auth,locale,created_at')
+    .eq('kind', 'one_shot_passable')
+    .is('consumed_at', null)
+  if (subsError) throw new Error(`read subscriptions: ${subsError.message}`)
+  if (!subs || subs.length === 0) return { pending: 0, sent: 0 }
+
+  const { data: rules, error: rulesError } = await supabase
+    .from('safety_rules')
+    .select('safe_max_rising_cm,safe_max_falling_cm')
+    .eq('id', 1)
+    .single()
+  if (rulesError) throw new Error(`read rules: ${rulesError.message}`)
+
+  let sent = 0
+  let dropped = 0
+  for (const stationId of [...new Set((subs as PushSubRow[]).map((s) => s.station_id))]) {
+    const { data: readings, error: readError } = await supabase
+      .from('station_readings')
+      .select('observed_at,water_level_cm')
+      .eq('station_id', stationId)
+      .eq('parameter_id', PARAMETER_ID)
+      .order('observed_at', { ascending: false })
+      .limit(2)
+    if (readError || !readings || readings.length < 2) continue
+
+    const [latest, prev] = readings
+    const observedAt = Date.parse(latest.observed_at)
+    if (!Number.isFinite(observedAt) || now - observedAt > PUSH_MAX_READING_AGE_MS) continue
+
+    const rising = latest.water_level_cm >= prev.water_level_cm
+    const limit = rising ? rules.safe_max_rising_cm : rules.safe_max_falling_cm
+    if (latest.water_level_cm > limit) continue
+
+    for (const sub of (subs as PushSubRow[]).filter((s) => s.station_id === stationId)) {
+      // The triggering reading must postdate the subscription, so a sub
+      // created moments ago can't fire off data from before the tap.
+      if (observedAt <= Date.parse(sub.created_at)) continue
+      const strings = PUSH_STRINGS[sub.locale] ?? PUSH_STRINGS.da
+      const result = await sendPush(sub, strings.title, strings.body(signedCm(latest.water_level_cm), limit))
+      if (result === 'ok' || result === 'gone') {
+        await supabase.from('push_subscriptions').delete().eq('id', sub.id)
+        if (result === 'ok') sent++
+        else dropped++
+      }
+      // 'error' → row stays; the next cron run retries.
+    }
+  }
+  return { pending: subs.length, sent, dropped }
+}
+
+/** Manual test: send a test push to every pending subscription (no cleanup). */
+async function pushTest(supabase: Supa) {
+  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return { skipped: 'no VAPID keys' }
+  webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY)
+
+  const { data: subs, error } = await supabase
+    .from('push_subscriptions')
+    .select('id,station_id,endpoint,p256dh,auth,locale,created_at')
+    .is('consumed_at', null)
+  if (error) throw new Error(`read subscriptions: ${error.message}`)
+
+  const results: Array<{ id: string; result: string }> = []
+  for (const sub of (subs ?? []) as PushSubRow[]) {
+    const result = await sendPush(sub, 'Safe to Go? — test', 'Push virker. / Push works.')
+    results.push({ id: sub.id, result })
+  }
+  return { pending: results.length, results }
 }
 
 /**
@@ -403,7 +582,29 @@ async function fetchDkss(station: StationConfig): Promise<ForecastRow[]> {
 
 Deno.serve(async (req) => {
   try {
-    const discover = new URL(req.url).searchParams.get('discover')
+    const params = new URL(req.url).searchParams
+
+    // Test hook: sends a test push to all pending subscriptions. Gated on the
+    // service-role key — the anon key ships in the frontend bundle, so it must
+    // not be enough to make every subscriber's phone buzz.
+    if (params.get('push_test') === '1') {
+      const bearer = req.headers.get('authorization') ?? ''
+      if (bearer !== `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`) {
+        return new Response(JSON.stringify({ error: 'forbidden' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      }
+      const supabase = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      )
+      return new Response(JSON.stringify(await pushTest(supabase), null, 2), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    const discover = params.get('discover')
     const result = discover ? await discoverStations(discover) : await ingest()
 
     return new Response(JSON.stringify(result, null, 2), {

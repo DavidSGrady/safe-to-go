@@ -225,6 +225,15 @@
       "missing": "not loaded"
     }
   },
+  "notify": {
+    "button": "Notify me when the road is passable",
+    "subscribed": "You'll get one notification when the water level is below the limit.",
+    "expected": "Expected around {time} — indicative.",
+    "iosHint": "Add this page to your home screen to enable notifications (Share → Add to Home Screen).",
+    "denied": "Notifications are blocked for this site in your browser settings.",
+    "cancel": "Cancel",
+    "error": "Could not subscribe — try again."
+  },
   "demo": {
     "banner": "Demo mode — synthetic tide data, not real measurements."
   },

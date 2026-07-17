@@ -215,6 +215,15 @@
       "missing": "sin cargar"
     }
   },
+  "notify": {
+    "button": "Avisarme cuando el camino sea transitable",
+    "subscribed": "Recibirás un aviso cuando el nivel del agua esté por debajo del límite.",
+    "expected": "Previsto hacia las {time} — orientativo.",
+    "iosHint": "Añade la página a la pantalla de inicio para poder recibir avisos (Compartir → Añadir a pantalla de inicio).",
+    "denied": "Las notificaciones están bloqueadas para este sitio en los ajustes del navegador.",
+    "cancel": "Cancelar",
+    "error": "No se pudo suscribir — inténtalo de nuevo."
+  },
   "demo": {
     "banner": "Modo demo — datos de marea sintéticos, no mediciones reales."
   },

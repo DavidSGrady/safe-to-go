@@ -215,6 +215,15 @@
       "missing": "non chargée"
     }
   },
+  "notify": {
+    "button": "Me prévenir quand la route est praticable",
+    "subscribed": "Vous recevrez une notification lorsque le niveau d'eau sera sous le seuil.",
+    "expected": "Prévu vers {time} — indicatif.",
+    "iosHint": "Ajoutez la page à l'écran d'accueil pour recevoir des notifications (Partager → Sur l'écran d'accueil).",
+    "denied": "Les notifications sont bloquées pour ce site dans les réglages du navigateur.",
+    "cancel": "Annuler",
+    "error": "Échec de l'inscription — réessayez."
+  },
   "demo": {
     "banner": "Mode démo — données de marée synthétiques, pas de vraies mesures."
   },

@@ -12,3 +12,9 @@ app.use(i18n)
 app.mount('#app')
 
 document.documentElement.lang = i18n.global.locale.value
+
+// Push-only service worker (public/sw.js) — required for web push, including
+// iOS home-screen installs. Failure is non-fatal: the app works without it.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {})
+}

@@ -225,6 +225,15 @@
       "missing": "ikke indlæst"
     }
   },
+  "notify": {
+    "button": "Giv besked når vejen er farbar",
+    "subscribed": "Du får én besked, når vandstanden er under grænseværdien.",
+    "expected": "Forventet ca. {time} — vejledende.",
+    "iosHint": "Føj siden til hjemmeskærmen for at kunne få besked (Del → Føj til hjemmeskærm).",
+    "denied": "Notifikationer er blokeret for denne side i browserens indstillinger.",
+    "cancel": "Annullér",
+    "error": "Kunne ikke tilmelde — prøv igen."
+  },
   "demo": {
     "banner": "Demotilstand — syntetiske tidevandsdata, ikke rigtige målinger."
   },

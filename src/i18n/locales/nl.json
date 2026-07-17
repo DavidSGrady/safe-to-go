@@ -215,6 +215,15 @@
       "missing": "niet geladen"
     }
   },
+  "notify": {
+    "button": "Stuur een melding zodra de weg begaanbaar is",
+    "subscribed": "Je krijgt één melding zodra de waterstand onder de grenswaarde ligt.",
+    "expected": "Verwacht rond {time} — indicatief.",
+    "iosHint": "Voeg de pagina toe aan je beginscherm om meldingen te kunnen ontvangen (Deel → Zet op beginscherm).",
+    "denied": "Meldingen zijn voor deze site geblokkeerd in je browserinstellingen.",
+    "cancel": "Annuleren",
+    "error": "Aanmelden mislukt — probeer opnieuw."
+  },
   "demo": {
     "banner": "Demomodus — synthetische getijdengegevens, geen echte metingen."
   },
