@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Not public surfaces: the admin UI, its login, and the shop kiosk view.
+Disallow: /admin
+Disallow: /login
+Disallow: /display
+
+# HomePage is parked here while the verdict page is iterated on with users
+# (see src/router/index.ts). Remove this line when it goes public.
+Disallow: /status
+
+Sitemap: https://www.xn--krtilmand-l8ai.dk/sitemap.xml

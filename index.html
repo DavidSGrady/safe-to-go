@@ -2,20 +2,77 @@
 <html lang="da">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Live vandstand og tidevand for Låningsvejen til Mandø — vejledende tidsrum baseret på data fra DMI. / Live water level and tide for the Mandø causeway — indicative crossing windows based on DMI data." />
-    <meta name="theme-color" content="#0f6e66" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#101513" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <!-- Danish only: search engines show one language, and the indexable
+         locale is Danish (the 7 locales are runtime-switched, same URL). -->
+    <meta
+      name="description"
+      content="Se om Låningsvejen til Mandø er farbar lige nu — aktuel vandstand, tidevand og vejledende tidsrum for overfarten, baseret på data fra DMI."
+    />
+    <meta
+      name="theme-color"
+      content="#0f6e66"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#101513"
+      media="(prefers-color-scheme: dark)"
+    />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- Punycode for kørtilmandø.dk — ASCII IDN form is the safest for crawlers.
+         Static, so it points every route at "/": fine today because the only
+         indexable route IS "/" (robots.txt disallows the rest). If a second
+         page ever becomes public, this has to move to per-route runtime. -->
+    <link rel="canonical" href="https://www.xn--krtilmand-l8ai.dk/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Safe to Go? — Mandø</title>
+    <title>Kan man køre til Mandø nu? Vandstand på Låningsvejen</title>
+
+    <!-- Link previews (Messenger/Facebook is the main sharing channel here).
+         og:image is the 512px square app icon, so previews render a small
+         square thumbnail; a 1200x630 banner would upgrade this to a large card. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kør til Mandø" />
+    <meta property="og:locale" content="da_DK" />
+    <meta property="og:url" content="https://www.xn--krtilmand-l8ai.dk/" />
+    <meta
+      property="og:image"
+      content="https://www.xn--krtilmand-l8ai.dk/icon-512.png"
+    />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:title"
+      content="Kan man køre til Mandø nu? Vandstand på Låningsvejen"
+    />
+    <meta
+      property="og:description"
+      content="Se om Låningsvejen til Mandø er farbar lige nu — aktuel vandstand, tidevand og vejledende tidsrum for overfarten, baseret på data fra DMI."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Kan man køre til Mandø nu? Vandstand på Låningsvejen"
+    />
+    <meta
+      name="twitter:description"
+      content="Se om Låningsvejen til Mandø er farbar lige nu — aktuel vandstand, tidevand og vejledende tidsrum for overfarten, baseret på data fra DMI."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.xn--krtilmand-l8ai.dk/icon-512.png"
+    />
   </head>
   <body>
     <div id="app"></div>

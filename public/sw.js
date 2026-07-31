@@ -12,7 +12,7 @@ self.addEventListener('push', (event) => {
     // since the browser requires a visible notification per push anyway.
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Safe to Go? — Mandø', {
+    self.registration.showNotification(data.title || 'Kør til Mandø', {
       body: data.body || '',
       icon: '/icon-192.png',
       badge: '/icon-192.png',

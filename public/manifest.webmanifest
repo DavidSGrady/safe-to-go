@@ -1,6 +1,6 @@
 {
-  "name": "Safe to Go? — Mandø",
-  "short_name": "Mandø Tide",
+  "name": "Kør til Mandø",
+  "short_name": "Kør til Mandø",
   "description": "Live water level and indicative crossing windows for the Mandø causeway, based on DMI data.",
   "start_url": "/",
   "display": "standalone",

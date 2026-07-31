@@ -36,6 +36,10 @@ export const i18n = createI18n({
   messages: { da, en, de, nl, fr, es, zh },
 })
 
+// index.html hardcodes lang="da"; only setLocale() kept it in sync, so a first
+// load that resolved to another locale left the attribute lying.
+document.documentElement.lang = i18n.global.locale.value
+
 export function setLocale(code: LocaleCode): void {
   i18n.global.locale.value = code
   localStorage.setItem('locale', code)

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One entry on purpose: "/" is the only indexable route (robots.txt disallows
+  /admin, /login, /display and /status). No <lastmod>: the live data changes
+  constantly but this HTML shell does not, and a stale or invented date is
+  worse than none. <changefreq>/<priority> are omitted because Google ignores them.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.xn--krtilmand-l8ai.dk/</loc>
+  </url>
+</urlset>

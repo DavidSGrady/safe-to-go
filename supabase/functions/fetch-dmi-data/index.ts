@@ -519,7 +519,7 @@ async function pushTest(supabase: Supa) {
 
   const results: Array<{ id: string; result: string }> = []
   for (const sub of (subs ?? []) as PushSubRow[]) {
-    const result = await sendPush(sub, 'Safe to Go? — test', 'Push virker. / Push works.')
+    const result = await sendPush(sub, 'Kør til Mandø — test', 'Push virker. / Push works.')
     results.push({ id: sub.id, result })
   }
   return { pending: results.length, results }
