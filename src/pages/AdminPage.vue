@@ -119,7 +119,9 @@ async function save(): Promise<void> {
   try {
     await saveRules({ ...form })
     saved.value = true
-    await store.refresh()
+    // Skip the edge cache so the admin sees the thresholds they just saved
+    // rather than the up-to-5-minute-old cached bundle.
+    await store.refresh({ fresh: true })
     log.value = await fetchRuleChangeLog()
   } catch (e) {
     saveError.value = e instanceof Error ? e.message : String(e)

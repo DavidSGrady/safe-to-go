@@ -38,6 +38,85 @@ interface RulesRow {
   updated_at: string
 }
 
+/** Raw rows for one station, exactly as `/api/conditions` returns them. */
+interface StationRows {
+  readings: ReadingRow[]
+  predictions: PredictionRow[]
+  forecast: ForecastRow[]
+}
+
+interface ConditionsBundle {
+  rules: RulesRow | null
+  stations: Record<string, StationRows>
+  generatedAt: string
+}
+
+/** Everything the app needs for one render pass, keyed by station id. */
+export interface ConditionsSnapshot {
+  rules: SafetyRules
+  readings: Record<string, Reading[]>
+  predictions: Record<string, Prediction[]>
+  forecast: Record<string, ForecastPoint[]>
+}
+
+/**
+ * Fetch the whole dataset from the edge-cached Vercel route (`api/conditions.ts`).
+ *
+ * This is the normal public read path. It exists because querying Supabase from
+ * every browser made egress scale with traffic; the payload is identical for all
+ * visitors, so it is cached at the edge instead. Returns null when the route is
+ * unavailable (demo mode, or a plain `vite dev` session with no serverless
+ * function running) so the caller can fall back to querying Supabase directly.
+ *
+ * Pass `bypassCache` for a user-initiated refresh — pull-to-refresh and the
+ * freshness chip promise "the latest", and would otherwise report
+ * "nothing new" when the truth is "the cache hasn't rolled over yet".
+ */
+export async function fetchConditions(bypassCache = false): Promise<ConditionsSnapshot | null> {
+  if (isDemoMode) return null
+  try {
+    const url = bypassCache ? `/api/conditions?t=${Date.now()}` : '/api/conditions'
+    const res = await fetch(url, { headers: { Accept: 'application/json' } })
+    if (!res.ok) return null
+    const bundle = (await res.json()) as ConditionsBundle
+    if (!bundle?.rules || !bundle?.stations) return null
+
+    const readings: Record<string, Reading[]> = {}
+    const predictions: Record<string, Prediction[]> = {}
+    const forecast: Record<string, ForecastPoint[]> = {}
+    for (const [id, rows] of Object.entries(bundle.stations)) {
+      readings[id] = (rows.readings ?? []).map(mapReading)
+      predictions[id] = (rows.predictions ?? []).map(mapPrediction)
+      forecast[id] = (rows.forecast ?? []).map(mapForecast)
+    }
+    return { rules: mapRules(bundle.rules), readings, predictions, forecast }
+  } catch {
+    // Network error, or the SPA fallback handing back index.html instead of
+    // JSON — either way, treat it as "no cached route available".
+    return null
+  }
+}
+
+// Shared by the cached-bundle path and the direct-Supabase fallback so the two
+// can never drift apart.
+const mapReading = (r: ReadingRow): Reading => ({
+  observedAt: r.observed_at,
+  levelCm: Number(r.water_level_cm),
+})
+
+const mapPrediction = (p: PredictionRow): Prediction => ({
+  predictedAt: p.predicted_at,
+  predictionType: p.prediction_type,
+  levelCm: Number(p.value_cm),
+})
+
+const mapForecast = (r: ForecastRow): ForecastPoint => ({
+  forecastAt: r.forecast_at,
+  levelCm: Number(r.value_cm),
+  source: r.source,
+  generatedAt: r.generated_at,
+})
+
 export async function fetchReadings(stationId: string): Promise<Reading[]> {
   if (isDemoMode) return demoReadings(Date.now())
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
@@ -49,10 +128,7 @@ export async function fetchReadings(stationId: string): Promise<Reading[]> {
     .order('observed_at', { ascending: true })
     .limit(500)
   if (error) throw error
-  return (data as ReadingRow[]).map((r) => ({
-    observedAt: r.observed_at,
-    levelCm: Number(r.water_level_cm),
-  }))
+  return (data as ReadingRow[]).map(mapReading)
 }
 
 export async function fetchPredictions(stationId: string): Promise<Prediction[]> {
@@ -69,11 +145,7 @@ export async function fetchPredictions(stationId: string): Promise<Prediction[]>
     .order('predicted_at', { ascending: true })
     .limit(3000)
   if (error) throw error
-  return (data as PredictionRow[]).map((p) => ({
-    predictedAt: p.predicted_at,
-    predictionType: p.prediction_type,
-    levelCm: Number(p.value_cm),
-  }))
+  return (data as PredictionRow[]).map(mapPrediction)
 }
 
 interface ForecastRow {
@@ -98,12 +170,7 @@ export async function fetchForecast(stationId: string): Promise<ForecastPoint[]>
     .order('forecast_at', { ascending: true })
     .limit(2000)
   if (error) throw error
-  return (data as ForecastRow[]).map((r) => ({
-    forecastAt: r.forecast_at,
-    levelCm: Number(r.value_cm),
-    source: r.source,
-    generatedAt: r.generated_at,
-  }))
+  return (data as ForecastRow[]).map(mapForecast)
 }
 
 export async function fetchRules(): Promise<SafetyRules> {
@@ -114,7 +181,10 @@ export async function fetchRules(): Promise<SafetyRules> {
     .eq('id', 1)
     .single()
   if (error) throw error
-  const row = data as RulesRow
+  return mapRules(data as RulesRow)
+}
+
+function mapRules(row: RulesRow): SafetyRules {
   return {
     floodMarginCm: row.flood_margin_cm,
     fallMarginCm: row.fall_margin_cm,

@@ -74,7 +74,9 @@ const checkedNoNew = ref(false)
 let checkedTimer: ReturnType<typeof setTimeout> | undefined
 async function checkForNew(): Promise<void> {
   const before = viewStatus.value?.lastObservedAt ?? null
-  await store.refresh()
+  // `fresh` skips the edge cache: this is an explicit user gesture, and without
+  // it "checked · nothing new" could really mean "the cache hasn't rolled over".
+  await store.refresh({ fresh: true })
   const after = viewStatus.value?.lastObservedAt ?? null
   if (before !== null && after === before) {
     checkedNoNew.value = true

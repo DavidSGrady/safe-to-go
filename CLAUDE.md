@@ -37,6 +37,9 @@ here are written to be backward-compatible so either order is safe, but keep thi
    (`origin` = `github.com/DavidSGrady/safe-to-go`). There is **no** separate deploy step —
    `git push origin main` IS the production deploy. `vercel.json` only sets SPA rewrites.
    - Prod env vars live in Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (anon key only).
+     The `api/conditions.ts` serverless function reads the **same two** vars via `process.env` — no
+     service-role key, no extra config. `vercel.json`'s SPA rewrite excludes `/api/` so the function
+     isn't swallowed by the catch-all.
    - **Verify a deploy shipped:** `/admin` shows a "Live build" footer with the commit SHA
      (links to the GitHub commit) + build time, baked in via Vite `define` in `vite.config.ts`
      (`__COMMIT_SHA__` from `VERCEL_GIT_COMMIT_SHA`, `__BUILD_TIME__`; typed in `src/build-info.d.ts`).
@@ -61,8 +64,19 @@ here are written to be backward-compatible so either order is safe, but keep thi
 - `src/lib/tide.ts` — **the safety algorithm** (pure, no I/O). `computeStatus()` is the
   entry point; `findWindows()` scans the forecast curve for safe windows; `buildPredictionCurve()`
   interpolates DMI data. Everything downstream derives from its `StatusResult`.
-- `src/lib/api.ts` — Supabase queries + demo-mode fallback. Maps snake_case DB rows ↔ camelCase types.
-  `fetchReadings/fetchPredictions/fetchForecast` all take a `stationId` and filter by `station_id`.
+- `api/conditions.ts` — **the public read path** (Vercel serverless function, outside the Vite bundle).
+  Returns every station's raw rows + `safety_rules` as one JSON bundle, cached at Vercel's edge for
+  5 min (`s-maxage=300`), so **Supabase egress no longer scales with traffic** — it sees ~1 read per
+  cache period regardless of visitor count. Deliberately a dumb proxy (raw rows, no interpretation) so
+  the safety algorithm has exactly one implementation. Pages PostgREST in 1000-row chunks, since a
+  single response is capped at 1000 rows — which used to silently truncate the 8-day tide series to ~7
+  days. Its `select=` lists must track `src/lib/api.ts`; the forecast in particular needs
+  `source, generated_at`.
+- `src/lib/api.ts` — row→type mapping + demo-mode fallback. Maps snake_case DB rows ↔ camelCase types.
+  `fetchConditions(bypassCache)` reads the cached bundle and is the path the app normally takes.
+  `fetchReadings/fetchPredictions/fetchForecast/fetchRules` are the **direct-Supabase fallback** for when
+  the route is unavailable (demo mode, plain `vite dev`, Vercel function failure); they take a
+  `stationId` and filter by `station_id`. Both paths share the same mappers so they can't drift.
 - `src/lib/stations.ts` — the measuring stations (`STATIONS`: Mandø `9007101`, Ribe Kammersluse `9006701`).
   Both are valid crossing gauges; **thresholds are shared (v1)**. The `id` is the DMI observation
   stationId and the key for readings/predictions/forecast rows in Postgres.
@@ -86,6 +100,22 @@ here are written to be backward-compatible so either order is safe, but keep thi
   **When you add/rename a user-facing key, update `en` (fallback) + `da` (primary) at minimum;
   update all 7 for public-facing strings** so no `{placeholder}` renders raw in another locale.
 
+## Egress budget (why the read path looks like this)
+Supabase free plan = 5 GB egress/mo. The project blew it once (6.29 GB, 97.7% PostgREST) and the cause
+was amplification, not traffic: the cron re-upserted all ~144 readings per station every run, each of
+those writes fired a Realtime `postgres_changes` event because `station_readings` is in the publication,
+and the client refetched the *entire* dataset on every event. ~190k Realtime messages × ~25 KB ≈ 3.8 GB.
+Four rules keep it down — all load-bearing:
+1. **Ingest writes only new observations** (see below), so Realtime fan-out is proportional to new data.
+2. **Nothing subscribes to `station_readings`.** The store subscribes to `safety_rules` only. Don't
+   re-add a readings subscription — the 5-min poll is already inside DMI's 10-min publish cadence.
+   (The table stays *in* the publication, which is harmless with no subscribers.)
+3. **Public reads go through the edge-cached `api/conditions.ts`**, and the poll skips hidden tabs.
+4. **Automatic refreshes use the cache; user-initiated ones bypass it** via `refresh({ fresh: true })`
+   — pull-to-refresh, the freshness chip, and admin threshold saves. Without the bypass,
+   pull-to-refresh would report "checked · nothing new" when the truth is "the cache hasn't rolled
+   over yet". Don't make polling bypass the cache; that's what reintroduces traffic-scaled egress.
+
 ## Data ingestion (edge function)
 `supabase/functions/fetch-dmi-data/index.ts` runs on cron (~10 min). It ingests observations,
 tide predictions and **two forecasts** for **each station in its `STATIONS` array**
@@ -99,6 +129,21 @@ tide predictions and **two forecasts** for **each station in its `STATIONS` arra
   grid cells near the stations dry out at low tide (clamp ≈ −20 cm), so it must never be primary.
 `water_level_forecast` carries `station_id` (unique `station_id, source, forecast_at`) and
 `generated_at` (model-run time for `dmi_station`, fetch time for DKSS).
+
+Each series has its own write policy, and they deliberately differ:
+- **Observations** — diffed against stored timestamps; only genuinely new rows are written (DMI
+  republishes the whole 24 h window each run). Compares as epoch ms, because Postgres renders
+  timestamptz differently from DMI's ISO strings and string equality would never match. Diffing on
+  presence rather than "newer than max" also picks up backfilled gaps. This is the main egress fix —
+  see the Egress budget section.
+- **Both forecasts** — rewritten every run, **on purpose**. "Youngest write wins": a run's youngest
+  points are nudged toward the live observation, making them the most accurate value a timestamp ever
+  gets. Don't add an age/staleness gate here; two earlier attempts at head-skipping made accuracy
+  worse. Glitches are filtered by *shape* (`SPIKE_CM`), not age.
+- **Tide predictions** — skipped while the stored table still reaches `TIDE_HORIZON_MS` (7.5 d) ahead,
+  so about once a day. DMI's `tidewater` product is a pre-computed harmonic table: every row for
+  Aug 2026 carries `created: 2026-03-23`, i.e. generated months ahead and never revised.
+
 Deploy with `npx supabase functions deploy fetch-dmi-data` (this CLI has no `functions invoke`;
 trigger by waiting for cron or curling the function URL with the anon key). After a new station is
 added, apply the migration + deploy the frontend *before* the edge function starts writing the new

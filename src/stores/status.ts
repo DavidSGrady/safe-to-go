@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { fetchForecast, fetchPredictions, fetchReadings, fetchRules } from '@/lib/api'
+import {
+  fetchConditions,
+  fetchForecast,
+  fetchPredictions,
+  fetchReadings,
+  fetchRules,
+} from '@/lib/api'
 import { computeStatus, DEFAULT_HORIZON_HOURS, EXTENDED_HORIZON_HOURS } from '@/lib/tide'
 import { isDemoMode, getSupabase } from '@/lib/supabase'
 import { DEFAULT_STATION_ID, STATIONS, stationName } from '@/lib/stations'
@@ -143,31 +149,57 @@ export const useStatusStore = defineStore('status', () => {
     previewOffsetMin.value = min
   }
 
-  async function refresh(): Promise<void> {
+  /**
+   * Load every station's data straight from Supabase. Fallback for when the
+   * cached `/api/conditions` route is unavailable — demo mode, a plain
+   * `vite dev` session, or the Vercel function failing. This is the original
+   * behaviour, kept so the site degrades rather than breaks.
+   */
+  async function refreshDirect(): Promise<void> {
+    const ru = await fetchRules()
+    const perStation = await Promise.all(
+      STATIONS.map(async (s) => {
+        const [r, p, f] = await Promise.all([
+          fetchReadings(s.id),
+          fetchPredictions(s.id),
+          fetchForecast(s.id),
+        ])
+        return { id: s.id, r, p, f }
+      }),
+    )
+    const rMap: Record<string, Reading[]> = {}
+    const pMap: Record<string, Prediction[]> = {}
+    const fMap: Record<string, ForecastPoint[]> = {}
+    for (const x of perStation) {
+      rMap[x.id] = x.r
+      pMap[x.id] = x.p
+      fMap[x.id] = x.f
+    }
+    readingsByStation.value = rMap
+    predictionsByStation.value = pMap
+    forecastByStation.value = fMap
+    rules.value = ru
+  }
+
+  /**
+   * Reload everything.
+   *
+   * Pass `{ fresh: true }` for anything the user explicitly asked for
+   * (pull-to-refresh, the freshness chip, an admin saving thresholds) so it
+   * skips the 5-minute edge cache. Automatic polling should leave it off — that
+   * is what keeps Supabase egress independent of how many people are on the site.
+   */
+  async function refresh(opts: { fresh?: boolean } = {}): Promise<void> {
     try {
-      const ru = await fetchRules()
-      const perStation = await Promise.all(
-        STATIONS.map(async (s) => {
-          const [r, p, f] = await Promise.all([
-            fetchReadings(s.id),
-            fetchPredictions(s.id),
-            fetchForecast(s.id),
-          ])
-          return { id: s.id, r, p, f }
-        }),
-      )
-      const rMap: Record<string, Reading[]> = {}
-      const pMap: Record<string, Prediction[]> = {}
-      const fMap: Record<string, ForecastPoint[]> = {}
-      for (const x of perStation) {
-        rMap[x.id] = x.r
-        pMap[x.id] = x.p
-        fMap[x.id] = x.f
+      const snapshot = await fetchConditions(opts.fresh ?? false)
+      if (snapshot) {
+        readingsByStation.value = snapshot.readings
+        predictionsByStation.value = snapshot.predictions
+        forecastByStation.value = snapshot.forecast
+        rules.value = snapshot.rules
+      } else {
+        await refreshDirect()
       }
-      readingsByStation.value = rMap
-      predictionsByStation.value = pMap
-      forecastByStation.value = fMap
-      rules.value = ru
       error.value = null
     } catch (e) {
       error.value = e instanceof Error ? e.message : String(e)
@@ -185,7 +217,13 @@ export const useStatusStore = defineStore('status', () => {
     setInterval(() => {
       realNow.value = Date.now()
     }, RECOMPUTE_MS)
-    setInterval(() => void refresh(), REFRESH_MS)
+    // Don't poll a tab nobody is looking at. A forgotten open tab used to keep
+    // refetching the whole dataset indefinitely; the visibilitychange handler
+    // below catches it up the moment it returns.
+    setInterval(() => {
+      if (document.visibilityState !== 'visible') return
+      void refresh()
+    }, REFRESH_MS)
 
     // Browsers throttle timers in hidden tabs, so a phone waking from the
     // pocket could sit on stale data until the next poll. Snap the clock
@@ -197,19 +235,20 @@ export const useStatusStore = defineStore('status', () => {
     })
 
     if (!isDemoMode) {
-      // Live-update when the cron job writes new readings or an admin
-      // changes the rules; polling remains as fallback.
+      // Live-update when an admin changes the rules. Deliberately NOT subscribed
+      // to `station_readings`: it is the one data table in the Realtime
+      // publication, the ingest cron writes observations in bulk, and refreshing
+      // on every row event made a single cron run trigger dozens of full
+      // refetches per open tab — the amplification that blew the egress budget.
+      // New observations arrive via the poll above, which is already inside
+      // DMI's 10-minute publish cadence.
       getSupabase()
         .channel('public-data')
         .on(
           'postgres_changes',
-          { event: '*', schema: 'public', table: 'station_readings' },
-          () => void refresh(),
-        )
-        .on(
-          'postgres_changes',
           { event: '*', schema: 'public', table: 'safety_rules' },
-          () => void refresh(),
+          // An admin just changed the thresholds, so skip the cache.
+          () => void refresh({ fresh: true }),
         )
         .subscribe()
     }

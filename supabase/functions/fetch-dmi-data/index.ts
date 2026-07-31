@@ -125,6 +125,12 @@ interface ForecastRow {
   generated_at: string
 }
 
+/**
+ * How far ahead the stored tide table must reach before the fetch is skipped.
+ * See the tide block in ingestStation() for why the values are immutable.
+ */
+const TIDE_HORIZON_MS = 7.5 * 24 * 3600_000
+
 /** Ingest observations, tide predictions and the DKSS forecast for one station. */
 async function ingestStation(supabase: Supa, now: number, station: StationConfig) {
   const iso = (ms: number) => new Date(ms).toISOString()
@@ -148,41 +154,102 @@ async function ingestStation(supabase: Supa, now: number, station: StationConfig
       water_level_cm: p.value as number,
     }))
 
+  // Write only observations we don't already have. DMI republishes the whole
+  // 24 h window every run, but `station_readings` is the one data table in the
+  // Realtime publication, so a blind upsert of all ~144 rows fired ~144 change
+  // events per station per run — and every connected browser refetched the full
+  // dataset on each one. That amplification, not traffic, is what blew the
+  // free-tier egress budget. Diffing keeps the fan-out proportional to
+  // genuinely new data (~1 row per run).
+  //
+  // Note this is the opposite of the station-prognosis policy below, where
+  // re-writing every run is deliberate ("youngest write wins"). Observations
+  // are immutable measurements, so a rewrite carries no new information.
+  let newReadings = readings
   if (readings.length > 0) {
+    const oldest = readings.reduce(
+      (min, r) => (r.observed_at < min ? r.observed_at : min),
+      readings[0].observed_at,
+    )
+    const { data: existing, error: existingError } = await supabase
+      .from('station_readings')
+      .select('observed_at')
+      .eq('station_id', station.obsId)
+      // Match the unique constraint (station_id, parameter_id, observed_at) so a
+      // row for another parameter can't mask a genuinely new observation.
+      .eq('parameter_id', PARAMETER_ID)
+      .gte('observed_at', oldest)
+    if (existingError) throw new Error(`read existing readings: ${existingError.message}`)
+
+    // Compare as epoch ms: Postgres renders timestamptz differently from DMI's
+    // ISO strings, so raw string equality would never match and we'd rewrite
+    // everything anyway.
+    const seen = new Set(
+      ((existing ?? []) as Array<{ observed_at: string }>).map((r) => Date.parse(r.observed_at)),
+    )
+    newReadings = readings.filter((r) => !seen.has(Date.parse(r.observed_at)))
+  }
+
+  if (newReadings.length > 0) {
     const { error } = await supabase
       .from('station_readings')
-      .upsert(readings, { onConflict: 'station_id,parameter_id,observed_at' })
+      .upsert(newReadings, { onConflict: 'station_id,parameter_id,observed_at' })
     if (error) throw new Error(`upsert readings: ${error.message}`)
   }
 
   // --- Tide predictions: -12 h to +8 days (covers the "see further ahead" 7-day view) ---
-  const tideFeatures = await dmiGet('tidewater', {
-    stationId: station.tideId,
-    datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
-    limit: '3000',
-  })
+  // Re-fetched only when the stored table stops reaching TIDE_HORIZON_MS ahead,
+  // which lands about once a day. DMI's `tidewater` product is a pre-computed
+  // harmonic table: every row for Aug 2026 carries `created: 2026-03-23`, i.e.
+  // the values are generated months ahead and never revised, so re-fetching
+  // ~1250 rows per station every 10 minutes bought nothing.
+  const { data: tideHead } = await supabase
+    .from('tide_predictions')
+    .select('predicted_at')
+    .eq('station_id', station.obsId)
+    .order('predicted_at', { ascending: false })
+    .limit(1)
+  const tideReachMs = (tideHead ?? []).length
+    ? Date.parse((tideHead as Array<{ predicted_at: string }>)[0].predicted_at) - now
+    : -1
+  const tideFresh = tideReachMs >= TIDE_HORIZON_MS
 
-  const predictions = tideFeatures
-    .map((f) => f.properties)
-    .filter(
-      (p) =>
-        (p.predictionTime || p.predicted) &&
-        typeof p.value === 'number' &&
-        typeof p.predictionType === 'string',
-    )
-    .map((p) => ({
-      // Store under the observation stationId so the app keys everything by one id.
-      station_id: station.obsId,
-      prediction_type: String(p.predictionType),
-      predicted_at: String(p.predictionTime ?? p.predicted),
-      value_cm: p.value as number,
-    }))
+  let predictions: Array<{
+    station_id: string
+    prediction_type: string
+    predicted_at: string
+    value_cm: number
+  }> = []
 
-  if (predictions.length > 0) {
-    const { error } = await supabase
-      .from('tide_predictions')
-      .upsert(predictions, { onConflict: 'station_id,prediction_type,predicted_at' })
-    if (error) throw new Error(`upsert predictions: ${error.message}`)
+  if (!tideFresh) {
+    const tideFeatures = await dmiGet('tidewater', {
+      stationId: station.tideId,
+      datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
+      limit: '3000',
+    })
+
+    predictions = tideFeatures
+      .map((f) => f.properties)
+      .filter(
+        (p) =>
+          (p.predictionTime || p.predicted) &&
+          typeof p.value === 'number' &&
+          typeof p.predictionType === 'string',
+      )
+      .map((p) => ({
+        // Store under the observation stationId so the app keys everything by one id.
+        station_id: station.obsId,
+        prediction_type: String(p.predictionType),
+        predicted_at: String(p.predictionTime ?? p.predicted),
+        value_cm: p.value as number,
+      }))
+
+    if (predictions.length > 0) {
+      const { error } = await supabase
+        .from('tide_predictions')
+        .upsert(predictions, { onConflict: 'station_id,prediction_type,predicted_at' })
+      if (error) throw new Error(`upsert predictions: ${error.message}`)
+    }
   }
 
   // --- DMI station prognosis (primary forecast; the series dmi.dk shows) ---
@@ -227,8 +294,10 @@ async function ingestStation(supabase: Supa, now: number, station: StationConfig
 
   return {
     stationId: station.obsId,
-    readingsUpserted: readings.length,
+    readingsFetched: readings.length,
+    readingsUpserted: newReadings.length,
     predictionsUpserted: predictions.length,
+    tideSkipped: tideFresh,
     stationForecastUpserted: stationForecast.length,
     stationForecastError,
     forecastUpserted: forecast.length,
