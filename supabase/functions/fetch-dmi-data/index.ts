@@ -18,9 +18,16 @@
 //   DKSS_LON / DKSS_LAT       wet grid point near Mandø (default 8.50 / 55.28)
 //   NINJO_BASE_URL            dmi.dk station-prognosis endpoint override
 //   DMI_API_KEY               only if DMI ever reintroduces keys
+//   ALERT_WEBHOOK_URL         ops alerts (Slack incoming-webhook payload `{text}`);
+//                             unset = alerts off. See alertOnStaleObservations().
+//   STALE_ALERT_HOURS         alert when a station's newest reading is older (default 3)
+//   STALE_ALERT_REPEAT_HOURS  reminder cadence while it stays stale (default 6)
+//   ALERT_SITE_URL            link in alert messages (default the prod domain)
 //
 // Four things are ingested each run:
-//   observation  — measured water level (gauge, includes real weather)
+//   observation  — measured water level (gauge, includes real weather).
+//                  Primary: the open-data gateway. Fallback: dmi.dk's NinJo
+//                  feed (same values; see fetchNinjoObservations).
 //   tidewater    — astronomical tide table (no weather; used when the wind
 //                  toggle is OFF and as a fallback beyond the forecast horizon)
 //   station prognosis — DMI's per-station water-level prognosis (ARIMA + DKSS,
@@ -52,6 +59,8 @@ const NINJO_BASE_URL =
 const SOURCE_STATION = 'dmi_station'
 
 interface StationConfig {
+  /** Human name, for ops alerts only. */
+  name: string
   /** DMI observation stationId — also how rows are keyed in Postgres. */
   obsId: string
   /** DMI tidewater stationId (astronomical predictions). */
@@ -65,9 +74,85 @@ interface StationConfig {
 // Kammersluse is added as a second gauge locals cross-reference. If a station's
 // fetch fails, the others still run (see ingest()).
 const STATIONS: StationConfig[] = [
-  { obsId: STATION_OBS, tideId: STATION_TIDE, dkssLon: DKSS_LON, dkssLat: DKSS_LAT },
-  { obsId: '9006701', tideId: '25343', dkssLon: '8.66', dkssLat: '55.31' },
+  { name: 'Mandø', obsId: STATION_OBS, tideId: STATION_TIDE, dkssLon: DKSS_LON, dkssLat: DKSS_LAT },
+  { name: 'Ribe Kammersluse', obsId: '9006701', tideId: '25343', dkssLon: '8.66', dkssLat: '55.31' },
 ]
+
+interface ReadingRow {
+  station_id: string
+  parameter_id: string
+  observed_at: string
+  water_level_cm: number
+}
+
+/** Observation window fetched each run. DMI republishes all of it every time. */
+const OBS_WINDOW_MS = 24 * 3600_000
+
+/** Observations from the open-data gateway, newest first. */
+async function fetchGatewayObservations(station: StationConfig, now: number): Promise<ReadingRow[]> {
+  const iso = (ms: number) => new Date(ms).toISOString()
+  const features = await dmiGet('observation', {
+    stationId: station.obsId,
+    parameterId: PARAMETER_ID,
+    datetime: `${iso(now - OBS_WINDOW_MS)}/${iso(now)}`,
+    limit: '300',
+    sortorder: 'observed,DESC',
+  })
+  const rows = features
+    .map((f) => f.properties)
+    .filter((p) => p.observed && typeof p.value === 'number')
+    .map((p) => ({
+      station_id: String(p.stationId ?? station.obsId),
+      parameter_id: String(p.parameterId ?? PARAMETER_ID),
+      observed_at: String(p.observed),
+      water_level_cm: p.value as number,
+    }))
+  // An empty window from a healthy gateway is as useless as a dead one — let
+  // the caller try the fallback rather than silently recording nothing.
+  if (rows.length === 0) throw new Error('gateway returned no observations')
+  return rows
+}
+
+/**
+ * Fallback observation source: the www.dmi.dk NinJo endpoint that serves the
+ * station prognosis also serves the gauge observations dmi.dk's location pages
+ * show (`datatype=obs`, ~48 h of 10-minute values, keyed by the *tidewater*
+ * stationId like the prognosis). Checked 2026-09-07 against the gateway rows
+ * already in Postgres: identical at every shared timestamp once rounded (NinJo
+ * carries float noise such as 66.00000762939453).
+ *
+ * Fallback only, because it is undocumented and can change without notice. It
+ * exists because on 2026-09-07 the gateway's DNS record vanished for hours
+ * while dmi.dk kept updating — the app showed a 13 h old reading for nothing.
+ */
+async function fetchNinjoObservations(station: StationConfig, now: number): Promise<ReadingRow[]> {
+  const url = `${NINJO_BASE_URL}?cmd=odj&stations=${station.tideId}&datatype=obs`
+  const res = await fetch(url)
+  if (!res.ok) {
+    const body = (await res.text()).slice(0, 200)
+    throw new Error(`ninjo obs ${station.tideId} ${res.status}: ${body}`)
+  }
+  const json = await res.json()
+  const series = Array.isArray(json) ? json[0] : null
+  const values: Array<{ time?: string; value?: unknown }> = series?.values ?? []
+
+  const rows: ReadingRow[] = []
+  for (const v of values) {
+    if (!v?.time || typeof v.value !== 'number' || !Number.isFinite(v.value)) continue
+    const t = Date.parse(String(v.time))
+    // Same window as the gateway query, so the diff/upsert below behaves identically.
+    if (!Number.isFinite(t) || t < now - OBS_WINDOW_MS || t > now) continue
+    rows.push({
+      station_id: station.obsId,
+      parameter_id: PARAMETER_ID,
+      observed_at: new Date(t).toISOString(),
+      water_level_cm: Math.round(v.value),
+    })
+  }
+  if (rows.length === 0) throw new Error(`ninjo obs ${station.tideId}: no observations in window`)
+  rows.sort((a, b) => Date.parse(b.observed_at) - Date.parse(a.observed_at)) // newest first
+  return rows
+}
 
 interface DmiFeature {
   properties: Record<string, unknown>
@@ -136,23 +221,29 @@ async function ingestStation(supabase: Supa, now: number, station: StationConfig
   const iso = (ms: number) => new Date(ms).toISOString()
 
   // --- Observations: last 24 h of water levels ---
-  const obsFeatures = await dmiGet('observation', {
-    stationId: station.obsId,
-    parameterId: PARAMETER_ID,
-    datetime: `${iso(now - 24 * 3600_000)}/${iso(now)}`,
-    limit: '300',
-    sortorder: 'observed,DESC',
-  })
-
-  const readings = obsFeatures
-    .map((f) => f.properties)
-    .filter((p) => p.observed && typeof p.value === 'number')
-    .map((p) => ({
-      station_id: String(p.stationId ?? station.obsId),
-      parameter_id: String(p.parameterId ?? PARAMETER_ID),
-      observed_at: String(p.observed),
-      water_level_cm: p.value as number,
-    }))
+  // Gateway first, NinJo if it fails. Non-fatal: a dead observation source must
+  // not stop the forecasts below from refreshing. Before 2026-09-07 this fetch
+  // threw and aborted the station, so when the gateway's DNS record vanished
+  // the station prognosis — served by a host that was up the whole time —
+  // froze along with the readings.
+  let readings: ReadingRow[] = []
+  let readingsSource: 'dmi_gateway' | 'ninjo' | null = null
+  let gatewayError: string | null = null
+  let readingsError: string | null = null
+  try {
+    readings = await fetchGatewayObservations(station, now)
+    readingsSource = 'dmi_gateway'
+  } catch (err) {
+    gatewayError = String(err)
+    console.error(`gateway observations failed for ${station.obsId}, trying NinJo:`, gatewayError)
+    try {
+      readings = await fetchNinjoObservations(station, now)
+      readingsSource = 'ninjo'
+    } catch (ninjoErr) {
+      readingsError = `gateway: ${gatewayError}; ninjo: ${String(ninjoErr)}`
+      console.error(`all observation sources failed for ${station.obsId}:`, readingsError)
+    }
+  }
 
   // Write only observations we don't already have. DMI republishes the whole
   // 24 h window every run, but `station_readings` is the one data table in the
@@ -220,35 +311,43 @@ async function ingestStation(supabase: Supa, now: number, station: StationConfig
     predicted_at: string
     value_cm: number
   }> = []
+  let tideError: string | null = null
 
+  // Non-fatal like the observations: the tide table is on the same gateway, and
+  // the stored table reaches ~7.5 days ahead, so a day-long outage costs nothing.
   if (!tideFresh) {
-    const tideFeatures = await dmiGet('tidewater', {
-      stationId: station.tideId,
-      datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
-      limit: '3000',
-    })
+    try {
+      const tideFeatures = await dmiGet('tidewater', {
+        stationId: station.tideId,
+        datetime: `${iso(now - 12 * 3600_000)}/${iso(now + 8 * 24 * 3600_000)}`,
+        limit: '3000',
+      })
 
-    predictions = tideFeatures
-      .map((f) => f.properties)
-      .filter(
-        (p) =>
-          (p.predictionTime || p.predicted) &&
-          typeof p.value === 'number' &&
-          typeof p.predictionType === 'string',
-      )
-      .map((p) => ({
-        // Store under the observation stationId so the app keys everything by one id.
-        station_id: station.obsId,
-        prediction_type: String(p.predictionType),
-        predicted_at: String(p.predictionTime ?? p.predicted),
-        value_cm: p.value as number,
-      }))
+      predictions = tideFeatures
+        .map((f) => f.properties)
+        .filter(
+          (p) =>
+            (p.predictionTime || p.predicted) &&
+            typeof p.value === 'number' &&
+            typeof p.predictionType === 'string',
+        )
+        .map((p) => ({
+          // Store under the observation stationId so the app keys everything by one id.
+          station_id: station.obsId,
+          prediction_type: String(p.predictionType),
+          predicted_at: String(p.predictionTime ?? p.predicted),
+          value_cm: p.value as number,
+        }))
 
-    if (predictions.length > 0) {
-      const { error } = await supabase
-        .from('tide_predictions')
-        .upsert(predictions, { onConflict: 'station_id,prediction_type,predicted_at' })
-      if (error) throw new Error(`upsert predictions: ${error.message}`)
+      if (predictions.length > 0) {
+        const { error } = await supabase
+          .from('tide_predictions')
+          .upsert(predictions, { onConflict: 'station_id,prediction_type,predicted_at' })
+        if (error) throw new Error(`upsert predictions: ${error.message}`)
+      }
+    } catch (err) {
+      tideError = String(err)
+      console.error(`tide predictions failed for ${station.obsId} (non-fatal):`, tideError)
     }
   }
 
@@ -294,10 +393,14 @@ async function ingestStation(supabase: Supa, now: number, station: StationConfig
 
   return {
     stationId: station.obsId,
+    readingsSource,
     readingsFetched: readings.length,
     readingsUpserted: newReadings.length,
+    gatewayError,
+    readingsError,
     predictionsUpserted: predictions.length,
     tideSkipped: tideFresh,
+    tideError,
     stationForecastUpserted: stationForecast.length,
     stationForecastError,
     forecastUpserted: forecast.length,
@@ -344,6 +447,15 @@ async function ingest() {
     .delete()
     .lt('forecast_at', iso(now - 1 * 24 * 3600_000))
 
+  // --- Ops alert: readings stale for hours → webhook. Fault-isolated. ---
+  let staleAlert: unknown = null
+  try {
+    staleAlert = await alertOnStaleObservations(supabase, now, perStation)
+  } catch (err) {
+    console.error('alertOnStaleObservations failed (non-fatal):', err)
+    staleAlert = { error: String(err) }
+  }
+
   // --- Push notifications: fault-isolated, must never break ingestion ---
   let notify: unknown = null
   try {
@@ -353,7 +465,160 @@ async function ingest() {
     notify = { error: String(err) }
   }
 
-  return { stations: perStation, notify }
+  return { stations: perStation, staleAlert, notify }
+}
+
+// ---------------------------------------------------------------------------
+// Ops alert: "no new readings for N hours". Posts to ALERT_WEBHOOK_URL as a
+// Slack incoming-webhook payload (`{ text }`; Discord accepts the same on a
+// webhook URL suffixed `/slack`). State lives in `ops_alert_state` so a
+// station going stale produces one alert, a reminder every
+// STALE_ALERT_REPEAT_HOURS, and one recovery message — not a post per cron
+// run. See supabase/migrations/20260907000000_ops_alert_state.sql.
+//
+// Limitation: this runs inside the cron. If the cron itself stops, nothing
+// fires — that needs an external check, e.g. an uptime monitor on
+// /api/conditions that asserts on the newest observed_at.
+// ---------------------------------------------------------------------------
+
+const ALERT_WEBHOOK_URL = Deno.env.get('ALERT_WEBHOOK_URL') ?? ''
+const STALE_ALERT_MS = Number(Deno.env.get('STALE_ALERT_HOURS') ?? '3') * 3600_000
+const STALE_ALERT_REPEAT_MS = Number(Deno.env.get('STALE_ALERT_REPEAT_HOURS') ?? '6') * 3600_000
+const ALERT_SITE_URL = Deno.env.get('ALERT_SITE_URL') ?? 'https://www.xn--krtilmand-l8ai.dk'
+
+interface AlertStateRow {
+  key: string
+  active: boolean
+  first_stale_at: string | null
+  last_notified_at: string | null
+}
+
+/** Shape of the per-station ingest results this run, as far as alerting cares. */
+interface StationRunResult {
+  stationId: string
+  error?: string
+  readingsError?: string | null
+  gatewayError?: string | null
+  readingsSource?: string | null
+}
+
+async function postAlert(text: string): Promise<void> {
+  const res = await fetch(ALERT_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  if (!res.ok) throw new Error(`alert webhook ${res.status}: ${(await res.text()).slice(0, 200)}`)
+}
+
+function formatCopenhagen(ms: number): string {
+  return new Intl.DateTimeFormat('da-DK', {
+    timeZone: 'Europe/Copenhagen',
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(ms))
+}
+
+function formatAge(ms: number): string {
+  if (!Number.isFinite(ms)) return 'ever'
+  const h = Math.floor(ms / 3600_000)
+  const m = Math.floor((ms % 3600_000) / 60_000)
+  return h > 0 ? `${h} h ${m} min` : `${m} min`
+}
+
+/**
+ * Compare each station's newest stored reading against STALE_ALERT_MS and
+ * post/refresh/clear an alert accordingly. Reads the *stored* newest row, not
+ * this run's fetch, so it also covers "DMI serves data but nothing new in it"
+ * (a gauge outage) and a broken write path.
+ */
+async function alertOnStaleObservations(supabase: Supa, now: number, runResults: unknown[]) {
+  if (!ALERT_WEBHOOK_URL) return { skipped: 'no ALERT_WEBHOOK_URL' }
+  const iso = (ms: number) => new Date(ms).toISOString()
+
+  const { data: stateRows, error: stateError } = await supabase
+    .from('ops_alert_state')
+    .select('key,active,first_stale_at,last_notified_at')
+  if (stateError) {
+    throw new Error(
+      `read ops_alert_state: ${stateError.message} (is migration 20260907000000_ops_alert_state applied?)`,
+    )
+  }
+  const state = new Map<string, AlertStateRow>(
+    ((stateRows ?? []) as AlertStateRow[]).map((r) => [r.key, r]),
+  )
+  const reasons = new Map<string, string>()
+  for (const r of runResults as StationRunResult[]) {
+    const reason = r.error ?? r.readingsError ?? (r.readingsSource === 'ninjo' ? r.gatewayError : null)
+    if (reason) reasons.set(r.stationId, reason)
+  }
+
+  const out: Array<{ stationId: string; ageMinutes: number | null; stale: boolean; action: string }> = []
+  for (const station of STATIONS) {
+    const { data: latest, error } = await supabase
+      .from('station_readings')
+      .select('observed_at')
+      .eq('station_id', station.obsId)
+      .eq('parameter_id', PARAMETER_ID)
+      .order('observed_at', { ascending: false })
+      .limit(1)
+    if (error) throw new Error(`read newest reading ${station.obsId}: ${error.message}`)
+
+    const newestMs = latest?.[0]?.observed_at ? Date.parse(latest[0].observed_at) : NaN
+    const ageMs = Number.isFinite(newestMs) ? now - newestMs : Infinity
+    const stale = ageMs > STALE_ALERT_MS
+
+    const key = `stale_observations:${station.obsId}`
+    const prev = state.get(key)
+    const active = prev?.active ?? false
+    const lastNotifiedMs = prev?.last_notified_at ? Date.parse(prev.last_notified_at) : 0
+    const label = `${station.name} (${station.obsId})`
+    let action = 'none'
+
+    if (stale && (!active || now - lastNotifiedMs >= STALE_ALERT_REPEAT_MS)) {
+      const firstStaleAt = active && prev?.first_stale_at ? prev.first_stale_at : iso(now)
+      const lines = [
+        `⚠️ Kør til Mandø: no new water-level readings for ${label} in ${formatAge(ageMs)}.`,
+        Number.isFinite(newestMs)
+          ? `Newest reading: ${formatCopenhagen(newestMs)} (Europe/Copenhagen). The site is showing forecast only.`
+          : 'No readings stored at all for this station.',
+      ]
+      const reason = reasons.get(station.obsId)
+      if (reason) lines.push(`Last ingest error: ${reason.slice(0, 400)}`)
+      if (active) lines.push(`Stale since ${formatCopenhagen(Date.parse(firstStaleAt))}; reminders every ${formatAge(STALE_ALERT_REPEAT_MS)}.`)
+      lines.push(`${ALERT_SITE_URL}/admin`)
+      await postAlert(lines.join('\n'))
+      const { error: writeError } = await supabase.from('ops_alert_state').upsert(
+        { key, active: true, first_stale_at: firstStaleAt, last_notified_at: iso(now), updated_at: iso(now) },
+        { onConflict: 'key' },
+      )
+      if (writeError) throw new Error(`write ops_alert_state: ${writeError.message}`)
+      action = active ? 'reminded' : 'alerted'
+    } else if (!stale && active) {
+      const sinceMs = prev?.first_stale_at ? Date.parse(prev.first_stale_at) : NaN
+      const gap = Number.isFinite(sinceMs) ? ` after ${formatAge(now - sinceMs)}` : ''
+      await postAlert(
+        `✅ Kør til Mandø: readings for ${label} are flowing again${gap}. ` +
+          `Newest reading: ${formatCopenhagen(newestMs)} (Europe/Copenhagen).`,
+      )
+      const { error: writeError } = await supabase.from('ops_alert_state').upsert(
+        { key, active: false, first_stale_at: null, last_notified_at: iso(now), updated_at: iso(now) },
+        { onConflict: 'key' },
+      )
+      if (writeError) throw new Error(`write ops_alert_state: ${writeError.message}`)
+      action = 'recovered'
+    }
+
+    out.push({
+      stationId: station.obsId,
+      ageMinutes: Number.isFinite(ageMs) ? Math.round(ageMs / 60_000) : null,
+      stale,
+      action,
+    })
+  }
+  return out
 }
 
 // ---------------------------------------------------------------------------
@@ -653,17 +918,39 @@ Deno.serve(async (req) => {
   try {
     const params = new URL(req.url).searchParams
 
-    // Test hook: sends a test push to all pending subscriptions. Gated on the
-    // service-role key — the anon key ships in the frontend bundle, so it must
-    // not be enough to make every subscriber's phone buzz.
-    if (params.get('push_test') === '1') {
-      const bearer = req.headers.get('authorization') ?? ''
-      if (bearer !== `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`) {
-        return new Response(JSON.stringify({ error: 'forbidden' }), {
-          status: 403,
+    // Test hooks, gated on the service-role key — the anon key ships in the
+    // frontend bundle, so it must not be enough to make every subscriber's
+    // phone buzz or to spam the ops channel.
+    const isServiceRole =
+      (req.headers.get('authorization') ?? '') ===
+      `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+    const forbidden = () =>
+      new Response(JSON.stringify({ error: 'forbidden' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+    // Posts one test message to ALERT_WEBHOOK_URL so the wiring can be verified
+    // without waiting for an outage.
+    if (params.get('alert_test') === '1') {
+      if (!isServiceRole) return forbidden()
+      if (!ALERT_WEBHOOK_URL) {
+        return new Response(JSON.stringify({ skipped: 'no ALERT_WEBHOOK_URL' }), {
           headers: { 'Content-Type': 'application/json' },
         })
       }
+      await postAlert(
+        `🔔 Kør til Mandø: test alert from fetch-dmi-data. Stale threshold ${formatAge(STALE_ALERT_MS)}, ` +
+          `reminders every ${formatAge(STALE_ALERT_REPEAT_MS)}.`,
+      )
+      return new Response(JSON.stringify({ sent: true }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    // Sends a test push to all pending subscriptions.
+    if (params.get('push_test') === '1') {
+      if (!isServiceRole) return forbidden()
       const supabase = createClient(
         Deno.env.get('SUPABASE_URL')!,
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,

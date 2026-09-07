@@ -136,6 +136,21 @@ Each series has its own write policy, and they deliberately differ:
   timestamptz differently from DMI's ISO strings and string equality would never match. Diffing on
   presence rather than "newer than max" also picks up backfilled gaps. This is the main egress fix —
   see the Egress budget section.
+  **Source fallback:** the open-data gateway (`dmigw.govcloud.dk`) is primary; if it fails or returns
+  an empty window, the same NinJo endpoint as the prognosis is used with `datatype=obs` (identical
+  values once rounded — verified against stored gateway rows 2026-09-07). Every fetch in the station
+  is **non-fatal**: observations, tide, both forecasts. Keep it that way — on 2026-09-07 the gateway's
+  DNS record vanished for hours and, because the observation fetch used to throw, the prognosis
+  (served by www.dmi.dk, which was up) froze along with it. The run result reports `readingsSource`
+  (`dmi_gateway` | `ninjo` | null) and `gatewayError` / `readingsError` / `tideError` per station.
+
+**Ops alert — stale readings.** After ingest, `alertOnStaleObservations()` compares each station's
+newest *stored* reading against `STALE_ALERT_HOURS` (default 3) and POSTs a Slack-style `{ text }`
+payload to `ALERT_WEBHOOK_URL` (unset = off). State in `ops_alert_state` (service-role only) gives one
+alert, a reminder every `STALE_ALERT_REPEAT_HOURS` (default 6), and one recovery message — never a
+post per cron run. The alert quotes the last ingest error, so a DNS failure vs. a quiet gauge is
+visible from the message. Verify wiring with `GET …/fetch-dmi-data?alert_test=1` using the
+**service-role** bearer (anon → 403). Limitation: it runs inside the cron, so a dead cron alerts nobody.
 - **Both forecasts** — rewritten every run, **on purpose**. "Youngest write wins": a run's youngest
   points are nudged toward the live observation, making them the most accurate value a timestamp ever
   gets. Don't add an age/staleness gate here; two earlier attempts at head-skipping made accuracy
