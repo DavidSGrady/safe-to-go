@@ -4,6 +4,17 @@ Running list of features/ideas to build. Not prioritised unless noted.
 
 ## Shipped
 
+- **Visitor counting, cookieless and first-party.** Counts pageviews + daily
+  uniques, country, language and referrer. Nothing is visible on the site and
+  there's no dashboard: paste a block from `supabase/visitor_queries.sql` into
+  the Supabase SQL editor. No cookie/localStorage, so no consent banner; the IP
+  and user-agent are hashed inside `api/visit.ts` and never stored, and the
+  daily salt is purged after ~48 h. Needs `VISIT_TOKEN` + `VISIT_PEPPER` in
+  Vercel. Deliberately deferred: an `/admin` dashboard (the tables already have
+  an admin-read RLS policy, so it needs no migration), the `device` dimension
+  (already allowed by the CHECK constraint, just unpopulated), and a privacy
+  notice — see below.
+
 - **Surface flood-reach time** — the time DMI's prognosis says the water reaches
   the road (`caution_max_cm`) now shows in the verdict pane and per window.
 - **Station switch: Mandø ⇄ Ribe Kammersluse (v1).** Checkbox selector (one or
@@ -24,6 +35,18 @@ Running list of features/ideas to build. Not prioritised unless noted.
   a first load in English served English text tagged `lang="da"`).
 
 ## Ideas (not yet scoped)
+
+- **Privacy notice (`/privatliv`).** Considered and consciously declined when
+  visitor counting shipped. The counting itself doesn't need one: the IP/UA are
+  transient and never stored, and the retained aggregates are anonymous. What
+  *would* justify one is already live and predates it — `NotifyWhenPassable` on
+  the front page persists a push endpoint (a stable per-device identifier) with
+  no retention limit and no information shown to the person tapping the button,
+  and `index.html` loads IBM Plex from Google's CDN, so every visitor's IP goes
+  to Google. Both unchanged from before, neither closed. A short plain-Danish
+  page in `da` + `en` (the other five fall back to English) would cover it in
+  well under an hour; self-hosting the two woff2 files would close the fonts
+  one outright and speed up first paint.
 
 - **Prognosis drift warnings (high priority — build early).** On each DMI update,
   check whether the prognosis is trending _worse_ (e.g. the estimated time the

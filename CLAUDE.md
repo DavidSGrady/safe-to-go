@@ -37,9 +37,10 @@ here are written to be backward-compatible so either order is safe, but keep thi
    (`origin` = `github.com/DavidSGrady/safe-to-go`). There is **no** separate deploy step —
    `git push origin main` IS the production deploy. `vercel.json` only sets SPA rewrites.
    - Prod env vars live in Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (anon key only).
-     The `api/conditions.ts` serverless function reads the **same two** vars via `process.env` — no
-     service-role key, no extra config. `vercel.json`'s SPA rewrite excludes `/api/` so the function
-     isn't swallowed by the catch-all.
+     The `api/conditions.ts` serverless function reads those **same two** vars via `process.env` — no
+     service-role key. `api/visit.ts` additionally needs `VISIT_TOKEN` and `VISIT_PEPPER` (see
+     "Visitor counting" below); neither is a `VITE_` var, so neither reaches the browser bundle.
+     `vercel.json`'s SPA rewrite excludes `/api/` so the functions aren't swallowed by the catch-all.
    - **Verify a deploy shipped:** `/admin` shows a "Live build" footer with the commit SHA
      (links to the GitHub commit) + build time, baked in via Vite `define` in `vite.config.ts`
      (`__COMMIT_SHA__` from `VERCEL_GIT_COMMIT_SHA`, `__BUILD_TIME__`; typed in `src/build-info.d.ts`).
@@ -99,6 +100,30 @@ here are written to be backward-compatible so either order is safe, but keep thi
 - `src/i18n/locales/*.json` — 7 locales (da, en, de, nl, fr, es, zh). `fallbackLocale: 'en'`.
   **When you add/rename a user-facing key, update `en` (fallback) + `da` (primary) at minimum;
   update all 7 for public-facing strings** so no `{placeholder}` renders raw in another locale.
+
+## Visitor counting (cookieless, first-party)
+`api/visit.ts` + `src/lib/analytics.ts` + `20260919000000_visitor_counts.sql`. **Nothing is
+visible on the site** — no counter, no widget — and there is no admin dashboard. Read the
+numbers by pasting a block from **`supabase/visitor_queries.sql`** into the Supabase SQL editor.
+- **Why no consent banner:** consent attaches to *storing or reading information on the device*.
+  The beacon stores nothing — no cookie, no localStorage, no sessionStorage. **Don't add any**,
+  or the site needs a banner. (The app's *other* localStorage — locale, station selection — is
+  user-requested settings, a different matter.)
+- **Split knowledge:** `api/visit.ts` sees the IP + UA and hashes them with `VISIT_PEPPER`, which
+  is a Vercel env var and deliberately *not* in the database; Postgres sees only that digest,
+  salts it with a per-day random value and truncates to 64 bits. Salt + hashes are purged after
+  ~48 h (primary trigger is inside `visit_record` on day-rollover, so it needs no pg_cron).
+  So a full DB dump can't re-link a hash to a person.
+- **Two env vars, set by hand once:** `VISIT_TOKEN` (read it from `visit_ingest_secret` after the
+  migration — it's random per-project, not in git) and `VISIT_PEPPER` (any 32+ random chars).
+  Without them the endpoint silently no-ops. Set both in Vercel *before* pushing.
+- **Egress:** `visit_record` `returns void` (~300 B/pageview, <1 % of the budget). Never make it
+  return rows, never SELECT these tables from the browser, and **never add them to
+  `supabase_realtime`** — see below for why that matters.
+- `api/*.ts` is in **no tsconfig**, so `npm run build` does *not* typecheck it. Check by hand:
+  `npx esbuild api/visit.ts --bundle --platform=node --format=esm --outfile=<scratch>/visit.mjs`.
+- Counting fires from `router.afterEach` (covers first load *and* SPA transitions, and can't fire
+  on the store's poll, which doesn't navigate). Only `/` and `/status` count.
 
 ## Egress budget (why the read path looks like this)
 Supabase free plan = 5 GB egress/mo. The project blew it once (6.29 GB, 97.7% PostgREST) and the cause
