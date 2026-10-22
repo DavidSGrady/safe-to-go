@@ -47,6 +47,7 @@
     "shortUnsafe": "prochain {time}",
     "shortNone": "aucun créneau",
     "staleBanner": "Dernière mesure {duration} — nous affichons à la place la prévision DMI pour maintenant. Soyez particulièrement prudent.",
+    "forecastStaleBanner": "La prévision n'a pas été mise à jour depuis {time} — le niveau réel peut différer. Consultez dmi.dk et soyez particulièrement prudent.",
     "freshFresh": "Mesuré {duration}",
     "freshStale": "Dernière mesure {duration} — prévision affichée",
     "advisory": "Calculé à partir des données DMI — évaluez toujours vous-même les conditions sur place."

@@ -175,6 +175,10 @@ export interface StatusResult {
   lastObservedAt: number | null
   /** True when the newest observation is recent enough to trust */
   dataFresh: boolean
+  /** When DMI generated the forecast run in use (ms epoch); null when unknown or not a stored forecast */
+  forecastGeneratedAt: number | null
+  /** True when the stored forecast in use hasn't been refreshed within FORECAST_STALE_MS (ingest down) */
+  forecastStale: boolean
   /** True when the tide is currently rising */
   rising: boolean | null
   /** Sample the surge-adjusted forecast curve at an arbitrary future time (ms epoch); null outside its range */

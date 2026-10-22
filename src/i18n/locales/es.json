@@ -47,6 +47,7 @@
     "shortUnsafe": "próxima {time}",
     "shortNone": "sin ventanas",
     "staleBanner": "La última medición es de {duration} — se muestra en su lugar el pronóstico de DMI para este momento. Sea especialmente prudente.",
+    "forecastStaleBanner": "El pronóstico se actualizó por última vez a las {time}: el nivel real del agua puede diferir. Consulte dmi.dk y sea especialmente prudente.",
     "freshFresh": "Medido {duration}",
     "freshStale": "Medición de {duration} — se muestra el pronóstico",
     "advisory": "Calculado a partir de datos de DMI — evalúe siempre usted mismo las condiciones en el lugar."

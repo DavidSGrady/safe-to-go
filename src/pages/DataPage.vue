@@ -603,6 +603,10 @@ watch(
         </div>
       </div>
 
+      <p v-if="viewStatus?.forecastStale && viewStatus.forecastGeneratedAt" class="stale-fc" role="status">
+        {{ t('verdict.forecastStaleBanner', { time: fmtTime(viewStatus.forecastGeneratedAt, locale) }) }}
+      </p>
+
       <NotifyWhenPassable :status="viewStatus" :station-id="stationId" :now="now" />
 
       <p class="legend">
@@ -881,6 +885,18 @@ watch(
 
 .fresh.stale .fresh-dot {
   background: var(--verdict-caution-accent);
+}
+
+.stale-fc {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--verdict-caution-bd);
+  border-radius: 12px;
+  background: var(--verdict-caution-bg);
+  color: var(--verdict-caution-fg);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .site-footer .muted {

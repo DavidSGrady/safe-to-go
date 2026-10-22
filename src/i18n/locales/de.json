@@ -47,6 +47,7 @@
     "shortUnsafe": "nächste {time}",
     "shortNone": "keine Fenster",
     "staleBanner": "Die letzte Messung war {duration} — angezeigt wird stattdessen die DMI-Prognose für den aktuellen Zeitpunkt. Seien Sie besonders vorsichtig.",
+    "forecastStaleBanner": "Die Prognose wurde zuletzt um {time} aktualisiert — der tatsächliche Wasserstand kann abweichen. Prüfen Sie dmi.dk und seien Sie besonders vorsichtig.",
     "freshFresh": "Gemessen {duration}",
     "freshStale": "Messung {duration} — zeigt Prognose",
     "advisory": "Berechnet aus DMI-Daten — beurteilen Sie die Bedingungen vor Ort immer selbst."

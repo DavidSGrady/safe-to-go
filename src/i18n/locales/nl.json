@@ -47,6 +47,7 @@
     "shortUnsafe": "volgende {time}",
     "shortNone": "geen vensters",
     "staleBanner": "De laatste meting is {duration} — in plaats daarvan tonen we DMI's voorspelling voor dit moment. Wees extra voorzichtig.",
+    "forecastStaleBanner": "De voorspelling is voor het laatst bijgewerkt om {time} — het werkelijke waterpeil kan afwijken. Controleer dmi.dk en wees extra voorzichtig.",
     "freshFresh": "Gemeten {duration}",
     "freshStale": "Meting {duration} — toont voorspelling",
     "advisory": "Berekend uit DMI-gegevens — beoordeel de omstandigheden ter plaatse altijd zelf."

@@ -172,6 +172,10 @@ const freshnessTxt = computed(() => {
       }}
     </p>
 
+    <p v-if="status.forecastStale && status.forecastGeneratedAt" class="banner banner-stale">
+      {{ t('verdict.forecastStaleBanner', { time: fmtTime(status.forecastGeneratedAt, locale) }) }}
+    </p>
+
     <p v-if="freshnessTxt" class="freshness">
       <span class="dot" :class="{ stale: !status.dataFresh }" aria-hidden="true"></span>
       {{ freshnessTxt }}

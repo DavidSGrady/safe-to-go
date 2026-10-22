@@ -47,6 +47,7 @@
     "shortUnsafe": "next {time}",
     "shortNone": "no windows",
     "staleBanner": "The latest measurement is {duration} — showing DMI's forecast for right now instead. Be extra careful.",
+    "forecastStaleBanner": "The forecast was last updated at {time} — actual water levels may differ. Check dmi.dk and be extra careful.",
     "freshFresh": "Measured {duration}",
     "freshStale": "Measurement {duration} — showing forecast",
     "advisory": "Calculated from DMI data — always judge the conditions on site yourself."

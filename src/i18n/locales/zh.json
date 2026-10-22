@@ -47,6 +47,7 @@
     "shortUnsafe": "下次 {time}",
     "shortNone": "无通行时段",
     "staleBanner": "最新实测数据为 {duration}——现改为显示 DMI 对当前时刻的预测。请格外小心。",
+    "forecastStaleBanner": "预测最后更新于 {time}——实际水位可能有出入。请查看 dmi.dk,并格外小心。",
     "freshFresh": "测量于 {duration}",
     "freshStale": "测量 {duration}——显示预测值",
     "advisory": "根据 DMI 数据推算——请务必自行判断现场情况。"

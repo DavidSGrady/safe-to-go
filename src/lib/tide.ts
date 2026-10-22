@@ -12,6 +12,9 @@ import type {
 
 /** Observations older than this are considered stale. */
 const FRESHNESS_MS = 45 * 60 * 1000
+// The ingest rewrites both forecasts every ~10 min; an hour without a new run
+// means the cron or DMI is down and the forecast no longer tracks the weather.
+const FORECAST_STALE_MS = 60 * 60 * 1000
 /** Resolution used when scanning the curve for threshold crossings. */
 const STEP_MS = 5 * 60 * 1000
 /** Fine resolution used when locating the low point inside a window. */
@@ -199,6 +202,17 @@ export function computeStatus(
         ? 'astronomical'
         : 'none'
 
+  // Age of the forecast run actually in use. The newest generated_at wins:
+  // each run rewrites its whole horizon, so older rows keep older stamps.
+  const inUsePts = forecastSource === 'station' ? stationPts : forecastSource === 'dkss' ? dkssPts : null
+  const inUseGen = inUsePts
+    ? forecast
+        .filter((f) => (f.source === 'dmi_station') === (forecastSource === 'station'))
+        .reduce((m, f) => Math.max(m, Date.parse(f.generatedAt ?? '') || -Infinity), -Infinity)
+    : -Infinity
+  const forecastGeneratedAt = Number.isFinite(inUseGen) ? inUseGen : null
+  const forecastStale = forecastGeneratedAt !== null && realNow - forecastGeneratedAt > FORECAST_STALE_MS
+
   const adjusted: ((t: number) => number | null) | null =
     forecastSource === 'none'
       ? null
@@ -301,6 +315,8 @@ export function computeStatus(
     windAdjustmentEnabled: rules.windAdjustmentEnabled,
     lastObservedAt: latest ? latest.t : null,
     dataFresh,
+    forecastGeneratedAt,
+    forecastStale,
     rising,
     levelAt,
   }
