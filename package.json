@@ -9,6 +9,12 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc -b",
     "find-stations": "node scripts/find-stations.mjs",
+    "push-forecast": "node scripts/push-forecast.mjs",
+    "pusher": "node scripts/pusher.mjs",
+    "pusher:on": "node scripts/pusher.mjs on",
+    "pusher:off": "node scripts/pusher.mjs off",
+    "pusher:status": "node scripts/pusher.mjs status",
+    "pusher:now": "node scripts/pusher.mjs now",
     "visits": "node scripts/visits.mjs",
     "visits:check": "node scripts/visits.mjs --check"
   },

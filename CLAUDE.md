@@ -150,6 +150,25 @@ tide predictions and **two forecasts** for **each station in its `STATIONS` arra
   undocumented, 10-min resolution, ~5 days). **The exact series dmi.dk shows** — gauge-calibrated,
   so `tide.ts` uses it as-is (no datum shift). Our numbers must match dmi.dk 1:1; regressions here
   are user-visible (see the /data page footer for provenance/debugging).
+  **Geo-block (2026-10-22):** www.dmi.dk started answering this endpoint with `403 Access from your
+  location is not allowed` to Supabase's edge IPs — every region, so `x-region` doesn't help — while it
+  still works from Denmark. The open-data API has no equivalent series, and falling back to DKSS is
+  *worse* than a stale NinJo run (measured 10–26 cm off, under-forecasting Ribe's peak by ~20 cm). So the
+  fetch runs from a Danish IP instead: **`scripts/push-forecast.mjs`** (`npm run push-forecast`) fetches NinJo
+  and POSTs the raw response to the **`push-forecast`** edge function, which validates it, applies the same
+  `SPIKE_CM` shape filter, refuses to overwrite a run that is as new or newer (so it coexists with
+  `fetch-dmi-data` if DMI ever unblocks Supabase), and writes with the service-role key — which therefore
+  never leaves Supabase. Auth is the `x-ingest-token` header vs the `FORECAST_PUSH_TOKEN` secret (the same
+  value sits in the pusher machine's gitignored `.env`). Currently scheduled on Michael's Windows PC as the
+  task **`SafeToGo push-forecast`** (every **45 min** — just under the 60-min banner
+  threshold, since it is only a fallback; `conhost --headless node …`; log in
+  `~/.safe-to-go/push-forecast.log`). Start/stop it with `npm run pusher:on|off|status|now`
+  (`scripts/pusher.mjs`; while off, the site shows the banner after an hour). Meant to move to an
+  always-on Danish device. If the site shows the
+  "forecast is old" banner, check that log first. Dev duplication to keep in sync: `STATIONS` ids and the
+  spike filter exist in both `push-forecast` and `fetch-dmi-data`.
+  **Stale-forecast banner:** `computeStatus` reports `forecastGeneratedAt`/`forecastStale` (run in use older
+  than 60 min); DataPage and StatusHero show an amber banner. Not covered by the ops alert (readings only).
 - `source = 'dkss_ws'` — raw DKSS grid model via the open forecastedr API. **Fallback only**: the
   grid cells near the stations dry out at low tide (clamp ≈ −20 cm), so it must never be primary.
 `water_level_forecast` carries `station_id` (unique `station_id, source, forecast_at`) and
@@ -161,7 +180,11 @@ Each series has its own write policy, and they deliberately differ:
   timestamptz differently from DMI's ISO strings and string equality would never match. Diffing on
   presence rather than "newer than max" also picks up backfilled gaps. This is the main egress fix —
   see the Egress budget section.
-  **Source fallback:** the open-data gateway (`dmigw.govcloud.dk`) is primary; if it fails or returns
+  **Gateway host moved (2026-10-22):** `dmigw.govcloud.dk` lost its DNS record and DMI now serves the
+  same paths from `opendataapi.dmi.dk`. The Supabase secrets `DMI_BASE_URL` / `DKSS_BASE_URL` were set to
+  `https://opendataapi.dmi.dk/v2/oceanObs` and `/v1/forecastedr` (the code defaults still name the old
+  host, so the secrets are what make ingest work — don't unset them).
+  **Source fallback:** the open-data gateway (`dmigw.govcloud.dk`, now via the secrets above) is primary; if it fails or returns
   an empty window, the same NinJo endpoint as the prognosis is used with `datatype=obs` (identical
   values once rounded — verified against stored gateway rows 2026-09-07). Every fetch in the station
   is **non-fatal**: observations, tide, both forecasts. Keep it that way — on 2026-09-07 the gateway's
