@@ -389,7 +389,36 @@ export function findWindows(
   // The crossing must finish while the water is still this far below flooding.
   const target = rules.cautionMaxCm - rules.floodMarginCm
 
-  return raw
+  // A high tide can climb into the flood margin without flooding the road
+  // (e.g. +47 cm with the road at 50 and a 5 cm margin), so the scan above
+  // keeps one window across it. Its deadline belongs to that peak; once the
+  // water drops back, the next low is a fresh chance to cross. Cut the window
+  // at each such peak so every piece gets its own deadline — otherwise the
+  // whole following low tide inherits the peak's deadline and shows amber.
+  const pieces: typeof raw = []
+  for (const w of raw) {
+    let pieceStart = w.start
+    let peakT: number | null = null
+    let peakV = -Infinity
+    for (let t = w.start; t <= w.end; t += FINE_STEP_MS) {
+      const v = level(t)
+      if (v === null) continue
+      if (v >= target) {
+        if (v > peakV) {
+          peakV = v
+          peakT = t
+        }
+      } else if (peakT !== null) {
+        pieces.push({ start: pieceStart, end: peakT, flooded: false })
+        pieceStart = peakT
+        peakT = null
+        peakV = -Infinity
+      }
+    }
+    pieces.push({ start: pieceStart, end: w.end, flooded: w.flooded })
+  }
+
+  return pieces
     .filter((w) => w.end - w.start >= minWindowMs)
     .map((w) => {
       let minLevelCm = Infinity
